@@ -73,4 +73,18 @@ public class Map {
             System.out.println();
         }
     }
+
+    public Block[][] getMap_matrix() {
+        return map_matrix;
+    }
+
+    public void editMap_matrix(int i,int j,Block newblock) {
+        this.map_matrix[i][j] = newblock;
+    }
+    public void drawBlock(int i,int j){
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(map_matrix[i][j].getColor());
+        gc.fillRect(i*size,j*size,size,size);
+    }
+
 }

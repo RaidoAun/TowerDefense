@@ -3,7 +3,8 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseButton;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -21,7 +22,11 @@ public class Main extends Application {
         }
         map.drawMap();
         root.getChildren().add(canvas);
-
+        canvas.setOnMouseClicked(evt->{
+            //System.out.println("tere");
+            map.editMap_matrix(1,1,new Block(1,1,new Color(1,0,0,1)));
+            map.drawBlock(1,1);
+        });
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();

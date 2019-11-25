@@ -6,12 +6,13 @@ public class Block {
     private int id;
     private Color color;
     private int value;
+    private int level;
     public Block(int block_id,int block_value,Color block_color){
-        id = block_id;
-        color = block_color;
-        value = block_value;
+        setId(block_id);
+        setColor(block_color);
+        setValue(block_value);
+        setLevel(0);
     }
-
     public Color getColor() {
         return color;
     }
@@ -34,5 +35,13 @@ public class Block {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

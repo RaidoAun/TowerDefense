@@ -12,7 +12,9 @@ def makeMatrix(x, y, start, end):
     maatriks[3][4] = 1
     maatriks[3][2] = 1
     maatriks[3][1] = 1
-    #maatriks[3][0] = 1
+    maatriks[1][0] = 1
+    maatriks[1][1] = 1
+    maatriks[1][2] = 1
     maatriks[start[1]][start[0]] = 2
     maatriks[end[1]][end[0]] = 3
     return maatriks
@@ -65,11 +67,14 @@ def leiatee():
             break
     return tee
 
+def märgistatee():
+    for i in tee:
+        if i != start and i != end:
+            maatrix[i[1]][i[0]] = "♥"
 leitud = False
 start = [0, 0]
-end = [4, 4]
-maatrix = makeMatrix(5, 5, start, end)
-printmaatrix(maatrix)
+end = [20, 7]
+maatrix = makeMatrix(40, 10, start, end)
 halgus = int(math.sqrt(pow(end[0] -start[0], 2) + pow(end[1] - start[1], 2)) * 10)
 openList = [[start[0], start[1], start, 0, halgus, halgus]] #[x, y, [parentx, parenty], G, H, F]
 openListF = [141]
@@ -91,7 +96,10 @@ while len(openList) > 0:
         print("HEUREKA!")
         #print(closedList)
         leitud = True
-        print(leiatee())
+        tee = leiatee()
+        märgistatee()
+        print(tee)
+        printmaatrix(maatrix)
         break
     avatud_naabrid = avatudnaabrid()
     if len(avatud_naabrid) > 0:

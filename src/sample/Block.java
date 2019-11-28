@@ -7,12 +7,23 @@ public class Block {
     private Color color;
     private int value;
     private int level;
+    private boolean wall;
     public Block(int block_id,int block_value,Color block_color){
         setId(block_id);
         setColor(block_color);
         setValue(block_value);
         setLevel(0);
+        if (block_id != 1) {
+            wall = false;
+        } else {
+            wall = true;
+        }
     }
+
+    public boolean isWall() {
+        return wall;
+    }
+
     public Color getColor() {
         return color;
     }

@@ -71,6 +71,7 @@ def märgistatee():
     for i in tee:
         if i != start and i != end:
             maatrix[i[1]][i[0]] = "♥"
+
 leitud = False
 start = [0, 0]
 end = [20, 7]
@@ -80,6 +81,7 @@ openList = [[start[0], start[1], start, 0, halgus, halgus]] #[x, y, [parentx, pa
 openListF = [141]
 closedList = []
 closedListxy = []
+
 while len(openList) > 0:
     #print(openList)
     #print(openListF.index(min(openListF)))
@@ -104,5 +106,6 @@ while len(openList) > 0:
     avatud_naabrid = avatudnaabrid()
     if len(avatud_naabrid) > 0:
         lisanaabridopenlisti()
+
 if not leitud:
     print("Lõppu pole võimalik jõuda")

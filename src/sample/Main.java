@@ -32,16 +32,17 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
-        int[] start = {10, 5}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = {30, 15};
-        Pathfinder pathfinder = new Pathfinder(map.map_matrix, start, end);
-        pathfinder.printMatrix();
-        int[][] closedList = pathfinder.scanMap().toArray(new int[0][]);
-        System.out.println(Arrays.deepToString(closedList));
     }
 
 
     public static void main(String[] args) {
-        launch(args);
+        //launch(args);
+        int[] start = new int[]{0, 0}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{9, 9};
+        int[][] seinad = new int[][]{new int[]{1, 1}};
+        MapTest testMap = new MapTest(10, 10, seinad, start, end);
+        testMap.printMap();
+        Pathfinder pathfinder = new Pathfinder(testMap.getMap(), start, end);
+        System.out.println(Arrays.deepToString(pathfinder.scanMap().toArray()));
     }
 }

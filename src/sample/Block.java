@@ -13,15 +13,15 @@ public class Block {
         setColor(block_color);
         setValue(block_value);
         setLevel(0);
-        if (block_id != 1) {
-            wall = false;
-        } else {
-            wall = true;
-        }
+        if (getId() == 1) {setWall(true);}
     }
 
     public boolean isWall() {
         return wall;
+    }
+
+    public void setWall(boolean wall) {
+        this.wall = wall;
     }
 
     public Color getColor() {

@@ -7,7 +7,7 @@ import java.util.List;
 
 class Pathfinder {
 
-    private Block[][] map;
+    private int[][] map;
     private int[] start;
     private int[] end;
     private List<int[]> openList = new ArrayList<>();
@@ -17,19 +17,10 @@ class Pathfinder {
     private List<int[]> closedxy = new ArrayList<>(); // [x, y]
     private int[] current;
 
-    Pathfinder(Block[][] maatrix, int[] algus, int[] lopp) {
+    Pathfinder(int[][] maatrix, int[] algus, int[] lopp) {
         map = maatrix;
-        start = algus; //maatriksi kordinaadid ehk x ja y on vahetuses!
+        start = algus;
         end = lopp;
-    }
-
-    void printMatrix() {
-        for (Block[] blocks : map) {
-            for (Block block : blocks) {
-                System.out.print(block.getId());
-            }
-            System.out.println();
-        }
     }
 
     List<int[]> scanMap() {
@@ -39,10 +30,11 @@ class Pathfinder {
         openListxy.add(start);
         openListF.add(startBlock[6]);
         boolean leitud = false;
+        System.out.println(Arrays.toString(start));
+        System.out.println(Arrays.toString(end));
         while (openList.size() > 0) {
             int minIndex = openListF.indexOf(Collections.min(openListF));
             current = openList.get(minIndex);
-            //System.out.println(Arrays.deepToString(openListxy.toArray()));
             int[] currentxy = new int[]{current[0], current[1]};
             if (Arrays.equals(currentxy, end)) {
                 System.out.println("HEUREKA!");
@@ -53,9 +45,6 @@ class Pathfinder {
             openListxy.remove(minIndex);
             closedList.add(current);
             closedxy.add(currentxy);
-            System.out.println(Arrays.deepToString(closedxy.toArray()));
-            System.out.println(Arrays.toString(start));
-            System.out.println(closedxy.contains(start));
             int [][] naabrid = leiaNaabrid();
             if (naabrid.length > 0) {
                 updateOpenlist(naabrid);
@@ -92,7 +81,7 @@ class Pathfinder {
                 boolean uusxonpiirides = uusx >= 0 && uusx <= map[0].length - 1;
                 boolean uusyonpiirides = uusy >= 0 && uusy <= map.length - 1;
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
-                if (onpiirides && !map[uusy][uusx].isWall() && !closedxy.contains(uusxy) && !openListxy.contains(uusxy)) { // kui blokk on läbitav, ei ole closed ning ei asu open listis
+                if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, closedxy) && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav, ei ole closed ning ei asu open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
                     int g = current[4] + 10;
                     int f = h + g;
@@ -108,11 +97,21 @@ class Pathfinder {
 
     private void updateOpenlist(int[][] naabrid) {
         for (int[] naaber : naabrid) {
-            if (!closedxy.contains(new int[]{naaber[0], naaber[1]}) && !openListxy.contains(new int[]{naaber[0], naaber[1]})) {
+            int[] naabrixy = new int[]{naaber[0], naaber[1]};
+            if (!matrixContains(naabrixy, closedxy) && !matrixContains(naabrixy, openListxy)) {
                 openList.add(naaber);
                 openListF.add(naaber[6]);
                 openListxy.add(new int[]{naaber[0], naaber[1]});
             }
         }
+    }
+
+    private boolean matrixContains(int[] otsitav, List<int[]> matrix) {
+        for (int[] i: matrix) {
+            if (Arrays.equals(i, otsitav)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

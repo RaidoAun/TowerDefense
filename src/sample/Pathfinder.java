@@ -16,36 +16,91 @@ class Pathfinder {
     private List<int[]> closedList = new ArrayList<>(); // [x, y, parentx, parenty]
     private List<int[]> closedxy = new ArrayList<>(); // [x, y]
     private int[] current;
+    private int[][] finalPath;
+    private String[][] markedPath;
+    private boolean pathPossible;
 
     Pathfinder(int[][] maatrix, int[] algus, int[] lopp) {
         map = maatrix;
         start = algus;
         end = lopp;
+        closedList = scanMap();
+        if (closedList.size() > 0) {
+            finalPath = invertPath(findPath());
+            markedPath = drawPath();
+            pathPossible = true;
+        } else {
+            pathPossible = false;
+        }
     }
 
-    List<int[]> scanMap() {
+    private String[][] drawPath() {
+        String[][] m = new String[map.length][map[0].length];
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[0].length; j++) {
+                if (matrixContains(new int[]{j, i}, Arrays.asList(finalPath))) {
+                    m[i][j] = "●";
+                } else if (map[i][j] == 1) {
+                    m[i][j] = "■";
+                } else {
+                    m[i][j] = Integer.toString(map[i][j]);
+                }
+            }
+        }
+        return m;
+    }
+
+    private int[][] findPath() {
+        List<int[]> path = new ArrayList<>();
+        int[][] closedArray = new int[closedList.size()][closedList.get(0).length];
+        closedArray = closedList.toArray(closedArray);
+        int[] parent = end;
+        int[] c;
+        for (int i = closedArray.length - 1; i >= 0; i--) {
+            c = new int[]{closedArray[i][0], closedArray[i][1]};
+            if (Arrays.equals(c, parent)) {
+                path.add(c);
+                parent = new int[]{closedArray[i][2], closedArray[i][3]};
+            } else if (Arrays.equals(c, start)) {
+                break;
+            }
+        }
+        path.remove(0);
+        path.remove(path.size() - 1);
+        int[][] pathArray = new int[path.size()][path.get(0).length];
+        return path.toArray(pathArray);
+    }
+
+    private int[][] invertPath(int[][] path) {
+        int[][] invertedPath = new int[path.length][path[0].length];
+        for (int i = path.length - 1; i >= 0; i--) {
+            invertedPath[path.length - 1 - i] = path[i];
+        }
+        return invertedPath;
+    }
+
+    private List<int[]> scanMap() {
         int h_algus = leiaHupotenuus(start[0], end[0], start[1], end[1]);
         int[] startBlock = {start[0], start[1], start[0], start[1], 0, h_algus, h_algus}; // [x, y, parentx, parenty, G, H, F]
         openList.add(startBlock);
         openListxy.add(start);
         openListF.add(startBlock[6]);
         boolean leitud = false;
-        System.out.println(Arrays.toString(start));
-        System.out.println(Arrays.toString(end));
         while (openList.size() > 0) {
             int minIndex = openListF.indexOf(Collections.min(openListF));
             current = openList.get(minIndex);
             int[] currentxy = new int[]{current[0], current[1]};
             if (Arrays.equals(currentxy, end)) {
-                System.out.println("HEUREKA!");
                 leitud = true;
+                closedList.add(current);
+                break;
             }
             openList.remove(minIndex);
             openListF.remove(minIndex);
             openListxy.remove(minIndex);
             closedList.add(current);
             closedxy.add(currentxy);
-            int [][] naabrid = leiaNaabrid();
+            int[][] naabrid = leiaNaabrid();
             if (naabrid.length > 0) {
                 updateOpenlist(naabrid);
             }
@@ -68,7 +123,7 @@ class Pathfinder {
         List<int[]> naabrid = new ArrayList<>();
         int uusx;
         int uusy;
-        for (int i = -1; i < 2; i+=2) {
+        for (int i = -1; i < 2; i += 2) {
             for (int j = 0; j < 2; j++) {
                 if (j == 0) {
                     uusx = current[0] + i;
@@ -107,11 +162,25 @@ class Pathfinder {
     }
 
     private boolean matrixContains(int[] otsitav, List<int[]> matrix) {
-        for (int[] i: matrix) {
+        for (int[] i : matrix) {
             if (Arrays.equals(i, otsitav)) {
                 return true;
             }
         }
         return false;
     }
+
+    void printPath() {
+        if (pathPossible) {
+            for (String[] i : markedPath) {
+                for (String j : i) {
+                    System.out.print(j + " ");
+                }
+                System.out.println();
+            }
+        } else {
+            System.out.println("Impossible!!!");
+        }
+    }
+
 }

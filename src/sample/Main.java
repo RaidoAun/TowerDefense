@@ -25,7 +25,6 @@ public class Main extends Application {
         map.drawMap();
         root.getChildren().add(canvas);
         canvas.setOnMouseClicked(evt->{
-            //System.out.println("tere");
             map.editMap_matrix(1,1,new Block(1,1,new Color(1,0,0,1)));
             map.drawBlock(1,1);
         });
@@ -37,12 +36,11 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         //launch(args);
-        int[] start = new int[]{0, 0}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = new int[]{9, 9};
-        int[][] seinad = new int[][]{new int[]{1, 1}};
+        int[] start = new int[]{9, 0}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{0, 9};
+        int[][] seinad = new int[][]{{1, 1}, {9, 1}, {8, 1}, {7, 1}, {6, 1}, {5, 1}, {4, 1}, {3, 1}, {2, 1}, {9, 8}, {8, 8}, {7, 8}, {6, 8}, {5, 8}, {4, 8}, {3, 8}, {2, 8}};
         MapTest testMap = new MapTest(10, 10, seinad, start, end);
-        testMap.printMap();
         Pathfinder pathfinder = new Pathfinder(testMap.getMap(), start, end);
-        System.out.println(Arrays.deepToString(pathfinder.scanMap().toArray()));
+        pathfinder.printPath();
     }
 }

@@ -19,7 +19,7 @@ public class MapTest {
         mapMatrix = genMap();
     }
 
-    public int[][] getMap() {
+    int[][] getMap() {
         return mapMatrix;
     }
 

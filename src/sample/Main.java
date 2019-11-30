@@ -31,16 +31,16 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
+        int[] start = new int[]{5, 5}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{10, 15};
+        int[][] seinad = new int[][]{};
+        MapTest testMap = new MapTest(5, 5, seinad, start, end);
+        Pathfinder pathfinder = new Pathfinder(map.numbriMatrix(map.getMap_matrix()), start, end);
+        pathfinder.printPath();
     }
 
 
     public static void main(String[] args) {
-        //launch(args);
-        int[] start = new int[]{9, 0}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = new int[]{0, 9};
-        int[][] seinad = new int[][]{{1, 1}, {9, 1}, {8, 1}, {7, 1}, {6, 1}, {5, 1}, {4, 1}, {3, 1}, {2, 1}, {9, 8}, {8, 8}, {7, 8}, {6, 8}, {5, 8}, {4, 8}, {3, 8}, {2, 8}};
-        MapTest testMap = new MapTest(10, 10, seinad, start, end);
-        Pathfinder pathfinder = new Pathfinder(testMap.getMap(), start, end);
-        pathfinder.printPath();
+        launch(args);
     }
 }

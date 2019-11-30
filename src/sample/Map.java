@@ -8,12 +8,12 @@ import javafx.scene.paint.Color;
 import java.util.Random;
 
 public class Map {
-    int x;
-    int y;
-    Block[][] map_matrix;
-    Canvas canvas;
-    int size;
-    public Map(int rectCountx, int rectCounty, int blocksize,Canvas map_canvas){
+    private int x;
+    private int y;
+    private Block[][] map_matrix;
+    private Canvas canvas;
+    private int size;
+    Map(int rectCountx, int rectCounty, int blocksize, Canvas map_canvas){
         x = rectCountx;
         y = rectCounty;
         canvas = map_canvas;
@@ -22,7 +22,9 @@ public class Map {
         canvas.setWidth(size*rectCountx);
         canvas.setHeight(size*rectCounty);
     }
-    public void initMap(){
+
+
+    void initMap(){
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if (i == 0 || j == 0 || i == x-1 || j == y-1){
@@ -39,7 +41,8 @@ public class Map {
             }
         }
     }
-    public void genMap(){
+
+    void genMap(){
         for (int i = 1; i < x-1; i++) {
             for (int j = 1; j < y-1; j++) {
                 int block_value_sum = 0;
@@ -62,9 +65,9 @@ public class Map {
         }
     }
 
-    public void drawMap(){
-        editMap_matrix(30, 15, new Block(2, 0, new Color(0, 1, 0, 1)));
-        editMap_matrix(10, 10, new Block(3, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 2 - nexus; 3 - start
+    void drawMap(){
+        editMap_matrix(10, 15, new Block(3, 0, new Color(0, 1, 0, 1)));
+        editMap_matrix(5, 5, new Block(2, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -80,13 +83,24 @@ public class Map {
         return map_matrix;
     }
 
-    public void editMap_matrix(int i,int j,Block newblock) {
+    void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
     }
-    public void drawBlock(int i,int j){
+
+    void drawBlock(int i, int j){
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(map_matrix[i][j].getColor());
         gc.fillRect(i*size,j*size,size,size);
+    }
+
+    public int[][] numbriMatrix(Block[][] m) {
+        int[][] matrix = new int[m.length][m[0].length];
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                matrix[i][j] = m[i][j].getId();
+            }
+        }
+        return matrix;
     }
 
 }

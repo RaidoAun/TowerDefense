@@ -11,7 +11,17 @@ public class Block {
         setId(block_id);
         setColor(block_color);
         setValue(block_value);
+    }
+    public void makeTower(int tower_id){
         setLevel(0);
+        setId(tower_id);
+        if (tower_id == 10){
+            setColor(new Color(1,0,0,1));
+            setValue(10);
+        }
+    }
+    public void shoot(){
+
     }
     public Color getColor() {
         return color;

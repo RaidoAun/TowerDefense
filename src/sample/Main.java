@@ -17,7 +17,7 @@ public class Main extends Application {
         Group root = new Group();
         Scene scene = new Scene(root);
         Canvas canvas = new Canvas();
-        Map map = new Map(40,20,10,canvas);
+        Map map = new Map(80,40,10,canvas);
         map.initMap();
         for (int i = 0; i < 2; i++) {
             map.genMap();
@@ -31,12 +31,22 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
-        int[] start = new int[]{5, 5}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = new int[]{10, 15};
-        int[][] seinad = new int[][]{};
-        MapTest testMap = new MapTest(5, 5, seinad, start, end);
+        int[] start = new int[]{20, 20}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{25, 30};
+        int[][] seinad = new int[][]{{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {1, 8}, {2, 8}, {3, 8}, {4, 8}, {5, 8}, {6, 8}, {7, 8}, {8, 8}, {9, 8}};
+        MapTest testMap = new MapTest(10, 10, seinad, start, end);
         Pathfinder pathfinder = new Pathfinder(map.numbriMatrix(map.getMap_matrix()), start, end);
         pathfinder.printPath();
+
+        for (int[] closed : pathfinder.getClosedList()) {
+            map.getMap_matrix()[closed[0]][closed[1]].setColor(new Color(1, 1, 0, 1));
+            map.drawBlock(closed[0], closed[1]);
+        }
+
+        for (int[] xy : pathfinder.getFinalPath()) {
+            map.getMap_matrix()[xy[0]][xy[1]].setColor(new Color(0, 1, 0, 1));
+            map.drawBlock(xy[0], xy[1]);
+        }
     }
 
 

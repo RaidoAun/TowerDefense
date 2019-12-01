@@ -31,7 +31,16 @@ class Pathfinder {
             pathPossible = true;
         } else {
             pathPossible = false;
+            finalPath = new int[0][0];
         }
+    }
+
+    public List<int[]> getClosedList() {
+        return closedList;
+    }
+
+    public int[][] getFinalPath() {
+        return finalPath;
     }
 
     private String[][] drawPath() {
@@ -40,6 +49,7 @@ class Pathfinder {
             for (int j = 0; j < map[0].length; j++) {
                 if (matrixContains(new int[]{j, i}, Arrays.asList(finalPath))) {
                     m[i][j] = "●";
+
                 } else if (map[i][j] == 1) {
                     m[i][j] = "■";
                 } else {

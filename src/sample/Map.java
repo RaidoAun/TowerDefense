@@ -66,16 +66,16 @@ public class Map {
     }
 
     void drawMap(){
-        editMap_matrix(10, 15, new Block(3, 0, new Color(0, 1, 0, 1)));
-        editMap_matrix(5, 5, new Block(2, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
+        editMap_matrix(25, 30, new Block(3, 0, new Color(1, 0, 0, 1)));
+        editMap_matrix(20, 20, new Block(2, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
-                //System.out.print(map_matrix[i][j].getValue()+" ");
+                System.out.print(map_matrix[i][j].getValue()+" ");
                 gc.fillRect(i*size,j*size,size,size);
             }
-            //System.out.println();
+            System.out.println();
         }
     }
 

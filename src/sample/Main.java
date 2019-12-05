@@ -31,14 +31,16 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
-        int[] start = new int[]{20, 20}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = new int[]{25, 30};
+        int[] start = new int[]{0, 0}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{9, 9};
         int[][] seinad = new int[][]{{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {1, 8}, {2, 8}, {3, 8}, {4, 8}, {5, 8}, {6, 8}, {7, 8}, {8, 8}, {9, 8}};
         MapTest testMap = new MapTest(10, 10, seinad, start, end);
-        Pathfinder pathfinder = new Pathfinder(map.numbriMatrix(map.getMap_matrix()), start, end);
+        Pathfinder pathfinder = new Pathfinder(/*map.numbriMatrix(map.getMap_matrix())*/ testMap.getMap(), start, end);
+        System.out.println(Arrays.deepToString(pathfinder.getClosedList().toArray()));
+        System.out.println(Arrays.deepToString(pathfinder.getFinalPath()));
         pathfinder.printPath();
 
-        for (int[] closed : pathfinder.getClosedList()) {
+        /*for (int[] closed : pathfinder.getClosedList()) {
             map.getMap_matrix()[closed[0]][closed[1]].setColor(new Color(1, 1, 0, 1));
             map.drawBlock(closed[0], closed[1]);
         }
@@ -46,7 +48,7 @@ public class Main extends Application {
         for (int[] xy : pathfinder.getFinalPath()) {
             map.getMap_matrix()[xy[0]][xy[1]].setColor(new Color(0, 1, 0, 1));
             map.drawBlock(xy[0], xy[1]);
-        }
+        }*/
     }
 
 

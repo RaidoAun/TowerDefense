@@ -72,10 +72,10 @@ public class Map {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
-                System.out.print(map_matrix[i][j].getValue()+" ");
+                //System.out.print(map_matrix[i][j].getValue()+" ");
                 gc.fillRect(i*size,j*size,size,size);
             }
-            System.out.println();
+            //System.out.println();
         }
     }
 

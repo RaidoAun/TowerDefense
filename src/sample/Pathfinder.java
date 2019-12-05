@@ -64,9 +64,9 @@ class Pathfinder {
         List<int[]> path = new ArrayList<>();
         int[][] closedArray = new int[closedList.size()][closedList.get(0).length];
         closedArray = closedList.toArray(closedArray);
-        int[] parent = end;
-        int[] c;
-        for (int i = closedArray.length - 1; i >= 0; i--) {
+        List<int[]> parents = getParents();
+        int[] c = parents.get(parents.size() - 1);
+        /*for (int i = closedArray.length - 1; i >= 0; i--) {
             c = new int[]{closedArray[i][0], closedArray[i][1]};
             if (Arrays.equals(c, parent)) {
                 path.add(c);
@@ -74,8 +74,20 @@ class Pathfinder {
             } else if (Arrays.equals(c, start)) {
                 break;
             }
+        }*/
+        while (true) {
+            int index = matrixIndexof(c, parents);
+            if (index > 0) {
+                int[] xy = closedxy.get(index);
+                path.add(xy);
+                c = parents.get(matrixIndexof(parents.get(index), closedxy));
+            } else if (index == 0) {
+                break;
+            }
+            System.out.println(Arrays.deepToString(path.toArray()));
+            System.out.println(Arrays.toString(c));
         }
-        path.remove(0);
+        //path.remove(0);
         path.remove(path.size() - 1);
         int[][] pathArray = new int[path.size()][path.get(0).length];
         return path.toArray(pathArray);
@@ -103,6 +115,7 @@ class Pathfinder {
             if (Arrays.equals(currentxy, end)) {
                 leitud = true;
                 closedList.add(current);
+                closedxy.add(currentxy);
                 break;
             }
             openList.remove(minIndex);
@@ -146,12 +159,26 @@ class Pathfinder {
                 boolean uusxonpiirides = uusx >= 0 && uusx <= map[0].length - 1;
                 boolean uusyonpiirides = uusy >= 0 && uusy <= map.length - 1;
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
-                if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, closedxy) && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav, ei ole closed ning ei asu open listis
+                if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
                     int g = current[4] + 10;
                     int f = h + g;
                     int[] naaber = new int[]{uusx, uusy, current[0], current[1], g, h, f};
-                    naabrid.add(naaber);
+                    if (matrixContains(uusxy, closedxy)) { // kui blokk asub closed listis
+                        int index = matrixIndexof(uusxy, closedxy);
+                        int[] closedNode = closedList.get(index);
+                        System.out.println(index);
+                        if (closedNode[6] > f) {
+                            closedNode[2] = naaber[2];
+                            closedNode[3] = naaber[3];
+                            closedNode[4] = g;
+                            closedNode[5] = h;
+                            closedNode[6] = f;
+                            closedList.set(index, closedNode);
+                        }
+                    } else {
+                        naabrid.add(naaber);
+                    }
                 }
             }
         }
@@ -180,6 +207,15 @@ class Pathfinder {
         return false;
     }
 
+    private int matrixIndexof(int[] otsitav, List<int[]> matrix) {
+        for (int i = 0; i < matrix.size(); i++) {
+            if (matrix.get(i)[0] == otsitav[0] && matrix.get(i)[1] == otsitav[1]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     void printPath() {
         if (pathPossible) {
             for (String[] i : markedPath) {
@@ -191,6 +227,14 @@ class Pathfinder {
         } else {
             System.out.println("Impossible!!!");
         }
+    }
+
+    private List<int[]> getParents() {
+        List<int[]> paretnid = new ArrayList<>();
+        for (int[] closed : closedList) {
+            paretnid.add(new int[]{closed[2], closed[3]});
+        }
+        return paretnid;
     }
 
 }

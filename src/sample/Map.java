@@ -21,15 +21,8 @@ public class Map {
         map_matrix = new Block[rectCountx][rectCounty];
         canvas.setWidth(size*rectCountx);
         canvas.setHeight(size*rectCounty);
-        canvas.setOnMouseClicked(e -> {
-            map_matrix[convertPixelToIndex((e.getX()))][convertPixelToIndex(e.getY())].makeTower(10);
-            drawBlock(convertPixelToIndex((e.getX())),convertPixelToIndex(e.getY()));
-        });
     }
-    public int convertPixelToIndex (double pixel_coords){
-        int index = (int)pixel_coords/size;
-        return index;
-    }
+
     public void initMap(){
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -72,7 +65,7 @@ public class Map {
     public void drawMap(){
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                Main.gc.setFill(map_matrix[i][j].getColor());
+                Main.getGc().setFill(map_matrix[i][j].getColor());
                 Main.getGc().fillRect(i*size,j*size,size,size);
             }
         }
@@ -90,4 +83,7 @@ public class Map {
         Main.getGc().fillRect(i*size,j*size,size,size);
     }
 
+    public int getSize() {
+        return size;
+    }
 }

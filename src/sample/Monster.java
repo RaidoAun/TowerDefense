@@ -14,7 +14,7 @@ public class Monster {
         y = y_coord;
         id = type;
         if (id==0){
-            hp = 10;
+            hp = 1000;
             dmg = 5;
             color = new Color(1,1,0,1);
         }
@@ -31,5 +31,13 @@ public class Monster {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

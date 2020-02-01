@@ -66,8 +66,8 @@ public class Map {
     }
 
     void drawMap(){
-        editMap_matrix(25, 30, new Block(3, 0, new Color(1, 0, 0, 1)));
-        editMap_matrix(20, 20, new Block(2, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
+        editMap_matrix(7, 7, new Block(3, 0, new Color(1, 0, 0, 1)));
+        editMap_matrix(3, 3, new Block(2, 0, new Color(0, 0, 1, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -81,6 +81,10 @@ public class Map {
 
     public Block[][] getMap_matrix() {
         return map_matrix;
+    }
+
+    public int[][] getFlippedMap() {
+        return flipMap();
     }
 
     void editMap_matrix(int i, int j, Block newblock) {
@@ -101,6 +105,16 @@ public class Map {
             }
         }
         return matrix;
+    }
+
+    private int[][] flipMap () {
+        int[][] flippedMap = new int[map_matrix[0].length][map_matrix.length];
+        for (int i = 0; i < map_matrix.length; i++) {
+            for (int j = 0; j < map_matrix[0].length; j++) {
+                flippedMap[j][i] = map_matrix[i][j].getId();
+            }
+        }
+        return flippedMap;
     }
 
 }

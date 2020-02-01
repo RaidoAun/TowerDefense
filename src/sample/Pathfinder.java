@@ -84,8 +84,8 @@ class Pathfinder {
             } else if (index == 0) {
                 break;
             }
-            System.out.println(Arrays.deepToString(path.toArray()));
-            System.out.println(Arrays.toString(c));
+            //System.out.println(Arrays.deepToString(path.toArray()));
+            //System.out.println(Arrays.toString(c));
         }
         //path.remove(0);
         path.remove(path.size() - 1);
@@ -167,7 +167,7 @@ class Pathfinder {
                     if (matrixContains(uusxy, closedxy)) { // kui blokk asub closed listis
                         int index = matrixIndexof(uusxy, closedxy);
                         int[] closedNode = closedList.get(index);
-                        System.out.println(index);
+                        //.out.println(index);
                         if (closedNode[6] > f) {
                             closedNode[2] = naaber[2];
                             closedNode[3] = naaber[3];
@@ -235,6 +235,25 @@ class Pathfinder {
             paretnid.add(new int[]{closed[2], closed[3]});
         }
         return paretnid;
+    }
+
+    void printMap() {
+        StringBuilder stringRida = new StringBuilder();
+        for (int[] mapRida : map) {
+            for (int ruut : mapRida) {
+                if (ruut == 0) {
+                    stringRida.append("⬜");
+                } else if (ruut == 1) {
+                    stringRida.append("⬛");
+                } else if (ruut == 2){
+                    stringRida.append("◇");
+                } else {
+                    stringRida.append("◆");
+                }
+            }
+            System.out.println(stringRida);
+            stringRida.setLength(0);
+        }
     }
 
 }

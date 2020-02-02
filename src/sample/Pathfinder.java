@@ -1,9 +1,6 @@
 package sample;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 class Pathfinder {
 
@@ -29,18 +26,21 @@ class Pathfinder {
             finalPath = invertPath(findPath());
             markedPath = drawPath();
             pathPossible = true;
+            looTee();
         } else {
             pathPossible = false;
             finalPath = new int[0][0];
         }
     }
 
-    public List<int[]> getClosedList() {
-        return closedList;
-    }
-
     public int[][] getFinalPath() {
         return finalPath;
+    }
+
+    int[][] getClosedList() {
+        int[][] xy = new int[closedList.size()][7];
+        xy = closedList.toArray(xy);
+        return xy;
     }
 
     private String[][] drawPath() {
@@ -60,35 +60,47 @@ class Pathfinder {
         return m;
     }
 
-    private int[][] findPath() {
+    private int[][] findPath() {            //KIRJUTA UUESTI, SEST PARENTEID VÕIB ÜHEL BLOCKIL MITU OLLA
         List<int[]> path = new ArrayList<>();
-        int[][] closedArray = new int[closedList.size()][closedList.get(0).length];
-        closedArray = closedList.toArray(closedArray);
         List<int[]> parents = getParents();
-        int[] c = parents.get(parents.size() - 1);
-        /*for (int i = closedArray.length - 1; i >= 0; i--) {
-            c = new int[]{closedArray[i][0], closedArray[i][1]};
-            if (Arrays.equals(c, parent)) {
-                path.add(c);
-                parent = new int[]{closedArray[i][2], closedArray[i][3]};
-            } else if (Arrays.equals(c, start)) {
-                break;
-            }
-        }*/
+        List<int[]> algusetaClosedxy = closedxy;
+        List<Integer> algusetaF = getFcosts();
+        algusetaClosedxy.remove(0);
+        parents.remove(0);
+        algusetaF.remove(0);
+        Collections.reverse(algusetaF);
+        //System.out.println(Arrays.deepToString(parents.toArray()));
+        //int[] c = parents.get(parents.size() - 1); //viimane parent
+        int index = parents.size() - 1;
+        List<Integer> uuedIndexid;
+        List<int[]> uuedIndexidKoosf;
         while (true) {
-            int index = matrixIndexof(c, parents);
             if (index > 0) {
-                int[] xy = closedxy.get(index);
+                int[] xy = algusetaClosedxy.get(index);
                 path.add(xy);
-                c = parents.get(matrixIndexof(parents.get(index), closedxy));
+                uuedIndexid = matrixIndexesof(parents.get(index), algusetaClosedxy);
+                uuedIndexidKoosf = new ArrayList<>();
+                for (Integer integer : uuedIndexid) {
+                    uuedIndexidKoosf.add(new int[]{integer, algusetaF.get(integer)});
+                }
+
+                Comparator<int[]> comparator = new Comparator<int[]>() {
+                    public int compare(int[] o1, int[] o2) {
+                        return Integer.compare(o1[1], o2[1]);
+                    }
+                };
+
+                uuedIndexidKoosf.sort(comparator);
+                System.out.println(Arrays.deepToString(uuedIndexidKoosf.toArray()));
+                index = uuedIndexidKoosf.get(0)[0];
+                //c = parents.get(matrixIndexof(parents.get(index), algusetaClosedxy));
             } else if (index == 0) {
+                int[] xy = algusetaClosedxy.get(index);
+                path.add(xy);
                 break;
             }
-            //System.out.println(Arrays.deepToString(path.toArray()));
-            //System.out.println(Arrays.toString(c));
         }
-        //path.remove(0);
-        path.remove(path.size() - 1);
+        path.remove(0);
         int[][] pathArray = new int[path.size()][path.get(0).length];
         return path.toArray(pathArray);
     }
@@ -167,14 +179,8 @@ class Pathfinder {
                     if (matrixContains(uusxy, closedxy)) { // kui blokk asub closed listis
                         int index = matrixIndexof(uusxy, closedxy);
                         int[] closedNode = closedList.get(index);
-                        //.out.println(index);
                         if (closedNode[6] > f) {
-                            closedNode[2] = naaber[2];
-                            closedNode[3] = naaber[3];
-                            closedNode[4] = g;
-                            closedNode[5] = h;
-                            closedNode[6] = f;
-                            closedList.set(index, closedNode);
+                            closedList.set(index, naaber);
                         }
                     } else {
                         naabrid.add(naaber);
@@ -216,6 +222,16 @@ class Pathfinder {
         return -1;
     }
 
+    private List<Integer> matrixIndexesof(int[] otsitav, List<int[]> matrix) {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < matrix.size(); i++) {
+            if (matrix.get(i)[0] == otsitav[0] && matrix.get(i)[1] == otsitav[1]) {
+                indexes.add(i);
+            }
+        }
+        return indexes;
+    }
+
     void printPath() {
         if (pathPossible) {
             for (String[] i : markedPath) {
@@ -237,6 +253,14 @@ class Pathfinder {
         return paretnid;
     }
 
+    private List<Integer> getFcosts() {
+        List<Integer> f = new ArrayList<>();
+        for (int[] closed : closedList) {
+            f.add(closed[6]);
+        }
+        return f;
+    }
+
     void printMap() {
         StringBuilder stringRida = new StringBuilder();
         for (int[] mapRida : map) {
@@ -247,12 +271,20 @@ class Pathfinder {
                     stringRida.append("⬛");
                 } else if (ruut == 2){
                     stringRida.append("◇");
-                } else {
+                } else if (ruut == 3) {
                     stringRida.append("◆");
+                } else {
+                    stringRida.append("◉");
                 }
             }
             System.out.println(stringRida);
             stringRida.setLength(0);
+        }
+    }
+
+    private void looTee() {
+        for (int[] p : finalPath) {
+            map[p[1]][p[0]] = 4;
         }
     }
 

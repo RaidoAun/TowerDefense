@@ -17,7 +17,7 @@ public class Main extends Application {
         Group root = new Group();
         Scene scene = new Scene(root);
         Canvas canvas = new Canvas();
-        Map map = new Map(10,10,30,canvas);
+        Map map = new Map(150,30,10,canvas);
         map.initMap();
         for (int i = 0; i < 2; i++) {
             map.genMap();
@@ -31,15 +31,16 @@ public class Main extends Application {
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         primaryStage.show();
-        int[] start = new int[]{3, 3}; // [x, y] ei ole maatriksi kordinaadid!
-        int[] end = new int[]{7, 7};
+        int[] start = new int[]{10, 5}; // [x, y] ei ole maatriksi kordinaadid!
+        int[] end = new int[]{100, 20};
         int[][] seinad = new int[][]{{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {1, 8}, {2, 8}, {3, 8}, {4, 8}, {5, 8}, {6, 8}, {7, 8}, {8, 8}, {9, 8}};
         MapTest testMap = new MapTest(10, 10, seinad, start, end);
         Pathfinder pathfinder = new Pathfinder(/*map.numbriMatrix(map.getMap_matrix())*/ /*map.numbriMatrix(map.getMap_matrix())*/ map.getFlippedMap(), start, end);
         //System.out.println(Arrays.deepToString(pathfinder.getClosedList().toArray()));
         //System.out.println(Arrays.deepToString(pathfinder.getFinalPath()));
-        //pathfinder.printPath();
         pathfinder.printMap();
+        //System.out.println(Arrays.deepToString(pathfinder.getFinalPath()));
+        //System.out.println(Arrays.deepToString(pathfinder.getClosedList()));
 
         /*for (int[] closed : pathfinder.getClosedList()) {
             map.getMap_matrix()[closed[0]][closed[1]].setColor(new Color(1, 1, 0, 1));

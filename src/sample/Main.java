@@ -72,22 +72,14 @@ public class Main extends Application {
         int[] end = new int[]{100, 20};
         int[][] seinad = new int[][]{{1, 1}, {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {1, 8}, {2, 8}, {3, 8}, {4, 8}, {5, 8}, {6, 8}, {7, 8}, {8, 8}, {9, 8}};
         MapTest testMap = new MapTest(10, 10, seinad, start, end);
-        Pathfinder pathfinder = new Pathfinder(/*map.numbriMatrix(map.getMap_matrix())*/ /*map.numbriMatrix(map.getMap_matrix())*/ map.getFlippedMap(), start, end);
-        //System.out.println(Arrays.deepToString(pathfinder.getClosedList().toArray()));
-        //System.out.println(Arrays.deepToString(pathfinder.getFinalPath()));
-        pathfinder.printMap();
-        //System.out.println(Arrays.deepToString(pathfinder.getFinalPath()));
-        //System.out.println(Arrays.deepToString(pathfinder.getClosedList()));
-
-        /*for (int[] closed : pathfinder.getClosedList()) {
-            map.getMap_matrix()[closed[0]][closed[1]].setColor(new Color(1, 1, 0, 1));
-            map.drawBlock(closed[0], closed[1]);
+        Pathfinder pathfinder = new Pathfinder(map.getFlippedMap(), start, end);
+        //pathfinder.printMap();
+        int[][] path = pathfinder.getFinalPath();
+        if (path.length > 0) {
+            for (int[] p : path) {
+                map.editMap_matrix(p[0], p[1], new Block(5, 5, new Color(0, 1, 1, 1)));
+            }
         }
-
-        for (int[] xy : pathfinder.getFinalPath()) {
-            map.getMap_matrix()[xy[0]][xy[1]].setColor(new Color(0, 1, 0, 1));
-            map.drawBlock(xy[0], xy[1]);
-        }*/
     }
 
 

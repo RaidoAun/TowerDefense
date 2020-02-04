@@ -91,9 +91,7 @@ class Pathfinder {
                 };
 
                 uuedIndexidKoosf.sort(comparator);
-                System.out.println(Arrays.deepToString(uuedIndexidKoosf.toArray()));
                 index = uuedIndexidKoosf.get(0)[0];
-                //c = parents.get(matrixIndexof(parents.get(index), algusetaClosedxy));
             } else if (index == 0) {
                 int[] xy = algusetaClosedxy.get(index);
                 path.add(xy);
@@ -173,7 +171,7 @@ class Pathfinder {
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
                 if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
-                    int g = current[4] + 10;
+                    int g = current[4] + 1000;
                     int f = h + g;
                     int[] naaber = new int[]{uusx, uusy, current[0], current[1], g, h, f};
                     if (matrixContains(uusxy, closedxy)) { // kui blokk asub closed listis

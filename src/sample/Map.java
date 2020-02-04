@@ -86,7 +86,7 @@ public class Map {
         return flipMap();
     }
 
-    private void editMap_matrix(int i, int j, Block newblock) {
+    void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
     }
 

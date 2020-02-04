@@ -14,18 +14,14 @@ public class Block {
     private int y;
     private boolean active;
     private boolean wall;
-    public Block(int block_id,int block_value,Color block_color){
+    Block(int block_id, int block_value, Color block_color){
         setId(block_id);
         setColor(block_color);
         setValue(block_value);
-    }
-    public void makeTower(int tower_id,int pixelx, int pixely){
-        setLevel(0);
         if (getId() == 1) {setWall(true);}
     }
-
-    public boolean isWall() {
-        return wall;
+    void makeTower(int tower_id, int pixelx, int pixely){
+        setLevel(0);
         setId(tower_id);
         setX(pixelx);
         setY(pixely);
@@ -36,7 +32,11 @@ public class Block {
             setActive(false);
         }
     }
-    public void shoot(List<Monster> monsters){
+
+    public boolean isWall() {
+        return wall;
+    }
+    void shoot(List<Monster> monsters){
         for (Monster monster:
              monsters) {
             int dist =(int) Math.round(Math.sqrt(Math.pow(getX()-monster.getX(),2)+Math.pow(getY()-monster.getY(),2)));
@@ -49,36 +49,36 @@ public class Block {
 
         }
     }
-    public void drawRange(){
+    void drawRange(){
         Main.getGc().setFill(new Color(0,0,0,0.5));
         Main.getGc().fillOval(getX()-getRange(),getY()- getRange(),getRange()*2,getRange()*2);
     }
 
-    public void setWall(boolean wall) {
+    private void setWall(boolean wall) {
         this.wall = wall;
     }
 
-    public Color getColor() {
+    Color getColor() {
         return color;
     }
 
-    public int getId() {
+    int getId() {
         return id;
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 
-    public void setColor(Color color) {
+    void setColor(Color color) {
         this.color = color;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.id = id;
     }
 
-    public void setValue(int value) {
+    void setValue(int value) {
         this.value = value;
     }
 
@@ -86,39 +86,39 @@ public class Block {
         return level;
     }
 
-    public void setLevel(int level) {
+    private void setLevel(int level) {
         this.level = level;
     }
 
-    public void setRange(int range) {
+    private void setRange(int range) {
         this.range = range;
     }
 
-    public void setX(int x) {
+    private void setX(int x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    private void setY(int y) {
         this.y = y;
     }
 
-    public int getRange() {
+    private int getRange() {
         return range;
     }
 
-    public int getX() {
+    private int getX() {
         return x;
     }
 
-    public int getY() {
+    private int getY() {
         return y;
     }
 
-    public boolean getActive() {
+    boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         this.active = active;
     }
 }

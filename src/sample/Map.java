@@ -78,15 +78,15 @@ public class Map {
         }
     }
 
-    public Block[][] getMap_matrix() {
+    Block[][] getMap_matrix() {
         return map_matrix;
     }
 
-    public int[][] getFlippedMap() {
+    int[][] getFlippedMap() {
         return flipMap();
     }
 
-    void editMap_matrix(int i, int j, Block newblock) {
+    private void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
     }
 
@@ -116,4 +116,7 @@ public class Map {
         return flippedMap;
     }
 
+    int getSize() {
+        return size;
+    }
 }

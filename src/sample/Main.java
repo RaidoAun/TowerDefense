@@ -11,14 +11,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main extends Application {
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
     private static List<Monster> monsters = new ArrayList<>();
     private static List<Block> towers = new ArrayList<>();
-    static Map map = new Map(160,80,10);
+    static Map map = new Map(160,80,10, canvas);
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -97,10 +99,10 @@ public class Main extends Application {
         return canvas;
     }
 
-    public static GraphicsContext getGc() {
+    static GraphicsContext getGc() {
         return gc;
     }
-    public void drawMonsters(){
+    private void drawMonsters(){
         for (int i = getMonsters().size()-1; i >=0 ; i--) {
             if (getMonsters().get(i).getHp()<=0){
                monsters.remove(getMonsters().get(i));
@@ -110,25 +112,25 @@ public class Main extends Application {
             monster.drawMonster();
         }
     }
-    public void shootTowers(){
+    private void shootTowers(){
         for (Block tower:
              getTowers()) {
             tower.shoot(getMonsters());
         }
     }
 
-    public static List<Block> getTowers() {
+    private static List<Block> getTowers() {
         return towers;
     }
 
-    public static List<Monster> getMonsters() {
+    private static List<Monster> getMonsters() {
         return monsters;
     }
-    public int convertPixelToIndex (double pixel_coords){
+    private int convertPixelToIndex(double pixel_coords){
         int index = (int)pixel_coords/map.getSize();
         return index;
     }
-    public void drawTowerRanges(){
+    private void drawTowerRanges(){
         for (Block tower:
                 getTowers()) {
             if (tower.getActive()){

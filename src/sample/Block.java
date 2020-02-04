@@ -13,6 +13,7 @@ public class Block {
     private int x;
     private int y;
     private boolean active;
+    private boolean wall;
     public Block(int block_id,int block_value,Color block_color){
         setId(block_id);
         setColor(block_color);
@@ -20,6 +21,11 @@ public class Block {
     }
     public void makeTower(int tower_id,int pixelx, int pixely){
         setLevel(0);
+        if (getId() == 1) {setWall(true);}
+    }
+
+    public boolean isWall() {
+        return wall;
         setId(tower_id);
         setX(pixelx);
         setY(pixely);
@@ -47,6 +53,11 @@ public class Block {
         Main.getGc().setFill(new Color(0,0,0,0.5));
         Main.getGc().fillOval(getX()-getRange(),getY()- getRange(),getRange()*2,getRange()*2);
     }
+
+    public void setWall(boolean wall) {
+        this.wall = wall;
+    }
+
     public Color getColor() {
         return color;
     }

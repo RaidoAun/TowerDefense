@@ -119,4 +119,13 @@ public class Map {
     int getSize() {
         return size;
     }
+
+    void drawPath(int[][] path) {
+        if (path.length > 0) {
+            for (int[] p : path) {
+                editMap_matrix(p[0], p[1], new Block(5, 5, new Color(0, 1, 1, 1)));
+            }
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.scene.paint.Color;
 import java.util.*;
 
 class Pathfinder {
@@ -283,6 +284,14 @@ class Pathfinder {
     private void looTee() {
         for (int[] p : finalPath) {
             map[p[1]][p[0]] = 4;
+        }
+    }
+
+    void draw_path_onMap(Map m) {
+        if (finalPath.length > 0) {
+            for (int[] p : finalPath) {
+                m.editMap_matrix(p[0], p[1], new Block(5, 5, new Color(0, 1, 1, 1)));
+            }
         }
     }
 

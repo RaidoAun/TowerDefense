@@ -36,8 +36,7 @@ public class Main extends Application {
             int i = convertPixelToIndex((e.getX()));
             int j = convertPixelToIndex(e.getY());
             Block eventBlock = map.getMap_matrix()[i][j];
-            for (Block tower:
-                    getTowers()) {
+            for (Block tower : getTowers()) {
                 tower.setActive(false);
             }
             if (eventBlock.getId()<2){
@@ -82,6 +81,7 @@ public class Main extends Application {
     static GraphicsContext getGc() {
         return gc;
     }
+
     private void drawMonsters(){
         for (int i = getMonsters().size()-1; i >=0 ; i--) {
             if (getMonsters().get(i).getHp()<=0){
@@ -92,6 +92,7 @@ public class Main extends Application {
             monster.drawMonster();
         }
     }
+
     private void shootTowers(){
         for (Block tower:
              getTowers()) {
@@ -106,10 +107,11 @@ public class Main extends Application {
     private static List<Monster> getMonsters() {
         return monsters;
     }
+
     private int convertPixelToIndex(double pixel_coords){
-        int index = (int)pixel_coords/map.getSize();
-        return index;
+        return (int)pixel_coords/map.getSize();
     }
+
     private void drawTowerRanges(){
         for (Block tower:
                 getTowers()) {
@@ -118,5 +120,6 @@ public class Main extends Application {
             }
         }
     }
+
 }
 

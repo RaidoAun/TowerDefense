@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main extends Application {
@@ -67,6 +68,7 @@ public class Main extends Application {
         int[] end = new int[]{100, 20};
         Pathfinder pathfinder = new Pathfinder(map.getFlippedMap(), start, end);
         map.drawPath(pathfinder.getFinalPath());
+        map.spawnSpawnpoints(map.getSpawnpoints());
     }
 
 

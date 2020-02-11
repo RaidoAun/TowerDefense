@@ -9,14 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Map {
+class Map {
     private List<int[]> openBlocks;
     private int x;
     private int y;
     private Block[][] map_matrix;
     private Canvas canvas;
     private int size;
-    private int[][] spawnpoints;
 
     Map(int rectCountx, int rectCounty, int blocksize, Canvas map_canvas){
         x = rectCountx;
@@ -24,7 +23,6 @@ public class Map {
         canvas = map_canvas;
         size = blocksize;
         map_matrix = new Block[rectCountx][rectCounty];
-        spawnpoints = new int[3][2];
         openBlocks = new ArrayList<>();
         canvas.setWidth(size*rectCountx);
         canvas.setHeight(size*rectCounty);
@@ -121,8 +119,12 @@ public class Map {
         return size;
     }
 
-    public List<int[]> getOpenBlocks() {
+    List<int[]> getOpenBlocks() {
         return openBlocks;
+    }
+
+    List<int[]> getSpawnpoints() {
+        return generateSpawnpoints();
     }
 
     void drawPath(int[][] path) {
@@ -133,8 +135,24 @@ public class Map {
         }
     }
 
-    int[][] generateSpawnpoints() {
-        return new int[0][0];
+    private List<int[]> generateSpawnpoints() {
+        List<Integer> spawnIndexes = new ArrayList<>();
+        List<int[]> spawns = new ArrayList<>();
+        Random r = new Random();
+        while (spawnIndexes.size() < 3) {
+            int point = r.nextInt(openBlocks.size());
+            if (!spawnIndexes.contains(point)) {
+                spawnIndexes.add(point);
+                spawns.add(openBlocks.get(point));
+            }
+        }
+        return spawns;
+    }
+
+    void spawnSpawnpoints(List<int[]> spawnpoints) {
+        for (int[] p : spawnpoints) {
+            editMap_matrix(p[0], p[1], new Block(6, 5, new Color(0.5, 1, 0.5, 0.5)));
+        }
     }
 
 }

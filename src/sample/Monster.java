@@ -10,9 +10,9 @@ public class Monster {
     int y;
     Color color;
     Monster(int type, int x_coord, int y_coord){
-        x = x_coord;
-        y = y_coord;
-        id = type;
+        this.x = x_coord;
+        this.y = y_coord;
+        this.id = type;
         if (id==0){
             hp = 1000;
             dmg = 5;
@@ -39,5 +39,18 @@ public class Monster {
 
     public int getY() {
         return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    void move(int x, int y){
+        setX(x);
+        setY(y);
     }
 }

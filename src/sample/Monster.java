@@ -8,11 +8,13 @@ public class Monster {
     int id;
     int x;
     int y;
+    int step;
     Color color;
     Monster(int type, int x_coord, int y_coord){
         this.x = x_coord;
         this.y = y_coord;
         this.id = type;
+        this.step = 0;
         if (id==0){
             hp = 1000;
             dmg = 5;
@@ -52,5 +54,6 @@ public class Monster {
     void move(int x, int y){
         setX(x);
         setY(y);
+        this.step+=1;
     }
 }

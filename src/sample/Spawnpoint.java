@@ -27,4 +27,10 @@ public class Spawnpoint {
     public int[] getSpawnpointxy() {
         return spawnpointxy;
     }
+
+    void moveMonsters(){
+        for (Monster monster:this.koletised) {
+            monster.move(this.path[monster.step][0],this.path[monster.step][1]);
+        }
+    }
 }

@@ -51,16 +51,21 @@ public class Main extends Application {
             }
 
         });
-        final long startNanoTime = System.nanoTime();
         new AnimationTimer()
         {
             public void handle(long currentNanoTime)
             {
-                double t = (currentNanoTime - startNanoTime) / 1000000000.0;
+                long startNanoTime = System.nanoTime();
+
                 map.drawMap();
                 drawTowerRanges();
                 drawMonsters();
                 shootTowers();
+                for (Spawnpoint spawn : map.getSpawnpoints()) {
+                    spawn.moveMonsters();
+                }
+                double t = (currentNanoTime - startNanoTime) / 1000000000.0*1000;
+                System.out.println(t);
             }
         }.start();
         primaryStage.show();

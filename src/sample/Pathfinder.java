@@ -34,7 +34,7 @@ class Pathfinder {
         }
     }
 
-    public int[][] getFinalPath() {
+    int[][] getFinalPath() {
         return finalPath;
     }
 
@@ -61,7 +61,7 @@ class Pathfinder {
         return m;
     }
 
-    private int[][] findPath() {            //KIRJUTA UUESTI, SEST PARENTEID VÕIB ÜHEL BLOCKIL MITU OLLA
+    private int[][] findPath() {
         List<int[]> path = new ArrayList<>();
         List<int[]> parents = getParents();
         List<int[]> algusetaClosedxy = closedxy;
@@ -69,10 +69,8 @@ class Pathfinder {
         algusetaClosedxy.remove(0);
         parents.remove(0);
         algusetaF.remove(0);
-        Collections.reverse(algusetaF);
-        //System.out.println(Arrays.deepToString(parents.toArray()));
-        //int[] c = parents.get(parents.size() - 1); //viimane parent
         int index = parents.size() - 1;
+        System.out.println(Arrays.toString(parents.get(index)));
         List<Integer> uuedIndexid;
         List<int[]> uuedIndexidKoosf;
         while (true) {
@@ -80,6 +78,12 @@ class Pathfinder {
                 int[] xy = algusetaClosedxy.get(index);
                 path.add(xy);
                 uuedIndexid = matrixIndexesof(parents.get(index), algusetaClosedxy);
+                if (uuedIndexid.size() > 1) {
+                    System.out.println(Arrays.toString(uuedIndexid.toArray()));
+                }
+                if (matrixIndexesof(xy, parents).size() > 1) {
+                    System.out.println(Arrays.toString(matrixIndexesof(xy, parents).toArray()));
+                }
                 uuedIndexidKoosf = new ArrayList<>();
                 for (Integer integer : uuedIndexid) {
                     uuedIndexidKoosf.add(new int[]{integer, algusetaF.get(integer)});
@@ -92,6 +96,13 @@ class Pathfinder {
                 };
 
                 uuedIndexidKoosf.sort(comparator);
+                //System.out.println(Arrays.deepToString(uuedIndexidKoosf.toArray()));
+                if (uuedIndexidKoosf.size() == 0) {
+                    System.out.println("ERROR");
+                    System.out.println(Arrays.deepToString(path.toArray()));
+                    System.out.println(Arrays.toString(start));
+                    break;
+                }
                 index = uuedIndexidKoosf.get(0)[0];
             } else if (index == 0) {
                 int[] xy = algusetaClosedxy.get(index);

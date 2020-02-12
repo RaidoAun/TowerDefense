@@ -17,7 +17,7 @@ public class Main extends Application {
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
     private static List<Monster> monsters = new ArrayList<>();
     private static List<Block> towers = new ArrayList<>();
-    static Map map = new Map(160,80,10, canvas);
+    static Map map = new Map(80,40,20, canvas);
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -66,9 +66,12 @@ public class Main extends Application {
         primaryStage.show();
         int[] start = new int[]{10, 5}; // [x, y] ei ole maatriksi kordinaadid!
         int[] end = new int[]{100, 20};
-        Pathfinder pathfinder = new Pathfinder(map.getFlippedMap(), start, end);
-        map.drawPath(pathfinder.getFinalPath());
-        map.spawnSpawnpoints(map.getSpawnpoints());
+        map.genOpenBlocks();
+        map.generateSpawnpoints();
+        map.spawnSpawnpoints();
+        for (Spawnpoint spawn : map.getSpawnpoints()) {
+            map.drawPath(spawn.getPath());
+        }
     }
 
 

@@ -15,7 +15,6 @@ class Pathfinder {
     private List<int[]> closedxy = new ArrayList<>(); // [x, y]
     private int[] current;
     private int[][] finalPath;
-    private String[][] markedPath;
     private boolean pathPossible;
 
     Pathfinder(int[][] maatrix, int[] algus, int[] lopp) {
@@ -25,7 +24,6 @@ class Pathfinder {
         closedList = scanMap();
         if (closedList.size() > 0) {
             finalPath = invertPath(findPath());
-            markedPath = drawPath();
             pathPossible = true;
             looTee();
         } else {
@@ -44,73 +42,21 @@ class Pathfinder {
         return xy;
     }
 
-    private String[][] drawPath() {
-        String[][] m = new String[map.length][map[0].length];
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                if (matrixContains(new int[]{j, i}, Arrays.asList(finalPath))) {
-                    m[i][j] = "●";
-
-                } else if (map[i][j] == 1) {
-                    m[i][j] = "■";
-                } else {
-                    m[i][j] = Integer.toString(map[i][j]);
-                }
-            }
-        }
-        return m;
-    }
-
     private int[][] findPath() {
+        //Meetodi tööle vajalikud muutujad.
+        int[] currentPoint;
+        int[] currentParent;
         List<int[]> path = new ArrayList<>();
         List<int[]> parents = getParents();
-        List<int[]> algusetaClosedxy = closedxy;
-        List<Integer> algusetaF = getFcosts();
-        algusetaClosedxy.remove(0);
-        parents.remove(0);
-        algusetaF.remove(0);
-        int index = parents.size() - 1;
-        System.out.println(Arrays.toString(parents.get(index)));
-        List<Integer> uuedIndexid;
-        List<int[]> uuedIndexidKoosf;
-        while (true) {
-            if (index > 0) {
-                int[] xy = algusetaClosedxy.get(index);
-                path.add(xy);
-                uuedIndexid = matrixIndexesof(parents.get(index), algusetaClosedxy);
-                if (uuedIndexid.size() > 1) {
-                    System.out.println(Arrays.toString(uuedIndexid.toArray()));
-                }
-                if (matrixIndexesof(xy, parents).size() > 1) {
-                    System.out.println(Arrays.toString(matrixIndexesof(xy, parents).toArray()));
-                }
-                uuedIndexidKoosf = new ArrayList<>();
-                for (Integer integer : uuedIndexid) {
-                    uuedIndexidKoosf.add(new int[]{integer, algusetaF.get(integer)});
-                }
-
-                Comparator<int[]> comparator = new Comparator<int[]>() {
-                    public int compare(int[] o1, int[] o2) {
-                        return Integer.compare(o1[1], o2[1]);
-                    }
-                };
-
-                uuedIndexidKoosf.sort(comparator);
-                //System.out.println(Arrays.deepToString(uuedIndexidKoosf.toArray()));
-                if (uuedIndexidKoosf.size() == 0) {
-                    System.out.println("ERROR");
-                    System.out.println(Arrays.deepToString(path.toArray()));
-                    System.out.println(Arrays.toString(start));
-                    break;
-                }
-                index = uuedIndexidKoosf.get(0)[0];
-            } else if (index == 0) {
-                int[] xy = algusetaClosedxy.get(index);
-                path.add(xy);
-                break;
-            }
+        //Path hakkab lõpust pihta, sest lõpust algusesse saab olla ainult üks tee.
+        int index = closedxy.size() - 1;
+        //While loop töötab kuni algusesse jõudmiseni.
+        while (index > 0) {
+            currentPoint = closedxy.get(index);
+            path.add(currentPoint);
+            currentParent = parents.get(index);
+            index = matrixIndexof(currentParent, closedxy);
         }
-        path.remove(0);
         int[][] pathArray = new int[path.size()][path.get(0).length];
         return path.toArray(pathArray);
     }
@@ -183,10 +129,11 @@ class Pathfinder {
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
                 if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
-                    int g = current[4] + 1000;
+                    int g = current[4] + 500;
                     int f = h + g;
                     int[] naaber = new int[]{uusx, uusy, current[0], current[1], g, h, f};
-                    if (matrixContains(uusxy, closedxy)) { // kui blokk asub closed listis
+                    //Kui blokk asub closed listis ning temasse on minna soodsam.
+                    if (matrixContains(uusxy, closedxy)) {
                         int index = matrixIndexof(uusxy, closedxy);
                         int[] closedNode = closedList.get(index);
                         if (closedNode[6] > f) {
@@ -242,19 +189,6 @@ class Pathfinder {
         return indexes;
     }
 
-    void printPath() {
-        if (pathPossible) {
-            for (String[] i : markedPath) {
-                for (String j : i) {
-                    System.out.print(j + " ");
-                }
-                System.out.println();
-            }
-        } else {
-            System.out.println("Impossible!!!");
-        }
-    }
-
     private List<int[]> getParents() {
         List<int[]> paretnid = new ArrayList<>();
         for (int[] closed : closedList) {
@@ -263,46 +197,9 @@ class Pathfinder {
         return paretnid;
     }
 
-    private List<Integer> getFcosts() {
-        List<Integer> f = new ArrayList<>();
-        for (int[] closed : closedList) {
-            f.add(closed[6]);
-        }
-        return f;
-    }
-
-    void printMap() {
-        StringBuilder stringRida = new StringBuilder();
-        for (int[] mapRida : map) {
-            for (int ruut : mapRida) {
-                if (ruut == 0) {
-                    stringRida.append("⬜");
-                } else if (ruut == 1) {
-                    stringRida.append("⬛");
-                } else if (ruut == 2){
-                    stringRida.append("◇");
-                } else if (ruut == 3) {
-                    stringRida.append("◆");
-                } else {
-                    stringRida.append("◉");
-                }
-            }
-            System.out.println(stringRida);
-            stringRida.setLength(0);
-        }
-    }
-
     private void looTee() {
         for (int[] p : finalPath) {
             map[p[1]][p[0]] = 4;
-        }
-    }
-
-    void draw_path_onMap(Map m) {
-        if (finalPath.length > 0) {
-            for (int[] p : finalPath) {
-                m.editMap_matrix(p[0], p[1], new Block(5, 5, new Color(0, 1, 1, 1)));
-            }
         }
     }
 

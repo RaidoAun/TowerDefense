@@ -11,6 +11,7 @@ public class Spawnpoint {
    private int[] nexusxy;
    private int[][] path;
 
+
    Spawnpoint(int[] spawnpointxy, int[] nexusxy, int[][] map) {
        koletised = new ArrayList<>();
        this.spawnpointxy = spawnpointxy;

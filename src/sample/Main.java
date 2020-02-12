@@ -17,7 +17,7 @@ public class Main extends Application {
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
     private static List<Monster> monsters = new ArrayList<>();
     private static List<Block> towers = new ArrayList<>();
-    static Map map = new Map(80,40,20, canvas);
+    static Map map = new Map(300,150,5, canvas);
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));

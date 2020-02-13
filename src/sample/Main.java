@@ -15,7 +15,7 @@ import java.util.List;
 public class Main extends Application {
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
-    static Map map = new Map(300,150,5, canvas);
+    static Map map = new Map(150,80,10, canvas);
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -63,7 +63,7 @@ public class Main extends Application {
                 map.drawMap();
                 drawTowerRanges();
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
-                    //spawn.moveMonsters();
+                    spawn.moveMonsters();
                     spawn.drawMonsters();
                     spawn.shootTowers();
                 }

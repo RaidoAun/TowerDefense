@@ -74,7 +74,7 @@ class Map {
     }
 
     void drawMap(){
-        editMap_matrix(250, 100, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
+        editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -157,7 +157,7 @@ class Map {
             }
         }
         for (int i = 0; i < 3; i++) {
-            this.spawnpoints[i] = new Spawnpoint(spawns.get(i), new int[]{250, 100}, getFlippedMap()); //x - 50 y - 10 on nexus hetkel!
+            this.spawnpoints[i] = new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap()); //x - 50 y - 10 on nexus hetkel!
         }
     }
 

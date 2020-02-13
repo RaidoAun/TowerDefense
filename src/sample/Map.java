@@ -17,8 +17,10 @@ class Map {
     private Spawnpoint[] spawnpoints;
     private Canvas canvas;
     private int size;
+    private List<Block> towers;
 
     Map(int rectCountx, int rectCounty, int blocksize, Canvas map_canvas){
+        towers = new ArrayList<>();
         x = rectCountx;
         y = rectCounty;
         canvas = map_canvas;
@@ -163,6 +165,10 @@ class Map {
         for (Spawnpoint p : spawnpoints) {
             editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(6, 5, new Color(0.5, 1, 0.5, 0.5)));
         }
+    }
+
+    List<Block> getTowers() {
+        return towers;
     }
 
 }

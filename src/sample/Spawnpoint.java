@@ -18,7 +18,7 @@ class Spawnpoint {
        monsters = new ArrayList<>();
        this.spawnpointxy = spawnpointxy;
        this.nexusxy = nexusxy;
-       Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy);
+       Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, 500);
        this.path = tee.getFinalPath();
        monsters.add(new Monster(0,this.spawnpointxy[0]*Main.map.getSize(),this.spawnpointxy[1]*Main.map.getSize()));
    }

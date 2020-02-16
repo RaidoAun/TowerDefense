@@ -145,36 +145,58 @@ class Map {
     }
 
     void generateSpawnpoints(int count, int minDistance) {
+        double optimaalne = (this.x * this.y) / (Math.pow((double) minDistance/2, 2) * Math.PI);
+        if (count > optimaalne) {
+            System.out.println("Praeguste parameetritega on võimalik luua maksimum " + (int) optimaalne + " spawnpointi!");
+        }
         System.out.println("Alustan spawnpointide genereerimist...");
         List<int[]> openBlocksajutine;
         List<int[]> spawns = new ArrayList<>();
         Random r = new Random();
-
         //Esimese spawnpoindi loomine.
-        openBlocksajutine = openBlocks;
+        openBlocksajutine = new ArrayList<>(this.openBlocks);
         int index = r.nextInt(openBlocksajutine.size());
         int[] point = openBlocksajutine.get(index);
         openBlocksajutine.remove(index);
         spawns.add(point);
+        //Forloop, mis tagab, et spawnpoindid oleks üksteisest distance kaugusel.
+        for (int j = 0; j < openBlocksajutine.size(); j++) {
+            int c = (int) Math.hypot(point[0] - openBlocksajutine.get(j)[0], point[1] - openBlocksajutine.get(j)[1]);
+            if (c <= minDistance) {
+                openBlocksajutine.remove(j);
+                j -= 1;
+            }
+        }
         //Ülejäänud spawnpointide loomine.
         for (int i = 0; i < count - 1; i++) {
+            //Kui openBlocksajutine on tühi, valib programm uue esimese spawnpoindi.
+            if (openBlocksajutine.size() == 0) {
+                break;
+            }
             int index2 = r.nextInt(openBlocksajutine.size());
             int[] point2 = openBlocksajutine.get(index2);
-            Pathfinder p = new Pathfinder(getFlippedMap(), point, point2);
+            Pathfinder p = new Pathfinder(getFlippedMap(), point, point2, 1);
             if (p.getFinalPath().length > 0) {
                 spawns.add(point2);
+                //Forloop, mis tagab, et spawnpoindid oleks üksteisest distance kaugusel.
+                for (int j = 0; j < openBlocksajutine.size(); j++) {
+                    int c = (int) Math.hypot(point2[0] - openBlocksajutine.get(j)[0], point2[1] - openBlocksajutine.get(j)[1]);
+                    if (c <= minDistance) {
+                        openBlocksajutine.remove(j);
+                        j -= 1;
+                    }
+                }
             } else {
                 i -= 1;
+                openBlocksajutine.remove(index2);
             }
-            openBlocksajutine.remove(index2);
         }
-
         //Spawnpointide kirjutamine klassi.
-        for (int i = 0; i < count; i++) {
+        for (int[] spawn : spawns) {
             //x - 100 y - 50 on nexus hetkel!
-            this.spawnpoints.add(new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap()));
+            this.spawnpoints.add(new Spawnpoint(spawn, new int[]{100, 50}, getFlippedMap()));
         }
-        System.out.println("Genereermine õnnestus!");
+        System.out.println( spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
 
     void spawnSpawnpoints() {

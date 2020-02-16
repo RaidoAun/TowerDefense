@@ -14,11 +14,13 @@ class Pathfinder {
     private List<int[]> closedxy = new ArrayList<>(); // [x, y]
     private int[] current;
     private int[][] finalPath;
+    private int gCost;
 
-    Pathfinder(int[][] maatrix, int[] algus, int[] lopp) {
-        map = maatrix;
-        start = algus;
-        end = lopp;
+    Pathfinder(int[][] map, int[] start, int[] end, int gCost) {
+        this.gCost = gCost;
+        this.map = map;
+        this.start = start;
+        this.end = end;
         closedList = scanMap();
         if (closedList.size() > 0) {
             finalPath = invertPath(findPath());
@@ -125,7 +127,7 @@ class Pathfinder {
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
                 if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
-                    int g = current[4] + 500;
+                    int g = current[4] + this.gCost;
                     int f = h + g;
                     int[] naaber = new int[]{uusx, uusy, current[0], current[1], g, h, f};
                     //Kui blokk asub closed listis ning temasse on minna soodsam.

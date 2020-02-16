@@ -28,6 +28,13 @@ public class Main extends Application {
         }
         map.drawMap();
         root.getChildren().add(canvas);
+        //Spawnpointide loomine.
+        map.genOpenBlocks();
+        map.generateSpawnpoints();
+        map.spawnSpawnpoints();
+        for (Spawnpoint spawn : map.getSpawnpoints()) {
+            map.drawPath(spawn.getPath());
+        }
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(scene);
         canvas.setOnMouseClicked(e -> {
@@ -48,12 +55,7 @@ public class Main extends Application {
             }
 
         });
-        map.genOpenBlocks();
-        map.generateSpawnpoints();
-        map.spawnSpawnpoints();
-        for (Spawnpoint spawn : map.getSpawnpoints()) {
-            map.drawPath(spawn.getPath());
-        }
+
         new AnimationTimer()
         {
             public void handle(long currentNanoTime)

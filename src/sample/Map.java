@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.PathElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,21 +145,47 @@ class Map {
     }
 
     void generateSpawnpoints() {
-        List<Integer> spawnIndexes = new ArrayList<>();
+        System.out.println("Alustan spawnpointide genereerimist...");
+        int index;
+        List<int[]> openBlocksajutine;
         List<int[]> spawns = new ArrayList<>();
         Random r = new Random();
-        while (spawnIndexes.size() < 3) {
-            int index = r.nextInt(openBlocks.size());
-            if (!spawnIndexes.contains(index)) {
-                spawnIndexes.add(index);
-                int[] point = openBlocks.get(index);
+        int[] point;
+        boolean spawnsConnected = false;
+        //While loop lõppeb alles siis, kui sobivad spawnpoindid on leitud.
+        while (!spawnsConnected) {
+            spawns.clear();
+            openBlocksajutine = openBlocks;
+            for (int j = 0; j < 2; j++) {
+                index = r.nextInt(openBlocksajutine.size());
+                point = openBlocksajutine.get(index);
+                openBlocksajutine.remove(index);
                 spawns.add(point);
-                map_matrix[point[0]][point[1]].setId(1);
+            }
+            Pathfinder p1 = new Pathfinder(getFlippedMap(), spawns.get(0), spawns.get(1));
+            int c1 = p1.getHupotenuus();
+            //Mitmekesisuse mõttes ma teen nii, et spawnpoindid on üksteisest vähemalt 50 bloki kaugusel.
+            if (p1.getFinalPath().length > 0 && c1 >= 50) {
+                index = r.nextInt(openBlocksajutine.size());
+                point = openBlocksajutine.get(index);
+                openBlocksajutine.remove(index);
+                spawns.add(point);
+            } else {
+                continue;
+            }
+            Pathfinder p2 = new Pathfinder(getFlippedMap(), spawns.get(0), spawns.get(2));
+            int c2 = p2.getHupotenuus();
+            int c3 = (int) Math.hypot(spawns.get(1)[0] - spawns.get(2)[0], spawns.get(1)[1] - spawns.get(2)[1]);
+            if (p2.getFinalPath().length > 0 && c2 >= 50 && c3 >= 50) {
+                spawnsConnected = true;
             }
         }
+        //Kolme spawnpoint klassi loomine.
         for (int i = 0; i < 3; i++) {
-            this.spawnpoints[i] = new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap()); //x - 50 y - 10 on nexus hetkel!
+            //x - 100 y - 50 on nexus hetkel!
+            this.spawnpoints[i] = new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap());
         }
+        System.out.println("Genereermine õnnestus!");
     }
 
     void spawnSpawnpoints() {

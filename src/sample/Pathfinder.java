@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.scene.paint.Color;
 import java.util.*;
 
 class Pathfinder {
@@ -15,7 +14,6 @@ class Pathfinder {
     private List<int[]> closedxy = new ArrayList<>(); // [x, y]
     private int[] current;
     private int[][] finalPath;
-    private boolean pathPossible;
 
     Pathfinder(int[][] maatrix, int[] algus, int[] lopp) {
         map = maatrix;
@@ -24,10 +22,8 @@ class Pathfinder {
         closedList = scanMap();
         if (closedList.size() > 0) {
             finalPath = invertPath(findPath());
-            pathPossible = true;
             looTee();
         } else {
-            pathPossible = false;
             finalPath = new int[0][0];
         }
     }
@@ -106,7 +102,7 @@ class Pathfinder {
     private int leiaHupotenuus(int x1, int x2, int y1, int y2) {
         int xpikkus = Math.abs(x2 - x1);
         int ypikkus = Math.abs(y2 - y1);
-        double c = (Math.pow(xpikkus, 2) + Math.pow(ypikkus, 2)) * 10;
+        double c = Math.sqrt(Math.pow(xpikkus, 2) + Math.pow(ypikkus, 2));
         return (int) c;
     }
 
@@ -201,6 +197,10 @@ class Pathfinder {
         for (int[] p : finalPath) {
             map[p[1]][p[0]] = 4;
         }
+    }
+
+    int getHupotenuus() {
+        return leiaHupotenuus(start[0], end[0], start[1], end[1]);
     }
 
 }

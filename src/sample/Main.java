@@ -30,7 +30,7 @@ public class Main extends Application {
         root.getChildren().add(canvas);
         //Spawnpointide loomine.
         map.genOpenBlocks();
-        map.generateSpawnpoints();
+        map.generateSpawnpoints(10, 10);
         map.spawnSpawnpoints();
         for (Spawnpoint spawn : map.getSpawnpoints()) {
             map.drawPath(spawn.getPath());

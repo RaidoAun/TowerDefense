@@ -15,7 +15,7 @@ class Map {
     private int x;
     private int y;
     private Block[][] map_matrix;
-    private Spawnpoint[] spawnpoints;
+    private List<Spawnpoint> spawnpoints;
     private Canvas canvas;
     private int size;
     private List<Block> towers;
@@ -26,7 +26,7 @@ class Map {
         y = rectCounty;
         canvas = map_canvas;
         size = blocksize;
-        spawnpoints = new Spawnpoint[3];
+        spawnpoints = new ArrayList<>();
         map_matrix = new Block[rectCountx][rectCounty];
         openBlocks = new ArrayList<>();
         canvas.setWidth(size*rectCountx);
@@ -132,7 +132,7 @@ class Map {
         this.openBlocks = open;
     }
 
-    Spawnpoint[] getSpawnpoints() {
+    List<Spawnpoint> getSpawnpoints() {
         return spawnpoints;
     }
 
@@ -144,46 +144,35 @@ class Map {
         }
     }
 
-    void generateSpawnpoints() {
+    void generateSpawnpoints(int count, int minDistance) {
         System.out.println("Alustan spawnpointide genereerimist...");
-        int index;
         List<int[]> openBlocksajutine;
         List<int[]> spawns = new ArrayList<>();
         Random r = new Random();
-        int[] point;
-        boolean spawnsConnected = false;
-        //While loop lõppeb alles siis, kui sobivad spawnpoindid on leitud.
-        while (!spawnsConnected) {
-            spawns.clear();
-            openBlocksajutine = openBlocks;
-            for (int j = 0; j < 2; j++) {
-                index = r.nextInt(openBlocksajutine.size());
-                point = openBlocksajutine.get(index);
-                openBlocksajutine.remove(index);
-                spawns.add(point);
-            }
-            Pathfinder p1 = new Pathfinder(getFlippedMap(), spawns.get(0), spawns.get(1));
-            int c1 = p1.getHupotenuus();
-            //Mitmekesisuse mõttes ma teen nii, et spawnpoindid on üksteisest vähemalt 50 bloki kaugusel.
-            if (p1.getFinalPath().length > 0 && c1 >= 50) {
-                index = r.nextInt(openBlocksajutine.size());
-                point = openBlocksajutine.get(index);
-                openBlocksajutine.remove(index);
-                spawns.add(point);
+
+        //Esimese spawnpoindi loomine.
+        openBlocksajutine = openBlocks;
+        int index = r.nextInt(openBlocksajutine.size());
+        int[] point = openBlocksajutine.get(index);
+        openBlocksajutine.remove(index);
+        spawns.add(point);
+        //Ülejäänud spawnpointide loomine.
+        for (int i = 0; i < count - 1; i++) {
+            int index2 = r.nextInt(openBlocksajutine.size());
+            int[] point2 = openBlocksajutine.get(index2);
+            Pathfinder p = new Pathfinder(getFlippedMap(), point, point2);
+            if (p.getFinalPath().length > 0) {
+                spawns.add(point2);
             } else {
-                continue;
+                i -= 1;
             }
-            Pathfinder p2 = new Pathfinder(getFlippedMap(), spawns.get(0), spawns.get(2));
-            int c2 = p2.getHupotenuus();
-            int c3 = (int) Math.hypot(spawns.get(1)[0] - spawns.get(2)[0], spawns.get(1)[1] - spawns.get(2)[1]);
-            if (p2.getFinalPath().length > 0 && c2 >= 50 && c3 >= 50) {
-                spawnsConnected = true;
-            }
+            openBlocksajutine.remove(index2);
         }
-        //Kolme spawnpoint klassi loomine.
-        for (int i = 0; i < 3; i++) {
+
+        //Spawnpointide kirjutamine klassi.
+        for (int i = 0; i < count; i++) {
             //x - 100 y - 50 on nexus hetkel!
-            this.spawnpoints[i] = new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap());
+            this.spawnpoints.add(new Spawnpoint(spawns.get(i), new int[]{100, 50}, getFlippedMap()));
         }
         System.out.println("Genereermine õnnestus!");
     }

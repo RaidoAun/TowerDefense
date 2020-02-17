@@ -18,7 +18,6 @@ class Spawnpoint {
        towers = Main.map.getTowers();
        monsters = new ArrayList<>();
        this.spawnpointxy = spawnpointxy;
-       monsters.add(new Monster(0,this.spawnpointxy[0]*Main.map.getSize(),this.spawnpointxy[1]*Main.map.getSize()));
        this.map = map;
    }
 
@@ -31,13 +30,9 @@ class Spawnpoint {
     }
 
     void moveMonsters(){
-        monsters.add(new Monster(0,this.spawnpointxy[0]*Main.map.getSize(),this.spawnpointxy[1]*Main.map.getSize()));
+        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.map.getSize(),(this.spawnpointxy[1]+0.5)*Main.map.getSize()));
         for (Monster monster:this.monsters) {
-            if (monster.step<this.path.length){
-                monster.move(this.path[monster.step][0],this.path[monster.step][1]);
-            }else{
-                monster.setHp(0);
-            }
+            monster.move(this.path);
         }
     }
 

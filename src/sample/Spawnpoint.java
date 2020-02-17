@@ -10,17 +10,16 @@ class Spawnpoint {
    private int[] spawnpointxy;
    private int[] nexusxy;
    private int[][] path;
+   private int[][] map;
    private List<Block> towers;
 
 
-   Spawnpoint(int[] spawnpointxy, int[] nexusxy, int[][] map) {
+   Spawnpoint(int[] spawnpointxy, int[][] map) {
        towers = Main.map.getTowers();
        monsters = new ArrayList<>();
        this.spawnpointxy = spawnpointxy;
-       this.nexusxy = nexusxy;
-       Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, 500);
-       this.path = tee.getFinalPath();
        monsters.add(new Monster(0,this.spawnpointxy[0]*Main.map.getSize(),this.spawnpointxy[1]*Main.map.getSize()));
+       this.map = map;
    }
 
     public int[][] getPath() {
@@ -62,6 +61,15 @@ class Spawnpoint {
                 Main.map.getTowers()) {
             tower.shoot(getMonsters());
         }
+    }
+
+    void setNexusxy(int[] xy) {
+       this.nexusxy = xy;
+    }
+
+    void genPath(int gCost) {
+        Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, gCost);
+        this.path = tee.getFinalPath();
     }
 
 }

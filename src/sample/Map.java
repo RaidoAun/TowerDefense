@@ -19,6 +19,7 @@ class Map {
     private Canvas canvas;
     private int size;
     private List<Block> towers;
+    private int[][] map;
 
     Map(int rectCountx, int rectCounty, int blocksize, Canvas map_canvas){
         towers = new ArrayList<>();
@@ -28,6 +29,7 @@ class Map {
         size = blocksize;
         spawnpoints = new ArrayList<>();
         map_matrix = new Block[rectCountx][rectCounty];
+        map = new int[rectCounty][rectCountx];
         openBlocks = new ArrayList<>();
         canvas.setWidth(size*rectCountx);
         canvas.setHeight(size*rectCounty);
@@ -74,8 +76,12 @@ class Map {
         }
     }
 
+    void genFlippedMap() {
+        this.map = getFlippedMap();
+    }
+
     void drawMap(){
-        editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
+        //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -91,12 +97,13 @@ class Map {
         return map_matrix;
     }
 
-    int[][] getFlippedMap() {
+    private int[][] getFlippedMap() {
         return flipMap();
     }
 
-    void editMap_matrix(int i, int j, Block newblock) {
+    private void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
+        this.map[j][i] = newblock.getId();
     }
 
     void drawBlock(int i, int j){
@@ -175,7 +182,7 @@ class Map {
             }
             int index2 = r.nextInt(openBlocksajutine.size());
             int[] point2 = openBlocksajutine.get(index2);
-            Pathfinder p = new Pathfinder(getFlippedMap(), point, point2, 1);
+            Pathfinder p = new Pathfinder(this.map, point, point2, 1);
             if (p.getFinalPath().length > 0) {
                 spawns.add(point2);
                 //Forloop, mis tagab, et spawnpoindid oleks üksteisest distance kaugusel.
@@ -194,19 +201,36 @@ class Map {
         //Spawnpointide kirjutamine klassi.
         for (int[] spawn : spawns) {
             //x - 100 y - 50 on nexus hetkel!
-            this.spawnpoints.add(new Spawnpoint(spawn, new int[]{100, 50}, getFlippedMap()));
+            this.spawnpoints.add(new Spawnpoint(spawn, this.map));
         }
         System.out.println( spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
 
     void spawnSpawnpoints() {
         for (Spawnpoint p : spawnpoints) {
-            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(6, 5, new Color(0.5, 1, 0.5, 0.5)));
+            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(6, 5, new Color(0.5, 1, 0, 0.9)));
         }
     }
 
     List<Block> getTowers() {
         return towers;
+    }
+
+    void setNexusxy(int[] nexusxy) {
+        editMap_matrix(nexusxy[0], nexusxy[1], new Block(3, 0, new Color(1, 0, 0, 1)));
+        for (Spawnpoint spawn : this.spawnpoints) {
+            spawn.setNexusxy(nexusxy);
+        }
+    }
+
+    void genPathstoNexus(int gCost) {
+        Random r = new Random();
+        int randomGCost;
+        for (Spawnpoint spawn : this.spawnpoints) {
+            randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
+            System.out.println(randomGCost);
+            spawn.genPath(randomGCost);
+        }
     }
 
 }

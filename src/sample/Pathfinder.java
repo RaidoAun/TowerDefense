@@ -55,6 +55,7 @@ class Pathfinder {
             currentParent = parents.get(index);
             index = matrixIndexof(currentParent, closedxy);
         }
+        //path.remove(0);
         int[][] pathArray = new int[path.size()][path.get(0).length];
         return path.toArray(pathArray);
     }

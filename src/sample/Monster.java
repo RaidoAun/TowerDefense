@@ -19,7 +19,7 @@ public class Monster {
         if (id==0){
             this.hp = 1000;
             this.dmg = 5;
-            this.speed = 10;
+            this.speed = 5;
             this.color = new Color(1,1,0,1);
         }
     }

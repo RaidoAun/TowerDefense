@@ -145,8 +145,8 @@ class Map {
 
     void drawPath(int[][] path) {
         if (path.length > 0) {
-            for (int[] p : path) {
-                editMap_matrix(p[0], p[1], new Block(0, 5, new Color(0, 1, 1, 1)));
+            for (int i = 0; i < path.length - 1; i++) {
+                editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(0, 1, 1, 1)));
             }
         }
     }
@@ -228,7 +228,7 @@ class Map {
         int randomGCost;
         for (Spawnpoint spawn : this.spawnpoints) {
             randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
-            System.out.println(randomGCost);
+            //System.out.println(randomGCost);
             spawn.genPath(randomGCost);
         }
     }

@@ -58,11 +58,19 @@ public class Main extends Application {
                 int x = convertPixelToIndex(e.getX());
                 int y = convertPixelToIndex(e.getY());
                 map.setNexusxy(new int[]{x, y});
-                map.genPathstoNexus(500);
-                map.drawMap();
-                isNexus.set(true);
-                System.out.println("Nexuse asukoht valitud.");
-                animate.start();
+                map.getSpawnpoints().get(0).genPath(500);
+                if (map.getSpawnpoints().get(0).getPath().length == 0) {
+                    System.out.println("Valitud nexuse asukoht ei sobi. Proovi uuesti.");
+                } else {
+                    map.genPathstoNexus(500);
+                    for (Spawnpoint spawn: map.getSpawnpoints()) {
+                        map.drawPath(spawn.getPath());
+                    }
+                    map.drawMap();
+                    isNexus.set(true);
+                    System.out.println("Nexuse asukoht valitud.");
+                    animate.start();
+                }
             } else {
                 int i = convertPixelToIndex((e.getX()));
                 int j = convertPixelToIndex(e.getY());

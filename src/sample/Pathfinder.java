@@ -24,7 +24,6 @@ class Pathfinder {
         closedList = scanMap();
         if (closedList.size() > 0) {
             finalPath = invertPath(findPath());
-            looTee();
         } else {
             finalPath = new int[0][0];
         }
@@ -55,17 +54,24 @@ class Pathfinder {
             currentParent = parents.get(index);
             index = matrixIndexof(currentParent, closedxy);
         }
-        //path.remove(0);
-        int[][] pathArray = new int[path.size()][path.get(0).length];
-        return path.toArray(pathArray);
+        if (path.size() > 0) {
+            int[][] pathArray = new int[path.size()][path.get(0).length];
+            return path.toArray(pathArray);
+        } else {
+            return new int[0][0];
+        }
     }
 
     private int[][] invertPath(int[][] path) {
-        int[][] invertedPath = new int[path.length][path[0].length];
-        for (int i = path.length - 1; i >= 0; i--) {
-            invertedPath[path.length - 1 - i] = path[i];
+        if (path.length > 0) {
+            int[][] invertedPath = new int[path.length][path[0].length];
+            for (int i = path.length - 1; i >= 0; i--) {
+                invertedPath[path.length - 1 - i] = path[i];
+            }
+            return invertedPath;
+        } else {
+            return new int[0][0];
         }
-        return invertedPath;
     }
 
     private List<int[]> scanMap() {
@@ -126,7 +132,8 @@ class Pathfinder {
                 boolean uusxonpiirides = uusx >= 0 && uusx <= map[0].length - 1;
                 boolean uusyonpiirides = uusy >= 0 && uusy <= map.length - 1;
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
-                if (onpiirides && map[uusy][uusx] != 1 && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
+                Set<Integer> notPassable = new HashSet<>(Set.of(1, 10, 2));
+                if (onpiirides && /*map[uusy][uusx] != 1*/ !notPassable.contains(map[uusy][uusx]) && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
                     int g = current[4] + this.gCost;
                     int f = h + g;
@@ -194,16 +201,6 @@ class Pathfinder {
             paretnid.add(new int[]{closed[2], closed[3]});
         }
         return paretnid;
-    }
-
-    private void looTee() {
-        for (int[] p : finalPath) {
-            map[p[1]][p[0]] = 4;
-        }
-    }
-
-    int getHupotenuus() {
-        return leiaHupotenuus(start[0], end[0], start[1], end[1]);
     }
 
 }

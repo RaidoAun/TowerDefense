@@ -14,22 +14,25 @@ public class Block {
     private int y;
     private boolean active;
     private boolean wall;
+
     Block(int block_id, int block_value, Color block_color){
+        //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path;
         setId(block_id);
         setColor(block_color);
         setValue(block_value);
         if (getId() == 1) {setWall(true);}
     }
+
     void makeTower(int tower_id, int pixelx, int pixely){
-        setLevel(0);
-        setId(tower_id);
-        setX(pixelx);
-        setY(pixely);
+        this.level = 0;
+        this.id = tower_id;
+        this.x = pixelx;
+        this.y = pixely;
         if (tower_id == 10){
-            setColor(new Color(1,0,0,1));
-            setValue(1);
-            setRange(10*Main.map.getSize());
-            setActive(false);
+            this.color = new Color(1,0,0,1);
+            this.value = 0;
+            this.range = 10*Main.map.getSize();
+            this.active = false;
         }
     }
 
@@ -43,7 +46,7 @@ public class Block {
             if (dist<=getRange()){
                 monster.setHp(monster.getHp()-getValue());
                 Main.getGc().setStroke(getColor());
-                Main.getGc().setLineWidth(2);
+                Main.getGc().setLineWidth(0.5);
                 Main.getGc().strokeLine(getX(),getY(),monster.getX(),monster.getY());
             }
 

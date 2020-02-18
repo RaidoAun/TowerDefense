@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.PathElement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -77,11 +78,17 @@ class Map {
     }
 
     void genFlippedMap() {
-        this.map = getFlippedMap();
+        int[][] flippedMap = new int[map_matrix[0].length][map_matrix.length];
+        for (int i = 0; i < map_matrix.length; i++) {
+            for (int j = 0; j < map_matrix[0].length; j++) {
+                int id = map_matrix[i][j].getId();
+                flippedMap[j][i] = id;
+            }
+        }
+        this.map = flippedMap;
     }
 
     void drawMap(){
-        //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
@@ -97,11 +104,7 @@ class Map {
         return map_matrix;
     }
 
-    private int[][] getFlippedMap() {
-        return flipMap();
-    }
-
-    private void editMap_matrix(int i, int j, Block newblock) {
+    void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
         this.map[j][i] = newblock.getId();
     }
@@ -110,17 +113,6 @@ class Map {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(map_matrix[i][j].getColor());
         gc.fillRect(i*size,j*size,size,size);
-    }
-
-    private int[][] flipMap () {
-        int[][] flippedMap = new int[map_matrix[0].length][map_matrix.length];
-        for (int i = 0; i < map_matrix.length; i++) {
-            for (int j = 0; j < map_matrix[0].length; j++) {
-                int id = map_matrix[i][j].getId();
-                flippedMap[j][i] = id;
-            }
-        }
-        return flippedMap;
     }
 
     int getSize() {
@@ -146,7 +138,16 @@ class Map {
     void drawPath(int[][] path) {
         if (path.length > 0) {
             for (int i = 0; i < path.length - 1; i++) {
-                editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(0, 1, 1, 1)));
+                //Path bloki id on 9.
+                editMap_matrix(path[i][0], path[i][1], new Block(9, 5, new Color(0.8, 0.76, 0.72, 0.9)));
+            }
+        }
+    }
+
+    void deletePath(int[][] path) {
+        if (path.length > 0) {
+            for (int i = 0; i < path.length - 1; i++) {
+                editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(1, 1, 1, 1)));
             }
         }
     }
@@ -203,12 +204,12 @@ class Map {
             //x - 100 y - 50 on nexus hetkel!
             this.spawnpoints.add(new Spawnpoint(spawn, this.map));
         }
-        System.out.println( spawns.size() + " spawnpoindi genereermine õnnestus!");
+        System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
 
     void spawnSpawnpoints() {
         for (Spawnpoint p : spawnpoints) {
-            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(6, 5, new Color(0.5, 1, 0, 0.9)));
+            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(2, 5, new Color(0.5, 1, 0, 0.9)));
         }
     }
 
@@ -217,20 +218,40 @@ class Map {
     }
 
     void setNexusxy(int[] nexusxy) {
-        editMap_matrix(nexusxy[0], nexusxy[1], new Block(3, 0, new Color(1, 0, 0, 1)));
         for (Spawnpoint spawn : this.spawnpoints) {
             spawn.setNexusxy(nexusxy);
         }
     }
 
+    void genNexus() {
+        int[] n = this.spawnpoints.get(0).getNexusxy();
+        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 0, 1)));
+    }
+
     void genPathstoNexus(int gCost) {
-        Random r = new Random();
-        int randomGCost;
+        //Random r = new Random();
+        //int randomGCost;
         for (Spawnpoint spawn : this.spawnpoints) {
-            randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
+            //randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
             //System.out.println(randomGCost);
-            spawn.genPath(randomGCost);
+            spawn.genPath(gCost);
         }
+    }
+
+    List<Spawnpoint> pathsContain(int[] point) {
+        List<Spawnpoint> needChange = new ArrayList<>();
+        for (Spawnpoint spawn : spawnpoints) {
+            for (int[] p : spawn.getPath()) {
+                if (Arrays.equals(p, point)) {
+                    needChange.add(spawn);
+                }
+            }
+        }
+        return needChange;
+    }
+
+    Block getBlock(int x, int y) {
+        return map_matrix[x][y];
     }
 
 }

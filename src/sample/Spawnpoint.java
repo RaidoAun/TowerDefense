@@ -6,27 +6,34 @@ import java.util.List;
 
 class Spawnpoint {
 
-   private List<Monster> monsters;
-   private int[] spawnpointxy;
-   private int[] nexusxy;
-   private int[][] path;
-   private int[][] map;
-   private List<Block> towers;
+    private List<Monster> monsters;
+    private int[] spawnpointxy;
+    private int[] nexusxy;
+    private int[][] path;
+    private int[][] map;
+    private List<Block> towers;
 
-
-   Spawnpoint(int[] spawnpointxy, int[][] map) {
+    Spawnpoint(int[] spawnpointxy, int[][] map) {
        towers = Main.map.getTowers();
        monsters = new ArrayList<>();
        this.spawnpointxy = spawnpointxy;
        this.map = map;
-   }
+    }
 
-    public int[][] getPath() {
+    void setPath(int[][] path) {
+        this.path = path;
+    }
+
+    int[][] getPath() {
         return path;
     }
 
-    public int[] getSpawnpointxy() {
+    int[] getSpawnpointxy() {
         return spawnpointxy;
+    }
+
+    int[] getNexusxy() {
+        return nexusxy;
     }
 
     void moveMonsters(){
@@ -52,8 +59,7 @@ class Spawnpoint {
     }
 
     void shootTowers(){
-        for (Block tower:
-                Main.map.getTowers()) {
+        for (Block tower : Main.map.getTowers()) {
             tower.shoot(getMonsters());
         }
     }

@@ -18,22 +18,19 @@ class Map {
     private Block[][] map_matrix;
     private List<Spawnpoint> spawnpoints;
     private Canvas canvas;
-    private int size;
+    private double size;
     private List<Block> towers;
     private int[][] map;
 
-    Map(int rectCountx, int rectCounty, int blocksize, Canvas map_canvas){
-        towers = new ArrayList<>();
-        x = rectCountx;
-        y = rectCounty;
-        canvas = map_canvas;
-        size = blocksize;
-        spawnpoints = new ArrayList<>();
-        map_matrix = new Block[rectCountx][rectCounty];
-        map = new int[rectCounty][rectCountx];
-        openBlocks = new ArrayList<>();
-        canvas.setWidth(size*rectCountx);
-        canvas.setHeight(size*rectCounty);
+    Map(int rectCountx, int rectCounty,Canvas map_canvas){
+        this.towers = new ArrayList<>();
+        this.x = rectCountx;
+        this.y = rectCounty;
+        this.canvas = map_canvas;
+        this.spawnpoints = new ArrayList<>();
+        this.map_matrix = new Block[rectCountx][rectCounty];
+        this.map = new int[rectCounty][rectCountx];
+        this.openBlocks = new ArrayList<>();
     }
 
     void initMap(){
@@ -54,24 +51,26 @@ class Map {
         }
     }
 
-    void genMap(){
-        for (int i = 1; i < x-1; i++) {
-            for (int j = 1; j < y-1; j++) {
-                int block_value_sum = 0;
-                for (int k = -1; k < 2; k++) {
-                    for (int l = -1; l < 2; l++) {
-                        block_value_sum+=map_matrix[i+k][j+l].getValue();
+    void genMap(int a){
+        for (int w = 0; w < a; w++) {
+            for (int i = 1; i < x-1; i++) {
+                for (int j = 1; j < y-1; j++) {
+                    int block_value_sum = 0;
+                    for (int k = -1; k < 2; k++) {
+                        for (int l = -1; l < 2; l++) {
+                            block_value_sum+=map_matrix[i+k][j+l].getValue();
+                        }
                     }
-                }
-                if (block_value_sum>5){
-                    map_matrix[i][j].setId(1);
-                    map_matrix[i][j].setValue(1);
-                    map_matrix[i][j].setColor(new Color(0,0,0,1));
-                }
-                if (block_value_sum<5){
-                    map_matrix[i][j].setId(0);
-                    map_matrix[i][j].setValue(0);
-                    map_matrix[i][j].setColor(new Color(1,1,1,1));
+                    if (block_value_sum>5){
+                        map_matrix[i][j].setId(1);
+                        map_matrix[i][j].setValue(1);
+                        map_matrix[i][j].setColor(new Color(0,0,0,1));
+                    }
+                    if (block_value_sum<5){
+                        map_matrix[i][j].setId(0);
+                        map_matrix[i][j].setValue(0);
+                        map_matrix[i][j].setColor(new Color(1,1,1,1));
+                    }
                 }
             }
         }
@@ -88,20 +87,24 @@ class Map {
         this.map = flippedMap;
     }
 
-    void drawMap(){
+    void drawMap(double blocksize){
+        this.size = blocksize;
+        this.canvas.setWidth(size*this.x);
+        this.canvas.setHeight(size*this.y);
+        //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
                 //System.out.print(map_matrix[i][j].getValue()+" ");
-                gc.fillRect(i*size,j*size,size,size);
+                gc.fillRect(i*this.size,j*this.size, this.size, this.size);
             }
             //System.out.println();
         }
     }
 
     Block[][] getMap_matrix() {
-        return map_matrix;
+        return this.map_matrix;
     }
 
     void editMap_matrix(int i, int j, Block newblock) {
@@ -115,7 +118,7 @@ class Map {
         gc.fillRect(i*size,j*size,size,size);
     }
 
-    int getSize() {
+    double getSize() {
         return size;
     }
 
@@ -256,4 +259,11 @@ class Map {
         return map_matrix[x][y];
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
 }

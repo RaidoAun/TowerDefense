@@ -25,7 +25,7 @@ public class Monster {
     }
      public void drawMonster(){
         Main.getGc().setFill(this.color);
-        int diameeter = Main.map.getSize()/2;
+        double diameeter = Main.map.getSize()/2;
         Main.getGc().fillOval(this.x-diameeter/2, this.y-diameeter/2, diameeter, diameeter);
     }
 

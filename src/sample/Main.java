@@ -2,32 +2,99 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.UnaryOperator;
 
 public class Main extends Application {
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
-    static Map map = new Map(150,80,10, canvas);
+    static Map map = new Map(150,80, canvas);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        Group root = new Group();
-        Scene scene = new Scene(root);
+       // GridPane menu = new GridPane();
+        VBox menu_button_box = new VBox();
+        menu_button_box.setSpacing(10);
+        Scene menu_scene = new Scene(menu_button_box,300,200);
+        Button play_btn = new Button("Play");
+        Button settings_btn = new Button("Settings");
 
+        menu_button_box.getChildren().addAll(play_btn,settings_btn);
+        menu_button_box.setAlignment(Pos.CENTER);
+
+        primaryStage.setTitle("Hello World");
+        primaryStage.setScene(menu_scene);
+        //menu.getChildren().add(menu_button_box);
+        primaryStage.show();
+        play_btn.setOnAction(event -> {
+            GridPane game = new GridPane();
+            Scene game_scene = new Scene(game);
+            game.getChildren().add(canvas);
+            Rectangle2D screenSizes = Screen.getPrimary().getBounds();
+            double blocksize;
+            if (screenSizes.getWidth()/Main.map.getX()<screenSizes.getHeight()/Main.map.getY()){
+                 blocksize = screenSizes.getWidth()/Main.map.getX();
+            }else{
+                blocksize = screenSizes.getHeight()/Main.map.getY();
+            }
+            primaryStage.setScene(game_scene);
+            startGame(blocksize);
+            primaryStage.setMaximized(true);
+        });
+        settings_btn.setOnAction(event -> {
+            VBox settings_Vbox = new VBox();
+            VBox settings_Vbox2= new VBox();
+            HBox settings_Hbox = new HBox();
+            Scene settings_scene = new Scene(settings_Hbox);
+            settings_Vbox.setSpacing(10);
+            settings_Vbox.setAlignment(Pos.CENTER);
+            UnaryOperator<TextFormatter.Change> filter = change -> {
+                String text = change.getText();
+
+                if (text.matches("[0-9]*")) {
+                    return change;
+                }
+
+                return null;
+            };
+            TextField mapx_val = new TextField();
+            TextField mapy_val = new TextField();
+            mapx_val.setTextFormatter(new TextFormatter<>(filter));
+            mapy_val.setTextFormatter(new TextFormatter<>(filter));
+            mapx_val.setPromptText("Map horisontal size");
+            mapy_val.setPromptText("Map vertical size");
+            settings_Vbox.getChildren().addAll(mapx_val);
+            settings_Vbox2.getChildren().addAll(mapy_val);
+            settings_Hbox.getChildren().addAll(settings_Vbox,settings_Vbox2);
+            primaryStage.setScene(settings_scene);
+        });
+
+    }
+    void startGame(double blocksize){
         AnimationTimer animate = new AnimationTimer() {
             public void handle(long currentNanoTime) {
                 long startNanoTime = System.nanoTime();
-                map.drawMap();
+                map.drawMap(blocksize);
                 drawTowerRanges();
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     spawn.moveMonsters();
@@ -40,22 +107,18 @@ public class Main extends Application {
         };
 
         map.initMap();
-        for (int i = 0; i < 2; i++) {
-            map.genMap();
-        }
+        map.genMap(2);
         map.genFlippedMap();
         //Genereerib nii palju spawnpointe, kui võimalik on.
         map.genOpenBlocks();
         map.generateSpawnpoints(5, 40);
         map.spawnSpawnpoints();
-        map.drawMap();
+        map.drawMap(blocksize);
 
-        root.getChildren().add(canvas);
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(scene);
+
         System.out.println("Vali nexuse asukoht kaardil!");
         AtomicBoolean isNexus = new AtomicBoolean(false);
-
+        map.drawMap(blocksize);
         canvas.setOnMouseClicked(e -> {
 
             int x = convertPixelToIndex(e.getX());
@@ -125,11 +188,8 @@ public class Main extends Application {
                 } else {
                     System.out.println("Towerit pole võimalik maha panna. Proovi uuesti.");
                 }
-
             }
         });
-
-        primaryStage.show();
     }
 
     public static void main(String[] args) {
@@ -145,7 +205,7 @@ public class Main extends Application {
     }
 
     private int convertPixelToIndex(double pixel_coords){
-        return (int)pixel_coords/map.getSize();
+        return (int) (pixel_coords/map.getSize());
     }
 
     private void drawTowerRanges(){

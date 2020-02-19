@@ -147,7 +147,9 @@ class Map {
     void deletePath(int[][] path) {
         if (path.length > 0) {
             for (int i = 0; i < path.length - 1; i++) {
-                editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(1, 1, 1, 1)));
+                if (map_matrix[path[i][0]][path[i][1]].getId() == 9) {
+                    editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(1, 1, 1, 1)));
+                }
             }
         }
     }
@@ -225,7 +227,7 @@ class Map {
 
     void genNexus() {
         int[] n = this.spawnpoints.get(0).getNexusxy();
-        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 0, 1)));
+        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 1, 1)));
     }
 
     void genPathstoNexus(int gCost) {

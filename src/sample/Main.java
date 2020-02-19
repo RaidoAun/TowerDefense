@@ -32,7 +32,7 @@ public class Main extends Application {
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     spawn.moveMonsters();
                     spawn.drawMonsters();
-                    spawn.shootTowers();
+                    //spawn.shootTowers();
                 }
                 double t = (currentNanoTime - startNanoTime) / 1000000000.0*1000;
                 //System.out.println(t);
@@ -57,9 +57,12 @@ public class Main extends Application {
         AtomicBoolean isNexus = new AtomicBoolean(false);
 
         canvas.setOnMouseClicked(e -> {
+
+            int x = convertPixelToIndex(e.getX());
+            int y = convertPixelToIndex(e.getY());
+            Block eventBlock = map.getMap_matrix()[x][y];
+
             if (!isNexus.get()) {
-                int x = convertPixelToIndex(e.getX());
-                int y = convertPixelToIndex(e.getY());
                 map.setNexusxy(new int[]{x, y});
                 map.getSpawnpoints().get(0).genPath(500);
                 if (map.getSpawnpoints().get(0).getPath().length == 0) {
@@ -75,18 +78,15 @@ public class Main extends Application {
                     animate.start();
                 }
             } else {
-                int i = convertPixelToIndex((e.getX()));
-                int j = convertPixelToIndex(e.getY());
-                Block eventBlock = map.getMap_matrix()[i][j];
                 System.out.println(eventBlock.getId());
 
                 //Spawnpoindid, mille teele jääb tower ette.
-                List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{i, j});
+                List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
                 //System.out.println(updatableSpawns.size());
                 boolean towerPossible = true;
                 //Ajutise seina loomine.
-                Block oldBlock = map.getBlock(i, j);
-                map.editMap_matrix(i, j, new Block(1, 0, new Color(0, 0, 0, 1)));
+                Block oldBlock = map.getBlock(x, y);
+                map.editMap_matrix(x, y, new Block(1, 0, new Color(0, 0, 0, 1)));
                 //Uuenda spawnpointide path.
                 System.out.println(updatableSpawns.size());
                 for (Spawnpoint spawn : updatableSpawns) {
@@ -98,12 +98,12 @@ public class Main extends Application {
                         break;
                     } else {
                         System.out.println("Uus tee!");
-                        //map.deletePath(oldPath);
-                        //map.drawPath(spawn.getPath());
+                        map.deletePath(oldPath);
+                        map.drawPath(spawn.getPath());
                     }
                 }
 
-                map.editMap_matrix(i, j, oldBlock);
+                map.editMap_matrix(x, y, oldBlock);
 
                 if (towerPossible) {
                     for (Block tower : map.getTowers()) {
@@ -111,8 +111,8 @@ public class Main extends Application {
                     }
                     if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
                         //map.editMap_matrix(i, j, new Block(10, 0, new Color(0, 0, 0, 1)));
-                        eventBlock.makeTower(10,i*map.getSize()+map.getSize()/2,j*map.getSize()+map.getSize()/2);
-                        map.editMap_matrix(i, j, eventBlock);
+                        eventBlock.makeTower(10,x*map.getSize()+map.getSize()/2,y*map.getSize()+map.getSize()/2);
+                        map.editMap_matrix(x, y, eventBlock);
                         //map.drawBlock(convertPixelToIndex((e.getX())),convertPixelToIndex(e.getY()));
                         map.getTowers().add(eventBlock);
                         eventBlock.setActive(true);

@@ -29,6 +29,10 @@ public class Main extends Application {
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
     static Map map = new Map(150,80, canvas);
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
@@ -47,20 +51,11 @@ public class Main extends Application {
         //menu.getChildren().add(menu_button_box);
         primaryStage.show();
         play_btn.setOnAction(event -> {
-            GridPane game = new GridPane();
-            Scene game_scene = new Scene(game);
-            game.getChildren().add(canvas);
-            Rectangle2D screenSizes = Screen.getPrimary().getBounds();
-            double blocksize;
-            if (screenSizes.getWidth()/Main.map.getX()<screenSizes.getHeight()/Main.map.getY()){
-                 blocksize = screenSizes.getWidth()/Main.map.getX();
-            }else{
-                blocksize = screenSizes.getHeight()/Main.map.getY();
-            }
-            primaryStage.setScene(game_scene);
-            startGame(blocksize);
+            primaryStage.setScene(StartPhase.getGameScene());
             primaryStage.setMaximized(true);
+            StartPhase.startGame();
         });
+
         settings_btn.setOnAction(event -> {
             VBox settings_Vbox = new VBox();
             VBox settings_Vbox2= new VBox();
@@ -90,130 +85,17 @@ public class Main extends Application {
         });
 
     }
-    void startGame(double blocksize){
-        AnimationTimer animate = new AnimationTimer() {
-            public void handle(long currentNanoTime) {
-                long startNanoTime = System.nanoTime();
-                map.drawMap(blocksize);
-                drawTowerRanges();
-                for (Spawnpoint spawn : map.getSpawnpoints()) {
-                    spawn.moveMonsters();
-                    spawn.drawMonsters();
-                    //spawn.shootTowers();
-                }
-                double t = (currentNanoTime - startNanoTime) / 1000000000.0*1000;
-                //System.out.println(t);
-            }
-        };
-
-        map.initMap();
-        map.genMap(2);
-        map.genFlippedMap();
-        //Genereerib nii palju spawnpointe, kui võimalik on.
-        map.genOpenBlocks();
-        map.generateSpawnpoints(5, 40);
-        map.spawnSpawnpoints();
-        map.drawMap(blocksize);
-
-
-        System.out.println("Vali nexuse asukoht kaardil!");
-        AtomicBoolean isNexus = new AtomicBoolean(false);
-        map.drawMap(blocksize);
-        canvas.setOnMouseClicked(e -> {
-
-            int x = convertPixelToIndex(e.getX());
-            int y = convertPixelToIndex(e.getY());
-            Block eventBlock = map.getMap_matrix()[x][y];
-
-            if (!isNexus.get()) {
-                map.setNexusxy(new int[]{x, y});
-                map.getSpawnpoints().get(0).genPath(500);
-                if (map.getSpawnpoints().get(0).getPath().length == 0) {
-                    System.out.println("Valitud nexuse asukoht ei sobi. Proovi uuesti.");
-                } else {
-                    map.genNexus();
-                    map.genPathstoNexus(500);
-                    for (Spawnpoint spawn: map.getSpawnpoints()) {
-                        map.drawPath(spawn.getPath());
-                    }
-                    isNexus.set(true);
-                    System.out.println("Nexuse asukoht valitud.");
-                    animate.start();
-                }
-            } else {
-                System.out.println(eventBlock.getId());
-
-                //Spawnpoindid, mille teele jääb tower ette.
-                List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
-                //System.out.println(updatableSpawns.size());
-                boolean towerPossible = true;
-                //Ajutise seina loomine.
-                Block oldBlock = map.getBlock(x, y);
-                map.editMap_matrix(x, y, new Block(1, 0, new Color(0, 0, 0, 1)));
-                //Uuenda spawnpointide path.
-                System.out.println(updatableSpawns.size());
-                for (Spawnpoint spawn : updatableSpawns) {
-                    int[][] oldPath = spawn.getPath();
-                    spawn.genPath(500);
-                    if (spawn.getPath().length == 0) {
-                        towerPossible = false;
-                        spawn.setPath(oldPath);
-                        break;
-                    } else {
-                        System.out.println("Uus tee!");
-                        map.deletePath(oldPath);
-                        map.drawPath(spawn.getPath());
-                    }
-                }
-
-                map.editMap_matrix(x, y, oldBlock);
-
-                if (towerPossible) {
-                    for (Block tower : map.getTowers()) {
-                        tower.setActive(false);
-                    }
-                    if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
-                        //map.editMap_matrix(i, j, new Block(10, 0, new Color(0, 0, 0, 1)));
-                        eventBlock.makeTower(10,x*map.getSize()+map.getSize()/2,y*map.getSize()+map.getSize()/2);
-                        map.editMap_matrix(x, y, eventBlock);
-                        //map.drawBlock(convertPixelToIndex((e.getX())),convertPixelToIndex(e.getY()));
-                        map.getTowers().add(eventBlock);
-                        eventBlock.setActive(true);
-                    }
-                    else if (eventBlock.getId()>=10){
-                        eventBlock.setActive(true);
-                    }
-                    System.out.println(eventBlock.getId());
-                    System.out.println("----------------------");
-                } else {
-                    System.out.println("Towerit pole võimalik maha panna. Proovi uuesti.");
-                }
-            }
-        });
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     public static Canvas getCanvas() {
         return canvas;
     }
 
+    public static Map getMap() {
+        return map;
+    }
+
     static GraphicsContext getGc() {
         return gc;
-    }
-
-    private int convertPixelToIndex(double pixel_coords){
-        return (int) (pixel_coords/map.getSize());
-    }
-
-    private void drawTowerRanges(){
-        for (Block tower: map.getTowers()) {
-            if (tower.getActive()){
-                tower.drawRange();
-            }
-        }
     }
 
 }

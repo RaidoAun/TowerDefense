@@ -1,0 +1,7 @@
+20.03.2020 Leo
+Update_log.txt faili lisamine. See fail on oma saavutuste ja plaanide kirjapanemiseks, päevikuga võrreldav. Kõik suuremad
+muudatused võiks siia kirja panna. Üritan täna nii teha, et error sõnumid ilmuvad ekraanile, mitte konsooli. Nihutasin
+suurema osa Main.java faili koodist StartPhase.java faili. Võiks natuke cleanima ning organiseerituma mulje jätta. Mõte
+on praegu, et StartPhase.java hoolitseb mängu alguse eest (start nupu vajutus ----> round 1 algus). Genereeritakse map,
+spawnpoindid ning valitakse nexuse asukoht. Towerite placemist ning koletiste loomist see klass ei võimalda, selleks tuleb
+erinev klass. Pop-upide loomine jääb homsesse täna enam ei jõua sellega tegeleda. Epic gamer leo_xxx out.

@@ -162,7 +162,6 @@ class Map {
         if (count > optimaalne) {
             System.out.println("Praeguste parameetritega on võimalik luua maksimum " + (int) optimaalne + " spawnpointi!");
         }
-        System.out.println("Alustan spawnpointide genereerimist...");
         List<int[]> openBlocksajutine;
         List<int[]> spawns = new ArrayList<>();
         Random r = new Random();
@@ -209,7 +208,7 @@ class Map {
             //x - 100 y - 50 on nexus hetkel!
             this.spawnpoints.add(new Spawnpoint(spawn, this.map));
         }
-        System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
+        //System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
 
     void spawnSpawnpoints() {
@@ -240,6 +239,7 @@ class Map {
             //randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
             //System.out.println(randomGCost);
             spawn.genPath(gCost);
+            spawn.setNexusWithPath(true);
         }
     }
 

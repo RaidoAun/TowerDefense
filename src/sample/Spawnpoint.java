@@ -6,6 +6,7 @@ import java.util.List;
 
 class Spawnpoint {
 
+    private boolean nexusWithPath;
     private List<Monster> monsters;
     private int[] spawnpointxy;
     private int[] nexusxy;
@@ -14,10 +15,11 @@ class Spawnpoint {
     private List<Block> towers;
 
     Spawnpoint(int[] spawnpointxy, int[][] map) {
-       towers = Main.map.getTowers();
-       monsters = new ArrayList<>();
-       this.spawnpointxy = spawnpointxy;
-       this.map = map;
+        nexusWithPath = false;
+        towers = Main.map.getTowers();
+        monsters = new ArrayList<>();
+        this.spawnpointxy = spawnpointxy;
+        this.map = map;
     }
 
     void setPath(int[][] path) {
@@ -71,6 +73,20 @@ class Spawnpoint {
     void genPath(int gCost) {
         Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, gCost);
         this.path = tee.getFinalPath();
+    }
+
+    public boolean isNexusWithPath() {
+        return this.nexusWithPath;
+    }
+
+    public void setNexusWithPath(boolean nexusWithPath) {
+        this.nexusWithPath = nexusWithPath;
+    }
+
+    //Mõeldud ühekordseks kasutuseks, ei muuda mingeid klassi muutujaid, tagastab vaid tee
+    public int[][] genPathReturn(int gCost) {
+        Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, gCost);
+        return tee.getFinalPath();
     }
 
 }

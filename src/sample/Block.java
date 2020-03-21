@@ -20,7 +20,7 @@ public class Block {
         setId(block_id);
         setColor(block_color);
         setValue(block_value);
-        if (getId() == 1) {setWall(true);}
+        if (getId() == 1) {setWall(true);} else {setWall(false);}
     }
 
     void makeTower(int tower_id, double pixelx, double pixely){

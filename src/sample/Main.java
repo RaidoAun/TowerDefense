@@ -1,27 +1,16 @@
 package sample;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.UnaryOperator;
 
 public class Main extends Application {
@@ -34,7 +23,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
        // GridPane menu = new GridPane();
         VBox menu_button_box = new VBox();
@@ -48,15 +37,19 @@ public class Main extends Application {
 
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(menu_scene);
-        //menu.getChildren().add(menu_button_box);
         primaryStage.show();
+
         play_btn.setOnAction(event -> {
-            primaryStage.setScene(StartPhase.getGameScene());
+            primaryStage.setScene(Game.getGameScene());
             primaryStage.setMaximized(true);
-            StartPhase.startGame();
+            Game.generateGame();
+            PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!");
+            canvas.setOnMouseClicked(e -> {
+                if (Game.chooseNexus(e.getX(), e.getY())) Game.startRounds();
+            });
         });
 
-        settings_btn.setOnAction(event -> {
+        settings_btn.setOnAction(e -> {
             VBox settings_Vbox = new VBox();
             VBox settings_Vbox2= new VBox();
             HBox settings_Hbox = new HBox();

@@ -31,7 +31,7 @@ public class Block {
         if (tower_id == 10){
             this.color = new Color(1,0,0,1);
             this.value = 0;
-            this.range = 10*Main.map.getSize();
+            this.range = 10*Main.getMap().getSize();
             this.active = false;
         }
     }

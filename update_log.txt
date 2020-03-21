@@ -10,3 +10,4 @@ Epic gamer leo_xxx out.
 21.03.2020 Leo
 Game.java töötab korralikult. Tegin kenasti koodi ümber organiseerimist, dunno võib-olla see tegi asja hoopis segasemask.
 Kui ei sobi siis saab alati GitHubis aega tagasi kerida. Mängul on nüüd ka pop-up aknad, mis teavitavad mängijat toimuvast.
+Seadete ekraan peaaegu completed, mõned pisiasjad vaja veel ära teha. Kustutasid mõned üleliigsed failid. Tänaseks aitab.

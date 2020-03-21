@@ -21,6 +21,8 @@ class Map {
     private double size;
     private List<Block> towers;
     private int[][] map;
+    private int minDisdanceBetweenSpawns;
+    private int spawnCount;
 
     Map(int rectCountx, int rectCounty,Canvas map_canvas){
         this.towers = new ArrayList<>();
@@ -31,6 +33,8 @@ class Map {
         this.map_matrix = new Block[rectCountx][rectCounty];
         this.map = new int[rectCounty][rectCountx];
         this.openBlocks = new ArrayList<>();
+        this.minDisdanceBetweenSpawns = 50;
+        this.spawnCount = 4;
     }
 
     void initMap(){
@@ -38,7 +42,7 @@ class Map {
             for (int j = 0; j < y; j++) {
                 if (i == 0 || j == 0 || i == x-1 || j == y-1){
                     map_matrix[i][j] = new Block(1,1,new Color(0,0,0,1));
-                }else{
+                } else{
                     int rand = new Random().nextInt(2);
                     if (new Random().nextInt(40)==1){
                         map_matrix[i][j] = new Block(rand,4,new Color(1-rand,1-rand,1-rand,1));
@@ -266,4 +270,33 @@ class Map {
     public int getY() {
         return y;
     }
+
+    public void setX(int x) {
+        this.map = new int[this.y][x];
+        this.map_matrix = new Block[x][this.y];
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.map = new int[y][this.x];
+        this.map_matrix = new Block[this.x][y];
+        this.y = y;
+    }
+
+    public int getMinDisdanceBetweenSpawns() {
+        return minDisdanceBetweenSpawns;
+    }
+
+    public int getSpawnCount() {
+        return spawnCount;
+    }
+
+    public void setMinDisdanceBetweenSpawns(int minDisdanceBetweenSpawns) {
+        this.minDisdanceBetweenSpawns = minDisdanceBetweenSpawns;
+    }
+
+    public void setSpawnCount(int spawnCount) {
+        this.spawnCount = spawnCount;
+    }
+
 }

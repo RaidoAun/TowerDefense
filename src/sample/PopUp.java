@@ -24,7 +24,7 @@ public class PopUp {
         Button button = new Button("Ok");
         button.setOnAction(e -> popup.close());
         layout.getChildren().addAll(label, button);
-        Scene pop = new Scene(layout, 200, 200);
+        Scene pop = new Scene(layout, 300, 200);
         popup.setScene(pop);
         popup.showAndWait();
     }

@@ -9,9 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import java.util.List;
 
-//Mõte oleks, et see klass töötaks start nupu klikimisest kuni esimese roundi alguseni.
-// Ükejäänud funktsioonid asuksid mujal klassis
-
 public class Game {
 
     private static Map map = Main.getMap();
@@ -44,7 +41,7 @@ public class Game {
         map.setNexusxy(new int[]{x, y});
         if (eventBlock.isWall()) {
             PopUp.createPopup("Valitud nexuse asukoht ei sobi!\nProovi uuesti!");
-            System.out.println("Sein!");
+            //System.out.println("Sein!");
         } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
             PopUp.createPopup("Valitud nexuse asukoht ei sobi!\nProovi uuesti!");
         } else {
@@ -128,7 +125,7 @@ public class Game {
 
     private static double getBlockSize() {
         Rectangle2D screenSizes = Screen.getPrimary().getBounds();
-        return Math.min(screenSizes.getWidth() / Main.map.getX(), screenSizes.getHeight() / Main.map.getY());
+        return Math.min(screenSizes.getWidth() / Main.getMap().getX(), screenSizes.getHeight() / Main.getMap().getY());
     }
 
     private static int convertPixelToIndex(double pixel_coords){

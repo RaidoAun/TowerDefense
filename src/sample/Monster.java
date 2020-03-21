@@ -25,7 +25,7 @@ public class Monster {
     }
      public void drawMonster(){
         Main.getGc().setFill(this.color);
-        double diameeter = Main.map.getSize()/2;
+        double diameeter = Main.getMap().getSize()/2;
         Main.getGc().fillOval(this.x-diameeter/2, this.y-diameeter/2, diameeter, diameeter);
     }
 
@@ -50,8 +50,8 @@ public class Monster {
     }
     void move(int[][] path,double speed){
         if (this.step<path.length){
-            int distx= (int) (((path[this.step][0]+0.5)*Main.map.getSize())-this.x);
-            int disty= (int) (((path[this.step][1]+0.5)*Main.map.getSize())-this.y);
+            int distx= (int) (((path[this.step][0]+0.5)*Main.getMap().getSize())-this.x);
+            int disty= (int) (((path[this.step][1]+0.5)*Main.getMap().getSize())-this.y);
             if (distx<0){
                 if (speed>=-distx){
                     this.x=distx+this.x;

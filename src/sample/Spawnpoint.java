@@ -16,7 +16,7 @@ class Spawnpoint {
 
     Spawnpoint(int[] spawnpointxy, int[][] map) {
         nexusWithPath = false;
-        towers = Main.map.getTowers();
+        towers = Main.getMap().getTowers();
         monsters = new ArrayList<>();
         this.spawnpointxy = spawnpointxy;
         this.map = map;
@@ -39,7 +39,7 @@ class Spawnpoint {
     }
 
     void moveMonsters(){
-        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.map.getSize(),(this.spawnpointxy[1]+0.5)*Main.map.getSize()));
+        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.getMap().getSize(),(this.spawnpointxy[1]+0.5)*Main.getMap().getSize()));
         for (Monster monster:this.monsters) {
             monster.move(this.path);
         }
@@ -61,7 +61,7 @@ class Spawnpoint {
     }
 
     void shootTowers(){
-        for (Block tower : Main.map.getTowers()) {
+        for (Block tower : Main.getMap().getTowers()) {
             tower.shoot(getMonsters());
         }
     }

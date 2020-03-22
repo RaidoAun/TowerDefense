@@ -48,6 +48,7 @@ public class Monster {
     void move(int[][] path){
         move(path,this.speed);
     }
+
     void move(int[][] path,double speed){
         if (this.step<path.length){
             int distx= (int) (((path[this.step][0]+0.5)*Main.getMap().getSize())-this.x);
@@ -57,12 +58,10 @@ public class Monster {
                     this.x=distx+this.x;
                     this.step+=1;
                     move(path,speed+distx);
-                }
-                else{
+                } else{
                     this.x = this.x-speed;
                 }
-            }
-            else if (distx > 0){
+            } else if (distx > 0){
                 if(speed>=distx){
                     this.x = distx+this.x;
                     this.step+=1;
@@ -71,8 +70,7 @@ public class Monster {
                 else{
                     this.x = this.x+speed;
                 }
-            }
-            else if (disty < 0){
+            } else if (disty < 0){
                 if (speed>=-disty){
                     this.y = disty+this.y;
                     this.step+=1;
@@ -81,8 +79,7 @@ public class Monster {
                 else{
                     this.y = this.y-speed;
                 }
-            }
-            else if (disty>0){
+            } else if (disty>0){
                 if (speed>=disty){
                     this.y = disty+this.y;
                     this.step+=1;
@@ -95,8 +92,7 @@ public class Monster {
             if (distx==0&&disty==0){
                 this.step+=1;
             }
-        }
-        else{
+        } else{
             this.hp = 0;
         }
     }

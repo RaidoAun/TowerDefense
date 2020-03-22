@@ -77,9 +77,5 @@ public class Main extends Application {
         return gc;
     }
 
-    public static Scene getMenuScene() {
-        return menu_scene;
-    }
-
 }
 

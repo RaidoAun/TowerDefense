@@ -161,7 +161,11 @@ class Map {
         }
     }
 
-    void generateSpawnpoints(int count, int minDistance) {
+    void generateSpawnpoints() {
+
+        int minDistance = this.minDisdanceBetweenSpawns;
+        int count = this.spawnCount;
+
         double optimaalne = (this.x * this.y) / (Math.pow((double) minDistance/2, 2) * Math.PI);
         if (count > optimaalne) {
             System.out.println("Praeguste parameetritega on võimalik luua maksimum " + (int) optimaalne + " spawnpointi!");

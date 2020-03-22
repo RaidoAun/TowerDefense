@@ -11,3 +11,7 @@ Epic gamer leo_xxx out.
 Game.java töötab korralikult. Tegin kenasti koodi ümber organiseerimist, dunno võib-olla see tegi asja hoopis segasemask.
 Kui ei sobi siis saab alati GitHubis aega tagasi kerida. Mängul on nüüd ka pop-up aknad, mis teavitavad mängijat toimuvast.
 Seadete ekraan peaaegu completed, mõned pisiasjad vaja veel ära teha. Kustutasid mõned üleliigsed failid. Tänaseks aitab.
+
+22.03.2020 Leo
+Tüütu bug fixed, nüüd võiks nexus alati õigesti maha minna. Lisasin raha ülese paremasse nurka ning staatilise meetodi, mis
+seda uuendab vajadusel.

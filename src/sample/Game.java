@@ -4,8 +4,12 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import java.util.List;
 
@@ -13,10 +17,12 @@ public class Game {
 
     private static Map map = Main.getMap();
     private static Canvas canvas = Main.getCanvas();
+    private static GraphicsContext g = canvas.getGraphicsContext2D();
+    private static int raha = 0;
 
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
-        game_layout.getChildren().add(Main.getCanvas());
+        game_layout.getChildren().add(canvas);
         return new Scene(game_layout);
     }
 
@@ -28,7 +34,7 @@ public class Game {
         map.genFlippedMap();
         //Genereerib nii palju spawnpointe, kui võimalik on.
         map.genOpenBlocks();
-        map.generateSpawnpoints(5, 40);
+        map.generateSpawnpoints();
         map.spawnSpawnpoints();
         map.drawMap(blocksize);
     }
@@ -37,13 +43,13 @@ public class Game {
         int x = convertPixelToIndex(xPixel);
         int y = convertPixelToIndex(yPixel);
         Block eventBlock = map.getMap_matrix()[x][y];
-        //Nexuse valimise klikk.
+        System.out.println(eventBlock.getId());
         map.setNexusxy(new int[]{x, y});
-        if (eventBlock.isWall()) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi!\nProovi uuesti!");
+        if (eventBlock.getId() != 0) {
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!");
             //System.out.println("Sein!");
         } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi!\nProovi uuesti!");
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!");
         } else {
             map.genNexus();
             map.genPathstoNexus(500);
@@ -62,6 +68,7 @@ public class Game {
                 long startNanoTime = System.nanoTime();
                 map.drawMap(blocksize);
                 drawTowerRanges();
+                updateMoney(4000);
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     spawn.moveMonsters();
                     spawn.drawMonsters();
@@ -138,6 +145,17 @@ public class Game {
                 tower.drawRange();
             }
         }
+    }
+
+    public static void updateMoney(int money) {
+        String text = String.format("Raha: %s $", money);
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, 50));
+        g.setFill(Paint.valueOf("#2aa32e"));
+        g.fillText(text, 1600, 75);
+    }
+
+    public static int getRaha() {
+        return raha;
     }
 
 }

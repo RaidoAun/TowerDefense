@@ -13,14 +13,12 @@ public class Block {
     private double x;
     private double y;
     private boolean active;
-    private boolean wall;
 
     Block(int block_id, int block_value, Color block_color){
         //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path;
-        setId(block_id);
-        setColor(block_color);
-        setValue(block_value);
-        if (getId() == 1) {setWall(true);} else {setWall(false);}
+        this.id = block_id;
+        this.color = block_color;
+        this.value = block_value;
     }
 
     void makeTower(int tower_id, double pixelx, double pixely){
@@ -36,12 +34,9 @@ public class Block {
         }
     }
 
-    public boolean isWall() {
-        return wall;
-    }
     void shoot(List<Monster> monsters){
-        for (Monster monster:
-             monsters) {
+
+        for (Monster monster: monsters) {
             int dist =(int) Math.round(Math.sqrt(Math.pow(this.x-monster.getX(),2)+Math.pow(this.y-monster.getY(),2)));
             if (dist<=this.range){
                 monster.setHp(monster.getHp()-getValue());
@@ -52,13 +47,10 @@ public class Block {
 
         }
     }
+
     void drawRange(){
         Main.getGc().setFill(new Color(0,0,0,0.5));
         Main.getGc().fillOval(this.x-this.range,this.y- this.range,this.range*2,this.range*2);
-    }
-
-    private void setWall(boolean wall) {
-        this.wall = wall;
     }
 
     Color getColor() {

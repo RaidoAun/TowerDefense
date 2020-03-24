@@ -17,9 +17,9 @@ public class Monster {
         this.id = type;
         this.step = 0;
         if (id==0){
-            this.hp = 1000;
-            this.dmg = 5;
-            this.speed = 1;
+            this.hp = 100;
+            this.dmg = 10;
+            this.speed = 0.5;
             this.color = new Color(1,1,0,1);
         }
     }

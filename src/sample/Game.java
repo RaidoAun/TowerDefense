@@ -19,6 +19,7 @@ public class Game {
     private static Canvas canvas = Main.getCanvas();
     private static GraphicsContext g = canvas.getGraphicsContext2D();
     private static int raha = 0;
+    private static int spawnspeed = 1; //Mitme sekundi tagant spawnib üks monster!!
 
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
@@ -43,11 +44,9 @@ public class Game {
         int x = convertPixelToIndex(xPixel);
         int y = convertPixelToIndex(yPixel);
         Block eventBlock = map.getMap_matrix()[x][y];
-        System.out.println(eventBlock.getId());
         map.setNexusxy(new int[]{x, y});
         if (eventBlock.getId() != 0) {
             PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!");
-            //System.out.println("Sein!");
         } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
             PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!");
         } else {
@@ -62,20 +61,30 @@ public class Game {
 
     public static void startRounds() {
 
+        long startNanoTime = System.nanoTime();
+
         AnimationTimer animate = new AnimationTimer() {
             double blocksize = getBlockSize();
+            boolean genereateMonster = false;
+            long timeStamp = spawnspeed;
             public void handle(long currentNanoTime) {
-                long startNanoTime = System.nanoTime();
+                long t = (currentNanoTime - startNanoTime) / 1000000000;
+                if (t == timeStamp) {
+                    timeStamp += spawnspeed;
+                    genereateMonster = true;
+                }
                 map.drawMap(blocksize);
                 drawTowerRanges();
                 updateMoney(4000);
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
+                    if (genereateMonster) {
+                        spawn.genMonster();
+                    }
                     spawn.moveMonsters();
                     spawn.drawMonsters();
                     spawn.shootTowers();
                 }
-                double t = (currentNanoTime - startNanoTime) / 1000000000.0*1000;
-                //System.out.println(t);
+                if (genereateMonster) genereateMonster = false;
             }
         };
         animate.start();

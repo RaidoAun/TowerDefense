@@ -39,10 +39,13 @@ class Spawnpoint {
     }
 
     void moveMonsters(){
-        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.getMap().getSize(),(this.spawnpointxy[1]+0.5)*Main.getMap().getSize()));
         for (Monster monster:this.monsters) {
             monster.move(this.path);
         }
+    }
+
+    public void genMonster() {
+        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.getMap().getSize(),(this.spawnpointxy[1]+0.5)*Main.getMap().getSize()));
     }
 
     void drawMonsters(){

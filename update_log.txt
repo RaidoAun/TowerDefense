@@ -15,3 +15,6 @@ Seadete ekraan peaaegu completed, mõned pisiasjad vaja veel ära teha. Kustutas
 22.03.2020 Leo
 Tüütu bug fixed, nüüd võiks nexus alati õigesti maha minna. Lisasin raha ülese paremasse nurka ning staatilise meetodi, mis
 seda uuendab vajadusel.
+
+24.03.2020 Leo
+Enum klass koletiste jaoks loodud, parameetreid pole veel välja mõelnud. Koletiste tekkimise kiirust saab nüüd reguleerida.

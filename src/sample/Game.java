@@ -20,6 +20,7 @@ public class Game {
     private static GraphicsContext g = canvas.getGraphicsContext2D();
     private static int raha = 0;
     private static int spawnspeed = 1; //Mitme sekundi tagant spawnib üks monster!!
+    private static CanvasWindow cWindow = new CanvasWindow(canvas);
 
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
@@ -65,31 +66,35 @@ public class Game {
 
         AnimationTimer animate = new AnimationTimer() {
             double blocksize = getBlockSize();
-            boolean genereateMonster = false;
+            boolean generateMonster = false;
             long timeStamp = spawnspeed;
             public void handle(long currentNanoTime) {
                 long t = (currentNanoTime - startNanoTime) / 1000000000;
                 if (t == timeStamp) {
                     timeStamp += spawnspeed;
-                    genereateMonster = true;
+                    generateMonster = true;
                 }
                 map.drawMap(blocksize);
                 drawTowerRanges();
+
                 updateMoney(4000);
+
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
-                    if (genereateMonster) {
+                    if (generateMonster) {
                         spawn.genMonster();
                     }
                     spawn.moveMonsters();
                     spawn.drawMonsters();
                     spawn.shootTowers();
                 }
-                if (genereateMonster) genereateMonster = false;
+                cWindow.draw();
+                if (generateMonster) generateMonster = false;
             }
         };
         animate.start();
 
         canvas.setOnMouseClicked(e -> {
+            cWindow.setActive(false);
             int x = convertPixelToIndex(e.getX());
             int y = convertPixelToIndex(e.getY());
             Block eventBlock = map.getMap_matrix()[x][y];
@@ -119,6 +124,7 @@ public class Game {
             if (towerPossible) {
                 for (Block tower : map.getTowers()) {
                     tower.setActive(false);
+
                 }
                 if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
                     //map.editMap_matrix(i, j, new Block(10, 0, new Color(0, 0, 0, 1)));
@@ -128,8 +134,15 @@ public class Game {
                     map.getTowers().add(eventBlock);
                     eventBlock.setActive(true);
                 }
-                else if (eventBlock.getId()>=10){
+                else if (eventBlock.getId()>=10){//UPGRADE
                     eventBlock.setActive(true);
+                    int window_x = (int) convertIndexToPixel(x);
+                    int window_y = (int) convertIndexToPixel(y);
+                    int window_w = (int) (canvas.getWidth()/10);
+                    int window_h = (int) (canvas.getHeight()/10);
+                    cWindow.set((int) (window_x-window_w/2+map.getSize()/2),window_y-window_h,window_w,window_h);
+                    cWindow.setActive(true);
+                    System.out.println("neeger");
                 }
             } else {
                 PopUp.createPopup("Towerit pole võimalik maha panna.\nProovi uuesti.");
@@ -146,6 +159,9 @@ public class Game {
 
     private static int convertPixelToIndex(double pixel_coords){
         return (int) (pixel_coords/map.getSize());
+    }
+    private static double convertIndexToPixel(int index){
+        return index*map.getSize();
     }
 
     private static void drawTowerRanges(){

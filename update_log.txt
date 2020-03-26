@@ -21,3 +21,6 @@ Enum klass koletiste jaoks loodud, parameetreid pole veel välja mõelnud. Kolet
 
 26.03.2020 Leo
 Koletise surres raha updateb, koletiste enum klass tehtud, hetkel on kolm erinevat koletist. Koletised genereerivad randomilt.
+
+26.03.2020 Raido
+CanvasWindow class näitab infot toweri kohta, mapi joonistamisel pikslite suurus int mitte double, mapil on ka nüüd grid pattern. Muutsin raha suuruse ja asukoha sõltuma canvase suurustest.

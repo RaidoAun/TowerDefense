@@ -81,19 +81,28 @@ public class Block {
         return level;
     }
 
-    private void setLevel(int level) {
-        this.level = level;
-    }
-
-    private void setRange(double range) {
-        this.range = range;
-    }
-
     boolean getActive() {
         return active;
     }
 
     void setActive(boolean active) {
         this.active = active;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getRange() {
+        return range;
+    }
+    void lvlUP(int x){
+        this.level+=x;
+        this.range+=10;
+        this.value+=1;
     }
 }

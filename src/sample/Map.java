@@ -18,7 +18,7 @@ class Map {
     private Block[][] map_matrix;
     private List<Spawnpoint> spawnpoints;
     private Canvas canvas;
-    private double size;
+    private int size;
     private List<Block> towers;
     private int[][] map;
     private int minDisdanceBetweenSpawns;
@@ -91,20 +91,28 @@ class Map {
         this.map = flippedMap;
     }
 
-    void drawMap(double blocksize){
+    void drawMap(int blocksize){
         this.size = blocksize;
         this.canvas.setWidth(size*this.x);
         this.canvas.setHeight(size*this.y);
+
         //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
+        gc.setLineWidth(0.1);
+        gc.setStroke(Color.BLACK);
+        for (int i = 0; i < this.x; i++) {
+            for (int j = 0; j < this.y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
                 //System.out.print(map_matrix[i][j].getValue()+" ");
                 gc.fillRect(i*this.size,j*this.size, this.size, this.size);
             }
+            gc.strokeLine(i*this.size,0,i*this.size,canvas.getHeight());
             //System.out.println();
         }
+        for (int i = 0; i < this.y; i++) {
+            gc.strokeLine(0,i*this.size,canvas.getWidth(),i*this.size);
+        }
+        gc.stroke();
     }
 
     Block[][] getMap_matrix() {
@@ -122,7 +130,7 @@ class Map {
         gc.fillRect(i*size,j*size,size,size);
     }
 
-    double getSize() {
+    int getSize() {
         return size;
     }
 

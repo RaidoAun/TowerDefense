@@ -44,13 +44,16 @@ class Spawnpoint {
         }
     }
 
-    public void genMonster() {
-        monsters.add(new Monster(0,(this.spawnpointxy[0]+0.5)*Main.getMap().getSize(),(this.spawnpointxy[1]+0.5)*Main.getMap().getSize()));
+    public void genMonster(Monsters type) {
+        double x = (this.spawnpointxy[0]+0.5)*Main.getMap().getSize();
+        double y = (this.spawnpointxy[1]+0.5)*Main.getMap().getSize();
+        monsters.add(new Monster(type, x, y));
     }
 
     void drawMonsters(){
         for (int i = getMonsters().size()-1; i >=0 ; i--) {
             if (getMonsters().get(i).getHp()<=0){
+                Game.updateMoney(getMonsters().get(i).getMoney());
                 monsters.remove(getMonsters().get(i));
             }
         }

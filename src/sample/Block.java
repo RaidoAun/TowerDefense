@@ -28,7 +28,7 @@ public class Block {
         this.y = pixely;
         if (tower_id == 10){
             this.color = new Color(1,0,0,1);
-            this.value = 0;
+            this.value = 1;
             this.range = 10*Main.getMap().getSize();
             this.active = false;
         }

@@ -12,6 +12,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import java.util.List;
+import java.util.Random;
 
 public class Game {
 
@@ -63,6 +64,7 @@ public class Game {
     public static void startRounds() {
 
         long startNanoTime = System.nanoTime();
+        Random r = new Random();
 
         AnimationTimer animate = new AnimationTimer() {
             double blocksize = getBlockSize();
@@ -77,11 +79,12 @@ public class Game {
                 map.drawMap(blocksize);
                 drawTowerRanges();
 
-                updateMoney(4000);
+                updateMoney(0);
 
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     if (generateMonster) {
-                        spawn.genMonster();
+                        Monsters[] monsters = Monsters.values();
+                        spawn.genMonster(monsters[r.nextInt(monsters.length)]);
                     }
                     spawn.moveMonsters();
                     spawn.drawMonsters();
@@ -173,7 +176,8 @@ public class Game {
     }
 
     public static void updateMoney(int money) {
-        String text = String.format("Raha: %s $", money);
+        raha += money;
+        String text = String.format("Raha: %s $", raha);
         g.setFont(Font.font("Calibri", FontWeight.BOLD, 50));
         g.setFill(Paint.valueOf("#2aa32e"));
         g.fillText(text, 1600, 75);

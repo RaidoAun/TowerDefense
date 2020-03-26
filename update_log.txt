@@ -18,3 +18,6 @@ seda uuendab vajadusel.
 
 24.03.2020 Leo
 Enum klass koletiste jaoks loodud, parameetreid pole veel välja mõelnud. Koletiste tekkimise kiirust saab nüüd reguleerida.
+
+26.03.2020 Leo
+Koletise surres raha updateb, koletiste enum klass tehtud, hetkel on kolm erinevat koletist. Koletised genereerivad randomilt.

@@ -3,30 +3,37 @@ package sample;
 import javafx.scene.paint.Color;
 
 public class Monster {
-    int hp;
-    int dmg;
-    int id;
-    double x;
-    double y;
-    int step;
-    double speed;
-    Color color;
-    Monster(int type, double x_coord, double y_coord){
+
+    private int hp;
+    private int dmg;
+    private int id;
+    private double x;
+    private double y;
+    private int step;
+    private double speed;
+    private Color color;
+    private int money;
+
+    Monster(Monsters type, double x_coord, double y_coord){
         this.x = x_coord;
         this.y = y_coord;
-        this.id = type;
         this.step = 0;
-        if (id==0){
-            this.hp = 100;
-            this.dmg = 10;
-            this.speed = 0.5;
-            this.color = new Color(1,1,0,1);
-        }
+        this.id = type.getId();
+        this.hp = type.getHp();
+        this.dmg = type.getDamage();
+        this.speed = type.getKiirus();
+        this.color = type.getColor();
+        this.money = type.getMoney();
     }
-     public void drawMonster(){
+
+    public void drawMonster(){
         Main.getGc().setFill(this.color);
         double diameeter = Main.getMap().getSize()/2;
         Main.getGc().fillOval(this.x-diameeter/2, this.y-diameeter/2, diameeter, diameeter);
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     public int getHp() {

@@ -13,10 +13,10 @@ public class PopUp {
 
     private static Label label = new Label();
 
-    public static void createPopup(String labelText) {
+    public static void createPopup(String labelText, boolean focus) { //focus true tähendab, et mängija ei saa muude akendega samal ajal suhelda.
         Stage popup = new Stage();
         popup.setTitle("Pop-up");
-        popup.initModality(Modality.APPLICATION_MODAL);
+        if (focus) popup.initModality(Modality.APPLICATION_MODAL);
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         label.setText(labelText);
@@ -26,7 +26,11 @@ public class PopUp {
         layout.getChildren().addAll(label, button);
         Scene pop = new Scene(layout, 300, 200);
         popup.setScene(pop);
-        popup.showAndWait();
+        if (focus) {
+            popup.showAndWait();
+        } else {
+            popup.show();
+        }
     }
 
     public static void editLabel(String newText) {

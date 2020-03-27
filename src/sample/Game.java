@@ -22,6 +22,7 @@ public class Game {
     private static int raha = 0;
     private static int spawnspeed = 1; //Mitme sekundi tagant spawnib üks monster!!
     private static CanvasWindow cWindow;
+    private static int health;
 
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
@@ -41,6 +42,8 @@ public class Game {
         map.spawnSpawnpoints();
         map.drawMap(blocksize);
         cWindow = new CanvasWindow(canvas);
+        updateMoney(500);
+        updateHealth(100);
     }
 
     public static boolean chooseNexus(int xPixel, int yPixel) {
@@ -49,9 +52,9 @@ public class Game {
         Block eventBlock = map.getMap_matrix()[x][y];
         map.setNexusxy(new int[]{x, y});
         if (eventBlock.getId() != 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!");
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!", true);
         } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!");
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!", true);
         } else {
             map.genNexus();
             map.genPathstoNexus(500);
@@ -81,6 +84,7 @@ public class Game {
                 drawTowerRanges();
 
                 updateMoney(0);
+                updateHealth(0);
 
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     if (generateMonster) {
@@ -93,6 +97,10 @@ public class Game {
                 }
                 cWindow.draw();
                 if (generateMonster) generateMonster = false;
+                if (health <= 0) {
+                    stop();
+                    PopUp.createPopup("YOU SUCK! GAME OVER!", false);
+                }
             }
         };
         animate.start();
@@ -102,7 +110,7 @@ public class Game {
             int clicky = (int) e.getY();
             if (cWindow.isClickOnWindow(clickx,clicky)){
 
-            }else{
+            } else {
                 cWindow.setActive(false);
                 int x = convertPixelToIndex(clickx);
                 int y = convertPixelToIndex(clicky);
@@ -142,14 +150,13 @@ public class Game {
                         //map.drawBlock(convertPixelToIndex((e.getX())),convertPixelToIndex(e.getY()));
                         map.getTowers().add(eventBlock);
                         eventBlock.setActive(true);
-                    }
-                    else if (eventBlock.getId()>=10){//UPGRADE
+                    } else if (eventBlock.getId()>=10){//UPGRADE
                         eventBlock.setActive(true);
                         cWindow.setTower(eventBlock);
                         cWindow.setActive(true);
                     }
                 } else {
-                    PopUp.createPopup("Towerit pole võimalik maha panna.\nProovi uuesti.");
+                    PopUp.createPopup("Towerit pole võimalik maha panna.\nProovi uuesti.", true);
                 }
             }
         });
@@ -164,6 +171,7 @@ public class Game {
     private static int convertPixelToIndex(int pixel_coords){
         return pixel_coords/map.getSize();
     }
+
     private static double convertIndexToPixel(int index){
         return index*map.getSize();
     }
@@ -184,8 +192,15 @@ public class Game {
         g.fillText(text, canvas.getWidth()*0.85, canvas.getHeight()*0.05);
     }
 
-    public static int getRaha() {
-        return raha;
+    public static void updateHealth(int hp) {
+        health += hp;
+        String text = String.format("Tervis: %s", health);
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth()/40));
+        g.setFill(Paint.valueOf("#db1818"));
+        g.fillText(text, canvas.getWidth()*0.85, canvas.getHeight()*0.10);
     }
 
+    public static int getHealth() {
+        return health;
+    }
 }

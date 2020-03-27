@@ -50,11 +50,15 @@ class Spawnpoint {
         monsters.add(new Monster(type, x, y));
     }
 
-    void drawMonsters(){
+    void drawMonsters() {
         for (int i = getMonsters().size()-1; i >=0 ; i--) {
-            if (getMonsters().get(i).getHp()<=0){
-                Game.updateMoney(getMonsters().get(i).getMoney());
-                monsters.remove(getMonsters().get(i));
+            Monster monster = getMonsters().get(i);
+            if (monster.getHp()<=0) {
+                Game.updateMoney(monster.getMoney());
+                monsters.remove(monster);
+            } else if (monster.hasReachedNexus()) {
+                Game.updateHealth(-monster.getDmg());
+                monsters.remove(monster);
             }
         }
         for (Monster monster:monsters) {

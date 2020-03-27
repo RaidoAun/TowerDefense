@@ -78,7 +78,7 @@ public class Settings {
                 try {
                     setAjutineSpawnD(Integer.parseInt(d_input.getCharacters().toString()));
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!");
+                    PopUp.createPopup("Error! Sisestage number!", true);
                     d_input.clear();
                     d_input.requestFocus();
                 }
@@ -90,7 +90,7 @@ public class Settings {
                 try {
                     setAjutineS(Integer.parseInt(s_input.getCharacters().toString()));
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!");
+                    PopUp.createPopup("Error! Sisestage number!", true);
                     s_input.clear();
                     s_input.requestFocus();
                 }
@@ -102,7 +102,7 @@ public class Settings {
                 try {
                     setAjutineX(Integer.parseInt(x_input.getCharacters().toString()));
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!");
+                    PopUp.createPopup("Error! Sisestage number!", true);
                     x_input.clear();
                     x_input.requestFocus();
                 }
@@ -114,7 +114,7 @@ public class Settings {
                 try {
                     setAjutineY(Integer.parseInt(y_input.getCharacters().toString()));
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!");
+                    PopUp.createPopup("Error! Sisestage number!", true);
                     y_input.clear();
                     y_input.requestFocus();
                 }

@@ -13,6 +13,7 @@ public class Monster {
     private double speed;
     private Color color;
     private int money;
+    private boolean reachedNexus;
 
     Monster(Monsters type, double x_coord, double y_coord){
         this.x = x_coord;
@@ -24,6 +25,7 @@ public class Monster {
         this.speed = type.getKiirus();
         this.color = type.getColor();
         this.money = type.getMoney();
+        this.reachedNexus = false;
     }
 
     public void drawMonster(){
@@ -50,6 +52,14 @@ public class Monster {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public int getDmg() {
+        return dmg;
+    }
+
+    public boolean hasReachedNexus() {
+        return reachedNexus;
     }
 
     void move(int[][] path){
@@ -99,8 +109,9 @@ public class Monster {
             if (distx==0&&disty==0){
                 this.step+=1;
             }
-        } else{
-            this.hp = 0;
+        } else {
+            this.reachedNexus = true;
         }
     }
+
 }

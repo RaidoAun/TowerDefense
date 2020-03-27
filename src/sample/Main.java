@@ -13,7 +13,7 @@ public class Main extends Application {
 
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
-    private static Map map = new Map(150,80, canvas);
+    private static Map map = new Map(160,85, canvas);
     private static Scene menu_scene;
     private static Stage window;
 
@@ -43,7 +43,7 @@ public class Main extends Application {
             window.setScene(Game.getGameScene());
             window.setMaximized(true);
             Game.generateGame();
-            PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!");
+            PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
 
             canvas.setOnMouseClicked(e -> {
                 if (Game.chooseNexus((int)e.getX(),(int) e.getY())) Game.startRounds();

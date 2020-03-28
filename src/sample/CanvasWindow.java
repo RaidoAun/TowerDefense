@@ -19,7 +19,7 @@ public class CanvasWindow {
     private GraphicsContext gc;
     private int block_size;
     private int text_size;
-    private Block tower;
+    private Tower tower;
     private int[] btn;
 
     CanvasWindow(Canvas c){
@@ -58,7 +58,7 @@ public class CanvasWindow {
     public boolean isClickOnWindow(int x,int y){
         if (x>this.x&&x<this.x+this.w&&y>this.y&&y<this.y+this.h){
             if(x>this.btn[0]&&x<this.btn[0]+this.btn[2]&&y>this.btn[1]&&y<this.btn[1]+this.btn[3]){
-                this.tower.lvlUP(1);
+                this.tower.lvlUp();
             }
             return true;
         }else{
@@ -70,19 +70,19 @@ public class CanvasWindow {
         this.active = active;
     }
 
-    public void setTower(Block tower) {
+    public void setTower(Tower tower) {
         this.tower = tower;
         this.w = (int) (c.getWidth()/12);
         this.h = (int) (this.w*0.8);
-        int tempx = (int) (tower.getX()-this.w/2);
-        int tempy = (int) (this.tower.getY()-this.block_size*2-this.h);
+        int tempx = (int) (tower.getPixelX()-this.w/2);
+        int tempy = (int) (this.tower.getPixelY()-this.block_size*2-this.h);
         if (tempx <0){
             this.x = 0;
         }else{
             this.x = tempx;
         }
         if(tempy<0){
-            this.y = (int) (this.tower.getY()+3*this.block_size);
+            this.y = (int) (this.tower.getPixelY()+3*this.block_size);
         }else{
             this.y = tempy;
         }

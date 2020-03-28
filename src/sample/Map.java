@@ -16,7 +16,7 @@ class Map {
     private List<Spawnpoint> spawnpoints;
     private Canvas canvas;
     private int size;
-    private List<Block> towers;
+    private List<Tower> towers;
     private int[][] map;
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
@@ -230,7 +230,7 @@ class Map {
         }
     }
 
-    List<Block> getTowers() {
+    List<Tower> getTowers() {
         return towers;
     }
 
@@ -306,6 +306,20 @@ class Map {
 
     public void setSpawnCount(int spawnCount) {
         this.spawnCount = spawnCount;
+    }
+
+    public Tower getTowerWithXY(int x, int y) {
+        //Pixlite x ja y tuleb tagasi indexi x ja y muuta.
+        for (Tower tower : towers) {
+            int towerX = pixToIndex(tower.getPixelX());
+            int towerY = pixToIndex(tower.getPixelY());
+            if (towerX == x && towerY == y) return tower;
+        }
+        return null;
+    }
+
+    private int pixToIndex(double pix) {
+        return (int) (2 * pix - this.size) / (2 * this.size);
     }
 
 }

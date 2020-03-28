@@ -91,8 +91,8 @@ class Spawnpoint {
     }
 
     public void monstersTakeDamage() {
-        for (Block tower : Main.getMap().getTowers()) {
-            tower.shoot(getMonsters());
+        for (Tower tower : Main.getMap().getTowers()) {
+            tower.shoot(this.monsters);
         }
     }
 

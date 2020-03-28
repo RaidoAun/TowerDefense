@@ -8,11 +8,6 @@ public class Block {
     int id;
     Color color;
     int value;
-    private int level;
-    private double range;
-    private double x;
-    private double y;
-    private boolean active;
 
     Block(int block_id, int block_value, Color block_color){
         //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path;
@@ -21,38 +16,8 @@ public class Block {
         this.value = block_value;
     }
 
-    void makeTower(int tower_id, double pixelx, double pixely){
-        this.level = 0;
-        this.id = tower_id;
-        this.x = pixelx;
-        this.y = pixely;
-        if (tower_id == 10){
-            this.color = new Color(1,0,0,1);
-            this.value = 1;
-            this.range = 10*Main.getMap().getSize();
-            this.active = false;
-        }
-    }
-
-    void shoot(List<Monster> monsters){
-
-        for (Monster monster: monsters) {
-            int dist =(int) Math.round(Math.sqrt(Math.pow(this.x-monster.getX(),2)+Math.pow(this.y-monster.getY(),2)));
-            if (dist<=this.range){
-                monster.setHp(monster.getHp()-getValue());
-                Main.getGc().setStroke(getColor());
-                Main.getGc().setLineWidth(0.5);
-                Main.getGc().strokeLine(this.x,this.y,monster.getX(),monster.getY());
-            }
-        }
-    }
-
-    void drawRange(){
-        Main.getGc().setFill(new Color(0,0,0,0.5));
-        Main.getGc().fillOval(this.x-this.range,this.y- this.range,this.range*2,this.range*2);
-    }
-
     Color getColor() {
+
         return color;
     }
 
@@ -74,36 +39,6 @@ public class Block {
 
     void setValue(int value) {
         this.value = value;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    boolean getActive() {
-        return active;
-    }
-
-    void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getRange() {
-        return range;
-    }
-
-    void lvlUP(int x){
-        this.level+=x;
-        this.range+=10;
-        this.value+=1;
     }
 
 }

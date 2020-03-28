@@ -112,16 +112,19 @@ public class Game {
             int clicky = (int) e.getY();
             if (!cWindow.isClickOnWindow(clickx,clicky)){
                 cWindow.setActive(false);
+
+                //Pikslite muutmine mapi maatriksi indexiteks.
                 int x = convertPixelToIndex(clickx);
                 int y = convertPixelToIndex(clicky);
-                Block eventBlock = map.getMap_matrix()[x][y];
 
                 //Spawnpoindid, mille teele jääb tower ette.
                 List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
                 boolean towerPossible = true;
+
                 //Ajutise seina loomine.
                 Block oldBlock = map.getBlock(x, y);
                 map.editMap_matrix(x, y, new Block(1, 0, new Color(0, 0, 0, 1)));
+
                 //Uuenda spawnpointide path.
                 for (Spawnpoint spawn : updatableSpawns) {
                     int[][] oldPath = spawn.getPath();
@@ -139,18 +142,24 @@ public class Game {
                 map.editMap_matrix(x, y, oldBlock);
 
                 if (towerPossible) {
-                    for (Block tower : map.getTowers()) {
+
+                    //Blokk, millel klikkati.
+                    Block eventBlock = map.getMap_matrix()[x][y];
+                    for (Tower tower : map.getTowers()) {
                         tower.setActive(false);
 
                     }
                     if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
-                        eventBlock.makeTower(10,x*map.getSize()+ (double) map.getSize()/2,y*map.getSize()+ (double) map.getSize()/2);
-                        map.editMap_matrix(x, y, eventBlock);
-                        map.getTowers().add(eventBlock);
-                        eventBlock.setActive(true);
-                    } else if (eventBlock.getId()>=10) {     //UPGRADE
-                        eventBlock.setActive(true);
-                        cWindow.setTower(eventBlock);
+                        double towerX = x*map.getSize() + (double) map.getSize()/2;
+                        double towerY = y*map.getSize() + (double) map.getSize()/2;
+                        Tower newTower = new Tower(Towers.LASER, towerX, towerY);
+                        map.getTowers().add(newTower);
+                        map.editMap_matrix(x, y, newTower.getBlock());
+                        newTower.setActive(true);
+                    } else if (eventBlock.getId()>=10) {
+                        Tower currentTower = map.getTowerWithXY(x, y);
+                        currentTower.setActive(true);
+                        cWindow.setTower(currentTower);
                         cWindow.setActive(true);
                     }
                 } else {
@@ -174,8 +183,8 @@ public class Game {
     }
 
     private static void drawTowerRanges(){
-        for (Block tower: map.getTowers()) {
-            if (tower.getActive()){
+        for (Tower tower: map.getTowers()) {
+            if (tower.isActive()){
                 tower.drawRange();
             }
         }

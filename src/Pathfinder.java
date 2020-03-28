@@ -1,5 +1,3 @@
-package sample;
-
 import java.util.*;
 
 class Pathfinder {

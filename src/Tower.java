@@ -1,5 +1,3 @@
-package sample;
-
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -15,7 +13,7 @@ public class Tower extends Block {
     private int hind;
     private int maxLevel;
 
-    Tower(Towers type, double x, double y) {
+    public Tower(Towers type, double x, double y) {
         super(type.getId() + 10, type.getDmg(), type.getColor());
         this.x = x;
         this.y = y;

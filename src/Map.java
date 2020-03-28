@@ -1,5 +1,3 @@
-package sample;
-
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -8,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-class Map {
+public class Map {
     private List<int[]> openBlocks;
     private int x;
     private int y;
@@ -21,7 +19,7 @@ class Map {
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
 
-    Map(int rectCountx, int rectCounty,Canvas map_canvas){
+    public Map(int rectCountx, int rectCounty,Canvas map_canvas){
         this.towers = new ArrayList<>();
         this.x = rectCountx;
         this.y = rectCounty;
@@ -230,7 +228,7 @@ class Map {
         }
     }
 
-    List<Tower> getTowers() {
+    public List<Tower> getTowers() {
         return towers;
     }
 

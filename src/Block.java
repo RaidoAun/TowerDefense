@@ -1,5 +1,3 @@
-package sample;
-
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -9,7 +7,7 @@ public class Block {
     Color color;
     int value;
 
-    Block(int block_id, int block_value, Color block_color){
+    public Block(int block_id, int block_value, Color block_color){
         //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path;
         this.id = block_id;
         this.color = block_color;

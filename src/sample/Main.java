@@ -46,7 +46,9 @@ public class Main extends Application {
             PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
 
             canvas.setOnMouseClicked(e -> {
-                if (Game.chooseNexus((int)e.getX(),(int) e.getY())) Game.startRounds();
+                if (Game.chooseNexus((int)e.getX(),(int) e.getY())) {
+                    Game.startRounds();
+                }
             });
 
         });

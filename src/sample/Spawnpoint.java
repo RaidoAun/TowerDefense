@@ -1,6 +1,5 @@
 package sample;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +11,9 @@ class Spawnpoint {
     private int[] nexusxy;
     private int[][] path;
     private int[][] map;
-    private List<Block> towers;
 
     Spawnpoint(int[] spawnpointxy, int[][] map) {
         nexusWithPath = false;
-        towers = Main.getMap().getTowers();
         monsters = new ArrayList<>();
         this.spawnpointxy = spawnpointxy;
         this.map = map;
@@ -70,12 +67,6 @@ class Spawnpoint {
         return monsters;
     }
 
-    void shootTowers(){
-        for (Block tower : Main.getMap().getTowers()) {
-            tower.shoot(getMonsters());
-        }
-    }
-
     void setNexusxy(int[] xy) {
        this.nexusxy = xy;
     }
@@ -97,6 +88,12 @@ class Spawnpoint {
     public int[][] genPathReturn(int gCost) {
         Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, gCost);
         return tee.getFinalPath();
+    }
+
+    public void monstersTakeDamage() {
+        for (Block tower : Main.getMap().getTowers()) {
+            tower.shoot(getMonsters());
+        }
     }
 
 }

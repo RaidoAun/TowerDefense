@@ -1,11 +1,8 @@
 package sample;
 
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.PathElement;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

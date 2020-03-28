@@ -93,24 +93,24 @@ public class Game {
                     }
                     spawn.moveMonsters();
                     spawn.drawMonsters();
-                    spawn.shootTowers();
+                    spawn.monstersTakeDamage();
                 }
                 cWindow.draw();
                 if (generateMonster) generateMonster = false;
                 if (health <= 0) {
-                    stop();
+                    this.stop();
                     PopUp.createPopup("YOU SUCK! GAME OVER!", false);
                 }
             }
         };
         animate.start();
 
+
+
         canvas.setOnMouseClicked(e -> {
             int clickx = (int) e.getX();
             int clicky = (int) e.getY();
-            if (cWindow.isClickOnWindow(clickx,clicky)){
-
-            } else {
+            if (!cWindow.isClickOnWindow(clickx,clicky)){
                 cWindow.setActive(false);
                 int x = convertPixelToIndex(clickx);
                 int y = convertPixelToIndex(clicky);
@@ -144,13 +144,11 @@ public class Game {
 
                     }
                     if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
-                        //map.editMap_matrix(i, j, new Block(10, 0, new Color(0, 0, 0, 1)));
-                        eventBlock.makeTower(10,x*map.getSize()+map.getSize()/2,y*map.getSize()+map.getSize()/2);
+                        eventBlock.makeTower(10,x*map.getSize()+ (double) map.getSize()/2,y*map.getSize()+ (double) map.getSize()/2);
                         map.editMap_matrix(x, y, eventBlock);
-                        //map.drawBlock(convertPixelToIndex((e.getX())),convertPixelToIndex(e.getY()));
                         map.getTowers().add(eventBlock);
                         eventBlock.setActive(true);
-                    } else if (eventBlock.getId()>=10){//UPGRADE
+                    } else if (eventBlock.getId()>=10) {     //UPGRADE
                         eventBlock.setActive(true);
                         cWindow.setTower(eventBlock);
                         cWindow.setActive(true);
@@ -160,7 +158,6 @@ public class Game {
                 }
             }
         });
-
     }
 
     private static int getBlockSize() {
@@ -200,7 +197,4 @@ public class Game {
         g.fillText(text, canvas.getWidth()*0.85, canvas.getHeight()*0.10);
     }
 
-    public static int getHealth() {
-        return health;
-    }
 }

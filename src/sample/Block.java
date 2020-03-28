@@ -5,9 +5,9 @@ import javafx.scene.paint.Color;
 import java.util.List;
 
 public class Block {
-    private int id;
-    private Color color;
-    private int value;
+    int id;
+    Color color;
+    int value;
     private int level;
     private double range;
     private double x;
@@ -44,7 +44,6 @@ public class Block {
                 Main.getGc().setLineWidth(0.5);
                 Main.getGc().strokeLine(this.x,this.y,monster.getX(),monster.getY());
             }
-
         }
     }
 
@@ -100,9 +99,11 @@ public class Block {
     public double getRange() {
         return range;
     }
+
     void lvlUP(int x){
         this.level+=x;
         this.range+=10;
         this.value+=1;
     }
+
 }

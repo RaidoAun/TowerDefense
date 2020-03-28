@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 public class CanvasWindow {
+
     private int x;
     private int y;
     private int w;
@@ -20,12 +21,14 @@ public class CanvasWindow {
     private int text_size;
     private Block tower;
     private int[] btn;
+
     CanvasWindow(Canvas c){
         this.c = c;
         this.gc = c.getGraphicsContext2D();
         this.block_size = Main.getMap().getSize();
         this.text_size = (int) (c.getWidth()/100);
     }
+
     public void draw(){
         if (this.active){
 
@@ -35,6 +38,7 @@ public class CanvasWindow {
             drawTowerUpgradeButton();
         }
     }
+
     public void drawTowerInfo(){
         String[] info = new String[]{"Id:","Dmg:","Range:","Level:"};
         String[] value = new String[]{Integer.toString(tower.getId()),Integer.toString(this.tower.getValue()),Double.toString(this.tower.getRange()),Integer.toString(this.tower.getLevel())};
@@ -45,10 +49,12 @@ public class CanvasWindow {
             gc.fillText(value[i], this.x+this.text_size*4, this.y+this.text_size*(i+1));
         }
     }
+
     public void drawTowerUpgradeButton(){
         gc.setFill(Color.GREEN);
         gc.fillRect(this.btn[0],this.btn[1],this.btn[2],this.btn[3]);
     }
+
     public boolean isClickOnWindow(int x,int y){
         if (x>this.x&&x<this.x+this.w&&y>this.y&&y<this.y+this.h){
             if(x>this.btn[0]&&x<this.btn[0]+this.btn[2]&&y>this.btn[1]&&y<this.btn[1]+this.btn[3]){
@@ -59,9 +65,11 @@ public class CanvasWindow {
             return false;
         }
     }
+
     public void setActive(boolean active) {
         this.active = active;
     }
+
     public void setTower(Block tower) {
         this.tower = tower;
         this.w = (int) (c.getWidth()/12);
@@ -80,4 +88,5 @@ public class CanvasWindow {
         }
         this.btn = new int[]{this.x+this.w/2-this.text_size/2, this.y+this.h-this.text_size, this.text_size, this.text_size};
     }
+
 }

@@ -18,7 +18,8 @@ public class CanvasWindow {
     private int block_size;
     private int text_size;
     private Tower tower;
-    private int[] btn;
+    private CanvasButton[] buttons;
+    private Boolean show_tower;
 
     CanvasWindow(Canvas c) {
         this.c = c;
@@ -29,17 +30,18 @@ public class CanvasWindow {
 
     public void draw() {
         if (this.active) {
-
             gc.setFill(color);
             gc.fillRect(x, y, w, h);
-            drawTowerInfo();
-            drawTowerUpgradeButton();
+            if (show_tower){
+                drawTowerInfo();
+            }
+            drawButtons();
         }
     }
 
     public void drawTowerInfo() {
         String[] info = new String[]{"Id:", "Dmg:", "Range:", "Level:"};
-        String[] value = new String[]{Integer.toString(tower.getId()), Integer.toString(this.tower.getValue()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
+        String[] value = new String[]{Integer.toString(tower.getId()), Integer.toString(this.tower.getDamage()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(Paint.valueOf("#2aa32e"));
         for (int i = 0; i < info.length; i++) {
@@ -47,23 +49,29 @@ public class CanvasWindow {
             gc.fillText(value[i], this.x + this.text_size * 4, this.y + this.text_size * (i + 1));
         }
     }
+    public void drawButtons(){
 
-    public void drawTowerUpgradeButton() {
-        gc.setFill(Color.GREEN);
-        gc.fillRect(this.btn[0], this.btn[1], this.btn[2], this.btn[3]);
+        for (int i = 0; i < buttons.length; i++) {
+            gc.setFill(this.buttons[i].getColor());
+            gc.fillRect(this.buttons[i].getX(), this.buttons[i].getY(), this.buttons[i].getW(), this.buttons[i].getH());
+        }
+
     }
 
     public boolean isClickOnWindow(int x, int y) {
         if (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h) {
-            if (x > this.btn[0] && x < this.btn[0] + this.btn[2] && y > this.btn[1] && y < this.btn[1] + this.btn[3]) {
-                this.tower.lvlUp();
-            }
             return true;
         } else {
             return false;
         }
     }
-
+    public void checkButtons(int clickx, int clicky){
+        for (int i = 0; i < this.buttons.length; i++) {
+            if (clickx > this.buttons[i].getX() && clickx < this.buttons[i].getX() + this.buttons[i].getW() && clicky > this.buttons[i].getY() && clicky < this.buttons[i].getY()+this.buttons[i].getH()) {
+                this.buttons[i].onPressed();
+            }
+        }
+    }
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -80,7 +88,48 @@ public class CanvasWindow {
         } else {
             this.y = tempy;
         }
-        this.btn = new int[]{this.x + this.w / 2 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size};
+        CanvasButton temp = new CanvasButton(tower::lvlUp);
+        temp.setCoords(this.x + this.w / 2 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
+        this.buttons = new CanvasButton[]{temp};
     }
 
+    public void setShow_tower(Boolean show_tower) {
+        this.show_tower = show_tower;
+    }
+    public void setCoords(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getH() {
+        return h;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setButtons(CanvasButton[] buttons) {
+        this.buttons = buttons;
+    }
+
+    public int getText_size() {
+        return text_size;
+    }
+
+    public void setH(int h) {
+        this.h = h;
+    }
+
+    public void setW(int w) {
+        this.w = w;
+    }
 }

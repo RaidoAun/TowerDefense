@@ -79,4 +79,7 @@ public class Tower extends Block {
 
     }
 
+    public int getDamage() {
+        return damage;
+    }
 }

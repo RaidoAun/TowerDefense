@@ -30,9 +30,9 @@ public class Tower extends Block {
     }
 
     void lvlUp() {
-        this.level+=1;
-        this.range+=10;
-        this.damage+=1;
+        this.level += 1;
+        this.range += 10;
+        this.damage += 1;
     }
 
     public int getLevel() {
@@ -61,21 +61,21 @@ public class Tower extends Block {
 
     void shoot(List<Monster> monsters) {
 
-        for (Monster monster: monsters) {
-            int dist =(int) Math.round(Math.sqrt(Math.pow(this.x-monster.getX(),2)+Math.pow(this.y-monster.getY(),2)));
-            if (dist<=this.range){
+        for (Monster monster : monsters) {
+            int dist = (int) Math.round(Math.sqrt(Math.pow(this.x - monster.getX(), 2) + Math.pow(this.y - monster.getY(), 2)));
+            if (dist <= this.range) {
                 monster.setHp(monster.getHp() - this.damage);
                 Main.getGc().setStroke(getColor());
                 Main.getGc().setLineWidth(0.5);
-                Main.getGc().strokeLine(this.x,this.y,monster.getX(),monster.getY());
+                Main.getGc().strokeLine(this.x, this.y, monster.getX(), monster.getY());
             }
         }
     }
 
     void drawRange() {
 
-        Main.getGc().setFill(new Color(0,0,0,0.5));
-        Main.getGc().fillOval(this.x-this.range,this.y- this.range,this.range*2,this.range*2);
+        Main.getGc().setFill(new Color(0, 0, 0, 0.5));
+        Main.getGc().fillOval(this.x - this.range, this.y - this.range, this.range * 2, this.range * 2);
 
     }
 

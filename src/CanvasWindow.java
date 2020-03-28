@@ -13,53 +13,53 @@ public class CanvasWindow {
     private int h;
     private Canvas c;
     private boolean active;
-    private Color color = new Color(1,1,1,0.95);
+    private Color color = new Color(1, 1, 1, 0.95);
     private GraphicsContext gc;
     private int block_size;
     private int text_size;
     private Tower tower;
     private int[] btn;
 
-    CanvasWindow(Canvas c){
+    CanvasWindow(Canvas c) {
         this.c = c;
         this.gc = c.getGraphicsContext2D();
         this.block_size = Main.getMap().getSize();
-        this.text_size = (int) (c.getWidth()/100);
+        this.text_size = (int) (c.getWidth() / 100);
     }
 
-    public void draw(){
-        if (this.active){
+    public void draw() {
+        if (this.active) {
 
             gc.setFill(color);
-            gc.fillRect(x,y,w,h);
+            gc.fillRect(x, y, w, h);
             drawTowerInfo();
             drawTowerUpgradeButton();
         }
     }
 
-    public void drawTowerInfo(){
-        String[] info = new String[]{"Id:","Dmg:","Range:","Level:"};
-        String[] value = new String[]{Integer.toString(tower.getId()),Integer.toString(this.tower.getValue()),Double.toString(this.tower.getRange()),Integer.toString(this.tower.getLevel())};
+    public void drawTowerInfo() {
+        String[] info = new String[]{"Id:", "Dmg:", "Range:", "Level:"};
+        String[] value = new String[]{Integer.toString(tower.getId()), Integer.toString(this.tower.getValue()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(Paint.valueOf("#2aa32e"));
         for (int i = 0; i < info.length; i++) {
-            gc.fillText(info[i], this.x+this.text_size/2, this.y+this.text_size*(i+1));
-            gc.fillText(value[i], this.x+this.text_size*4, this.y+this.text_size*(i+1));
+            gc.fillText(info[i], this.x + (double) this.text_size / 2, this.y + this.text_size * (i + 1));
+            gc.fillText(value[i], this.x + this.text_size * 4, this.y + this.text_size * (i + 1));
         }
     }
 
-    public void drawTowerUpgradeButton(){
+    public void drawTowerUpgradeButton() {
         gc.setFill(Color.GREEN);
-        gc.fillRect(this.btn[0],this.btn[1],this.btn[2],this.btn[3]);
+        gc.fillRect(this.btn[0], this.btn[1], this.btn[2], this.btn[3]);
     }
 
-    public boolean isClickOnWindow(int x,int y){
-        if (x>this.x&&x<this.x+this.w&&y>this.y&&y<this.y+this.h){
-            if(x>this.btn[0]&&x<this.btn[0]+this.btn[2]&&y>this.btn[1]&&y<this.btn[1]+this.btn[3]){
+    public boolean isClickOnWindow(int x, int y) {
+        if (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h) {
+            if (x > this.btn[0] && x < this.btn[0] + this.btn[2] && y > this.btn[1] && y < this.btn[1] + this.btn[3]) {
                 this.tower.lvlUp();
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -70,21 +70,17 @@ public class CanvasWindow {
 
     public void setTower(Tower tower) {
         this.tower = tower;
-        this.w = (int) (c.getWidth()/12);
-        this.h = (int) (this.w*0.8);
-        int tempx = (int) (tower.getPixelX()-this.w/2);
-        int tempy = (int) (this.tower.getPixelY()-this.block_size*2-this.h);
-        if (tempx <0){
-            this.x = 0;
-        }else{
-            this.x = tempx;
-        }
-        if(tempy<0){
-            this.y = (int) (this.tower.getPixelY()+3*this.block_size);
-        }else{
+        this.w = (int) (c.getWidth() / 12);
+        this.h = (int) (this.w * 0.8);
+        int tempx = (int) (tower.getPixelX() - this.w / 2);
+        int tempy = (int) (this.tower.getPixelY() - this.block_size * 2 - this.h);
+        this.x = Math.max(tempx, 0);
+        if (tempy < 0) {
+            this.y = (int) (this.tower.getPixelY() + 3 * this.block_size);
+        } else {
             this.y = tempy;
         }
-        this.btn = new int[]{this.x+this.w/2-this.text_size/2, this.y+this.h-this.text_size, this.text_size, this.text_size};
+        this.btn = new int[]{this.x + this.w / 2 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size};
     }
 
 }

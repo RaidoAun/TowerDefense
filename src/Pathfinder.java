@@ -31,12 +31,6 @@ class Pathfinder {
         return finalPath;
     }
 
-    int[][] getClosedList() {
-        int[][] xy = new int[closedList.size()][7];
-        xy = closedList.toArray(xy);
-        return xy;
-    }
-
     private int[][] findPath() {
         //Meetodi tööle vajalikud muutujad.
         int[] currentPoint;
@@ -181,16 +175,6 @@ class Pathfinder {
             }
         }
         return -1;
-    }
-
-    private List<Integer> matrixIndexesof(int[] otsitav, List<int[]> matrix) {
-        List<Integer> indexes = new ArrayList<>();
-        for (int i = 0; i < matrix.size(); i++) {
-            if (matrix.get(i)[0] == otsitav[0] && matrix.get(i)[1] == otsitav[1]) {
-                indexes.add(i);
-            }
-        }
-        return indexes;
     }
 
     private List<int[]> getParents() {

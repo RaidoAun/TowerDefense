@@ -17,12 +17,12 @@ class Spawnpoint {
         this.map = map;
     }
 
-    void setPath(int[][] path) {
-        this.path = path;
-    }
-
     int[][] getPath() {
         return path;
+    }
+
+    void setPath(int[][] path) {
+        this.path = path;
     }
 
     int[] getSpawnpointxy() {
@@ -33,22 +33,26 @@ class Spawnpoint {
         return nexusxy;
     }
 
-    void moveMonsters(){
-        for (Monster monster:this.monsters) {
+    void setNexusxy(int[] xy) {
+        this.nexusxy = xy;
+    }
+
+    void moveMonsters() {
+        for (Monster monster : this.monsters) {
             monster.move(this.path);
         }
     }
 
     public void genMonster(Monsters type) {
-        double x = (this.spawnpointxy[0]+0.5)*Main.getMap().getSize();
-        double y = (this.spawnpointxy[1]+0.5)*Main.getMap().getSize();
+        double x = (this.spawnpointxy[0] + 0.5) * Main.getMap().getSize();
+        double y = (this.spawnpointxy[1] + 0.5) * Main.getMap().getSize();
         monsters.add(new Monster(type, x, y));
     }
 
     void drawMonsters() {
-        for (int i = getMonsters().size()-1; i >=0 ; i--) {
+        for (int i = getMonsters().size() - 1; i >= 0; i--) {
             Monster monster = getMonsters().get(i);
-            if (monster.getHp()<=0) {
+            if (monster.getHp() <= 0) {
                 Game.updateMoney(monster.getMoney());
                 monsters.remove(monster);
             } else if (monster.hasReachedNexus()) {
@@ -56,17 +60,13 @@ class Spawnpoint {
                 monsters.remove(monster);
             }
         }
-        for (Monster monster:monsters) {
+        for (Monster monster : monsters) {
             monster.drawMonster();
         }
     }
 
     private List<Monster> getMonsters() {
         return monsters;
-    }
-
-    void setNexusxy(int[] xy) {
-       this.nexusxy = xy;
     }
 
     void genPath(int gCost) {

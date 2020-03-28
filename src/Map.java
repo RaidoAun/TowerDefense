@@ -1,6 +1,7 @@
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Map {
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
 
-    public Map(int rectCountx, int rectCounty,Canvas map_canvas){
+    public Map(int rectCountx, int rectCounty, Canvas map_canvas) {
         this.towers = new ArrayList<>();
         this.x = rectCountx;
         this.y = rectCounty;
@@ -32,17 +33,17 @@ public class Map {
         this.spawnCount = 4;
     }
 
-    void initMap(){
+    void initMap() {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                if (i == 0 || j == 0 || i == x-1 || j == y-1){
-                    map_matrix[i][j] = new Block(1,1,new Color(0,0,0,1));
-                } else{
+                if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
+                    map_matrix[i][j] = new Block(1, 1, new Color(0, 0, 0, 1));
+                } else {
                     int rand = new Random().nextInt(2);
-                    if (new Random().nextInt(40)==1){
-                        map_matrix[i][j] = new Block(rand,4,new Color(1-rand,1-rand,1-rand,1));
-                    }else {
-                        map_matrix[i][j] = new Block(rand,rand,new Color(1-rand,1-rand,1-rand,1));
+                    if (new Random().nextInt(40) == 1) {
+                        map_matrix[i][j] = new Block(rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1));
+                    } else {
+                        map_matrix[i][j] = new Block(rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1));
                     }
                 }
 
@@ -50,25 +51,25 @@ public class Map {
         }
     }
 
-    void genMap(int a){
+    void genMap(int a) {
         for (int w = 0; w < a; w++) {
-            for (int i = 1; i < x-1; i++) {
-                for (int j = 1; j < y-1; j++) {
+            for (int i = 1; i < x - 1; i++) {
+                for (int j = 1; j < y - 1; j++) {
                     int block_value_sum = 0;
                     for (int k = -1; k < 2; k++) {
                         for (int l = -1; l < 2; l++) {
-                            block_value_sum+=map_matrix[i+k][j+l].getValue();
+                            block_value_sum += map_matrix[i + k][j + l].getValue();
                         }
                     }
-                    if (block_value_sum>5){
+                    if (block_value_sum > 5) {
                         map_matrix[i][j].setId(1);
                         map_matrix[i][j].setValue(1);
-                        map_matrix[i][j].setColor(new Color(0,0,0,1));
+                        map_matrix[i][j].setColor(new Color(0, 0, 0, 1));
                     }
-                    if (block_value_sum<5){
+                    if (block_value_sum < 5) {
                         map_matrix[i][j].setId(0);
                         map_matrix[i][j].setValue(0);
-                        map_matrix[i][j].setColor(new Color(1,1,1,1));
+                        map_matrix[i][j].setColor(new Color(1, 1, 1, 1));
                     }
                 }
             }
@@ -86,10 +87,10 @@ public class Map {
         this.map = flippedMap;
     }
 
-    void drawMap(int blocksize){
+    void drawMap(int blocksize) {
         this.size = blocksize;
-        this.canvas.setWidth(size*this.x);
-        this.canvas.setHeight(size*this.y);
+        this.canvas.setWidth(size * this.x);
+        this.canvas.setHeight(size * this.y);
 
         //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -99,13 +100,13 @@ public class Map {
             for (int j = 0; j < this.y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
                 //System.out.print(map_matrix[i][j].getValue()+" ");
-                gc.fillRect(i*this.size,j*this.size, this.size, this.size);
+                gc.fillRect(i * this.size, j * this.size, this.size, this.size);
             }
-            gc.strokeLine(i*this.size,0,i*this.size,canvas.getHeight());
+            gc.strokeLine(i * this.size, 0, i * this.size, canvas.getHeight());
             //System.out.println();
         }
         for (int i = 0; i < this.y; i++) {
-            gc.strokeLine(0,i*this.size,canvas.getWidth(),i*this.size);
+            gc.strokeLine(0, i * this.size, canvas.getWidth(), i * this.size);
         }
         gc.stroke();
     }
@@ -117,12 +118,6 @@ public class Map {
     void editMap_matrix(int i, int j, Block newblock) {
         this.map_matrix[i][j] = newblock;
         this.map[j][i] = newblock.getId();
-    }
-
-    void drawBlock(int i, int j){
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(map_matrix[i][j].getColor());
-        gc.fillRect(i*size,j*size,size,size);
     }
 
     int getSize() {
@@ -169,7 +164,7 @@ public class Map {
         int minDistance = this.minDisdanceBetweenSpawns;
         int count = this.spawnCount;
 
-        double optimaalne = (this.x * this.y) / (Math.pow((double) minDistance/2, 2) * Math.PI);
+        double optimaalne = (this.x * this.y) / (Math.pow((double) minDistance / 2, 2) * Math.PI);
         if (count > optimaalne) {
             System.out.println("Praeguste parameetritega on võimalik luua maksimum " + (int) optimaalne + " spawnpointi!");
         }
@@ -244,11 +239,7 @@ public class Map {
     }
 
     void genPathstoNexus(int gCost) {
-        //Random r = new Random();
-        //int randomGCost;
         for (Spawnpoint spawn : this.spawnpoints) {
-            //randomGCost = (r.nextInt(gCost * 2) + 1 - 500) + gCost;
-            //System.out.println(randomGCost);
             spawn.genPath(gCost);
             spawn.setNexusWithPath(true);
         }
@@ -274,14 +265,14 @@ public class Map {
         return x;
     }
 
-    public int getY() {
-        return y;
-    }
-
     public void setX(int x) {
         this.map = new int[this.y][x];
         this.map_matrix = new Block[x][this.y];
         this.x = x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public void setY(int y) {
@@ -294,12 +285,12 @@ public class Map {
         return minDisdanceBetweenSpawns;
     }
 
-    public int getSpawnCount() {
-        return spawnCount;
-    }
-
     public void setMinDisdanceBetweenSpawns(int minDisdanceBetweenSpawns) {
         this.minDisdanceBetweenSpawns = minDisdanceBetweenSpawns;
+    }
+
+    public int getSpawnCount() {
+        return spawnCount;
     }
 
     public void setSpawnCount(int spawnCount) {

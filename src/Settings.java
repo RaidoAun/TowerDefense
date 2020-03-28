@@ -55,7 +55,7 @@ public class Settings {
         settings_layout.setSpacing(20);
         settings_layout.setAlignment(Pos.CENTER);
         settings_layout.getChildren().addAll(spawnpointCount, distance, mapSizeX, mapSizeY, button_row);
-        Scene settings = new Scene(settings_layout,500, 250);
+        Scene settings = new Scene(settings_layout, 500, 250);
 
         back.setOnAction(e -> Main.switchToMenu());
         apply.setOnAction(e -> {
@@ -127,28 +127,28 @@ public class Settings {
         return ajutineX;
     }
 
-    private static int getAjutineY() {
-        return ajutineY;
-    }
-
-    private static int getAjutineS() {
-        return ajutineSpawnCount;
-    }
-
-    public static int getAjutineSpawnD() {
-        return ajutineSpawnDist;
-    }
-
     private static void setAjutineX(int x) {
         ajutineX = x;
+    }
+
+    private static int getAjutineY() {
+        return ajutineY;
     }
 
     private static void setAjutineY(int y) {
         ajutineY = y;
     }
 
+    private static int getAjutineS() {
+        return ajutineSpawnCount;
+    }
+
     private static void setAjutineS(int ajutineSpawnCount) {
         Settings.ajutineSpawnCount = ajutineSpawnCount;
+    }
+
+    public static int getAjutineSpawnD() {
+        return ajutineSpawnDist;
     }
 
     public static void setAjutineSpawnD(int ajutineSpawnDist) {

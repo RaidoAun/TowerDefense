@@ -1,13 +1,11 @@
 import javafx.scene.paint.Color;
 
-import java.util.List;
-
 public class Block {
     int id;
     Color color;
     int value;
 
-    public Block(int block_id, int block_value, Color block_color){
+    public Block(int block_id, int block_value, Color block_color) {
         //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path;
         this.id = block_id;
         this.color = block_color;
@@ -19,20 +17,20 @@ public class Block {
         return color;
     }
 
-    int getId() {
-        return id;
-    }
-
-    int getValue() {
-        return value;
-    }
-
     void setColor(Color color) {
         this.color = color;
     }
 
+    int getId() {
+        return id;
+    }
+
     void setId(int id) {
         this.id = id;
+    }
+
+    int getValue() {
+        return value;
     }
 
     void setValue(int value) {

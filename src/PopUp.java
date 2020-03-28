@@ -31,8 +31,4 @@ public class PopUp {
         }
     }
 
-    public static void editLabel(String newText) {
-        label.setText(newText);
-    }
-
 }

@@ -9,6 +9,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
+
 import java.util.List;
 import java.util.Random;
 
@@ -28,7 +29,7 @@ public class Game {
         return new Scene(game_layout);
     }
 
-    public static void generateGame(){
+    public static void generateGame() {
 
         int blocksize = getBlockSize();
         map.initMap();
@@ -56,7 +57,7 @@ public class Game {
         } else {
             map.genNexus();
             map.genPathstoNexus(500);
-            for (Spawnpoint spawn: map.getSpawnpoints()) {
+            for (Spawnpoint spawn : map.getSpawnpoints()) {
                 map.drawPath(spawn.getPath());
             }
         }
@@ -72,6 +73,7 @@ public class Game {
             int blocksize = getBlockSize();
             boolean generateMonster = false;
             long timeStamp = spawnspeed;
+
             public void handle(long currentNanoTime) {
                 long t = (currentNanoTime - startNanoTime) / 1000000000;
                 if (t == timeStamp) {
@@ -104,11 +106,10 @@ public class Game {
         animate.start();
 
 
-
         canvas.setOnMouseClicked(e -> {
             int clickx = (int) e.getX();
             int clicky = (int) e.getY();
-            if (!cWindow.isClickOnWindow(clickx,clicky)){
+            if (!cWindow.isClickOnWindow(clickx, clicky)) {
                 cWindow.setActive(false);
 
                 //Pikslite muutmine mapi maatriksi indexiteks.
@@ -147,14 +148,14 @@ public class Game {
                         tower.setActive(false);
 
                     }
-                    if (eventBlock.getId() == 0 || eventBlock.getId() == 9){
-                        double towerX = x*map.getSize() + (double) map.getSize()/2;
-                        double towerY = y*map.getSize() + (double) map.getSize()/2;
+                    if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
+                        double towerX = x * map.getSize() + (double) map.getSize() / 2;
+                        double towerY = y * map.getSize() + (double) map.getSize() / 2;
                         Tower newTower = new Tower(Towers.LASER, towerX, towerY);
                         map.getTowers().add(newTower);
                         map.editMap_matrix(x, y, newTower.getBlock());
                         newTower.setActive(true);
-                    } else if (eventBlock.getId()>=10) {
+                    } else if (eventBlock.getId() >= 10) {
                         Tower currentTower = map.getTowerWithXY(x, y);
                         currentTower.setActive(true);
                         cWindow.setTower(currentTower);
@@ -172,17 +173,13 @@ public class Game {
         return (int) Math.min(screenSizes.getWidth() / Main.getMap().getX(), screenSizes.getHeight() / Main.getMap().getY());
     }
 
-    private static int convertPixelToIndex(int pixel_coords){
-        return pixel_coords/map.getSize();
+    private static int convertPixelToIndex(int pixel_coords) {
+        return pixel_coords / map.getSize();
     }
 
-    private static double convertIndexToPixel(int index){
-        return index*map.getSize();
-    }
-
-    private static void drawTowerRanges(){
-        for (Tower tower: map.getTowers()) {
-            if (tower.isActive()){
+    private static void drawTowerRanges() {
+        for (Tower tower : map.getTowers()) {
+            if (tower.isActive()) {
                 tower.drawRange();
             }
         }
@@ -191,17 +188,17 @@ public class Game {
     public static void updateMoney(int money) {
         raha += money;
         String text = String.format("Raha: %s $", raha);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth()/40));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth() / 40));
         g.setFill(Paint.valueOf("#2aa32e"));
-        g.fillText(text, canvas.getWidth()*0.85, canvas.getHeight()*0.05);
+        g.fillText(text, canvas.getWidth() * 0.85, canvas.getHeight() * 0.05);
     }
 
     public static void updateHealth(int hp) {
         health += hp;
         String text = String.format("Tervis: %s", health);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth()/40));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth() / 40));
         g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, canvas.getWidth()*0.85, canvas.getHeight()*0.10);
+        g.fillText(text, canvas.getWidth() * 0.85, canvas.getHeight() * 0.10);
     }
 
 }

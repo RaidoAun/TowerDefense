@@ -124,8 +124,8 @@ class Pathfinder {
                 boolean uusxonpiirides = uusx >= 0 && uusx <= map[0].length - 1;
                 boolean uusyonpiirides = uusy >= 0 && uusy <= map.length - 1;
                 boolean onpiirides = uusxonpiirides && uusyonpiirides;
-                Set<Integer> notPassable = new HashSet<>(Set.of(1, 10, 2));
-                if (onpiirides && /*map[uusy][uusx] != 1*/ !notPassable.contains(map[uusy][uusx]) && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
+                Set<Integer> notPassable = new HashSet<>(Set.of(1, 10, 2, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20));
+                if (onpiirides && !notPassable.contains(map[uusy][uusx]) && !matrixContains(uusxy, openListxy)) { // kui blokk on läbitav ning ei asu juba open listis
                     int h = leiaHupotenuus(uusx, end[0], uusy, end[1]);
                     int g = current[4] + this.gCost;
                     int f = h + g;

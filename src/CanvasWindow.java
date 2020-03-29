@@ -32,7 +32,7 @@ public class CanvasWindow {
         if (this.active) {
             gc.setFill(color);
             gc.fillRect(x, y, w, h);
-            if (show_tower){
+            if (show_tower) {
                 drawTowerInfo();
             }
             drawButtons();
@@ -49,29 +49,28 @@ public class CanvasWindow {
             gc.fillText(value[i], this.x + this.text_size * 4, this.y + this.text_size * (i + 1));
         }
     }
-    public void drawButtons(){
 
-        for (int i = 0; i < buttons.length; i++) {
-            gc.setFill(this.buttons[i].getColor());
-            gc.fillRect(this.buttons[i].getX(), this.buttons[i].getY(), this.buttons[i].getW(), this.buttons[i].getH());
+    public void drawButtons() {
+
+        for (CanvasButton button : buttons) {
+            gc.setFill(button.getColor());
+            gc.fillRect(button.getX(), button.getY(), button.getW(), button.getH());
         }
 
     }
 
     public boolean isClickOnWindow(int x, int y) {
-        if (x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h) {
-            return true;
-        } else {
-            return false;
-        }
+        return x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h;
     }
-    public void checkButtons(int clickx, int clicky){
-        for (int i = 0; i < this.buttons.length; i++) {
-            if (clickx > this.buttons[i].getX() && clickx < this.buttons[i].getX() + this.buttons[i].getW() && clicky > this.buttons[i].getY() && clicky < this.buttons[i].getY()+this.buttons[i].getH()) {
-                this.buttons[i].onPressed();
+
+    public void checkButtons(int clickx, int clicky) {
+        for (CanvasButton button : this.buttons) {
+            if (clickx > button.getX() && clickx < button.getX() + button.getW() && clicky > button.getY() && clicky < button.getY() + button.getH()) {
+                button.onPressed();
             }
         }
     }
+
     public void setActive(boolean active) {
         this.active = active;
     }
@@ -96,7 +95,8 @@ public class CanvasWindow {
     public void setShow_tower(Boolean show_tower) {
         this.show_tower = show_tower;
     }
-    public void setCoords(int x, int y){
+
+    public void setCoords(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -105,8 +105,16 @@ public class CanvasWindow {
         return h;
     }
 
+    public void setH(int h) {
+        this.h = h;
+    }
+
     public int getW() {
         return w;
+    }
+
+    public void setW(int w) {
+        this.w = w;
     }
 
     public int getY() {
@@ -123,13 +131,5 @@ public class CanvasWindow {
 
     public int getText_size() {
         return text_size;
-    }
-
-    public void setH(int h) {
-        this.h = h;
-    }
-
-    public void setW(int w) {
-        this.w = w;
     }
 }

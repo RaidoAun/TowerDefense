@@ -37,13 +37,13 @@ public class Map {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
-                    map_matrix[i][j] = new Block(1, 1, new Color(0, 0, 0, 1));
+                    map_matrix[i][j] = new Block(1, 1, new Color(0, 0, 0, 1), 0);
                 } else {
                     int rand = new Random().nextInt(2);
                     if (new Random().nextInt(40) == 1) {
-                        map_matrix[i][j] = new Block(rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1));
+                        map_matrix[i][j] = new Block(rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
                     } else {
-                        map_matrix[i][j] = new Block(rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1));
+                        map_matrix[i][j] = new Block(rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
                     }
                 }
 
@@ -92,7 +92,6 @@ public class Map {
         this.canvas.setWidth(size * this.x);
         this.canvas.setHeight(size * this.y);
 
-        //editMap_matrix(100, 50, new Block(3, 0, new Color(1, 0, 0, 1))); //0 - vaba; 1 - sein; 3 - nexus; 2 - start
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setLineWidth(0.1);
         gc.setStroke(Color.BLACK);
@@ -143,8 +142,12 @@ public class Map {
     void drawPath(int[][] path) {
         if (path.length > 0) {
             for (int i = 0; i < path.length - 1; i++) {
-                //Path bloki id on 9.
-                editMap_matrix(path[i][0], path[i][1], new Block(9, 5, new Color(0.8, 0.76, 0.72, 0.9)));
+                int indexX = path[i][0];
+                int indexY = path[i][1];
+                int pathCount = getBlock(indexX, indexY).getPathCount();
+
+                Block newBlock = new Block(9, 5, Color.LIGHTGRAY, pathCount + 1);
+                editMap_matrix(indexX, indexY, newBlock);
             }
         }
     }
@@ -152,9 +155,16 @@ public class Map {
     void deletePath(int[][] path) {
         if (path.length > 0) {
             for (int i = 0; i < path.length - 1; i++) {
-                if (map_matrix[path[i][0]][path[i][1]].getId() == 9) {
-                    editMap_matrix(path[i][0], path[i][1], new Block(0, 5, new Color(1, 1, 1, 1)));
+                int indexX = path[i][0];
+                int indexY = path[i][1];
+                int pathCount = getBlock(indexX, indexY).getPathCount();
+
+                Block newBlock = new Block(9, 5, Color.LIGHTGRAY, pathCount - 1);
+                if (newBlock.getPathCount() == 0) {
+                    newBlock.setId(0);
+                    newBlock.setColor(Color.WHITE);
                 }
+                if (getBlock(indexX, indexY).getId() == 9) editMap_matrix(indexX, indexY, newBlock);
             }
         }
     }
@@ -219,7 +229,7 @@ public class Map {
 
     void spawnSpawnpoints() {
         for (Spawnpoint p : spawnpoints) {
-            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(2, 5, new Color(0.5, 1, 0, 0.9)));
+            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(2, 5, new Color(0.5, 1, 0, 0.9), 0));
         }
     }
 
@@ -235,7 +245,7 @@ public class Map {
 
     void genNexus() {
         int[] n = this.spawnpoints.get(0).getNexusxy();
-        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 1, 1)));
+        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 1, 1), 0));
     }
 
     void genPathstoNexus(int gCost) {

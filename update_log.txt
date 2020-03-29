@@ -29,9 +29,16 @@ Muutsin raha suuruse ja asukoha sõltuma canvase suurustest.
 27.03.2020 Leo
 Mängijal on nüüd piiratud arv elusid, kui need otsa saavad, siis on game over.
 
-29.03.2020 Raido
-Leidsin mõned probleemid, mida võiks lahendada, kui mäng pmst valma. (või igav) CanvasWindow ja raha ja elude asjad võtavad oma suuruse canvase X laiusest,
-ehk kui X on väike siis need ka väiksed, võiksid võtta selle suuruse, mille järgi need tulevad kõige suuremad (map juba teeb seda ja teeb end alati kas alla või paremale vastu äärt
-abiks on Game.getBlockSize())
+28.03.2020 Leo
+Tower klass, mis extendib Block klassi. Erinevate toweri tüüpide jaoks enum klass Tower.
 
-Tegin CanvasButton classi, nüüd saab ikkagi canvasele teha igasuguseid buttoneid. Nüüd paremat klikki tehes saab valida mis towerit soovid placida.
+29.03.2020 Raido
+Leidsin mõned probleemid, mida võiks lahendada, kui mäng pmst valma. (või igav) CanvasWindow ja raha ja elude asjad võtavad
+oma suuruse canvase X laiusest, ehk kui X on väike siis need ka väiksed, võiksid võtta selle suuruse, mille järgi need tulevad
+kõige suuremad (map juba teeb seda ja teeb end alati kas alla või paremale vastu äärt abiks on Game.getBlockSize()). Tegin
+CanvasButton classi, nüüd saab ikkagi canvasele teha igasuguseid buttoneid. Nüüd paremat klikki tehes saab valida mis towerit
+soovid placida.
+
+29.03.2020 Leo
+Kaotasin toweritelt hp ära, sest see on kasutu. Tegin Towerite ehitamise koodijupile suure remondi. Kaotasin selle annoying
+if else spagetti ära ning optimiseerisin koodi märgatavalt. Kaotasin bug-i, kus overlapping teed vahel üksteist ära kustutasid.

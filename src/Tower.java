@@ -14,7 +14,7 @@ public class Tower extends Block {
     private int maxLevel;
 
     public Tower(Towers type, double x, double y) {
-        super(type.getId() + 10, type.getDmg(), type.getColor());
+        super(type.getId() + 10, type.getDmg(), type.getColor(), 0);
         this.x = x;
         this.y = y;
         this.level = 1;
@@ -26,7 +26,7 @@ public class Tower extends Block {
     }
 
     public Block getBlock() {
-        return new Block(this.id, this.value, this.color);
+        return new Block(this.id, this.value, this.color, this.getPathCount());
     }
 
     void lvlUp() {

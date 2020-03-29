@@ -7,16 +7,14 @@ public class CanvasButton {
     private int y;
     private int w;
     private int h;
-    public CanvasButton(Runnable func){
+
+    public CanvasButton(Runnable func) {
         this.func = func;
 
     }
-    public void onPressed(){
-        this.func.run();
-    }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void onPressed() {
+        this.func.run();
     }
 
     public int getX() {
@@ -34,7 +32,8 @@ public class CanvasButton {
     public int getH() {
         return h;
     }
-    public void setCoords(int x, int y, int w, int h){
+
+    public void setCoords(int x, int y, int w, int h) {
         this.x = x;
         this.y = y;
         this.w = w;
@@ -43,5 +42,9 @@ public class CanvasButton {
 
     public Color getColor() {
         return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

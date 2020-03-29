@@ -72,14 +72,20 @@ public class Game {
         AnimationTimer animate = new AnimationTimer() {
             int blocksize = getBlockSize();
             boolean generateMonster = false;
-            long timeStamp = 0;
+            boolean shoot = false;
+            long lastSpawnTime = 0;
+            long lastShootTime = 0;
             long startNanoTime = System.nanoTime();
 
             public void handle(long currentNanoTime) {
                 long t = (currentNanoTime - startNanoTime) / 1000000000;
-                if (t % spawnspeed == 0 && t != timeStamp) {
+                if (t % spawnspeed == 0 && t != lastSpawnTime) {
                     generateMonster = true;
-                    timeStamp = t;
+                    lastSpawnTime = t;
+                }
+                if (t != lastShootTime) {
+                    shoot = true;
+                    lastShootTime = t;
                 }
                 map.drawMap(blocksize);
                 drawTowerRanges();
@@ -94,10 +100,11 @@ public class Game {
                     }
                     spawn.moveMonsters();
                     spawn.drawMonsters();
-                    spawn.monstersTakeDamage();
+                    spawn.monstersTakeDamage(!shoot);
                 }
                 cWindow.draw();
                 if (generateMonster) generateMonster = false;
+                if (shoot) shoot = false;
                 if (health <= 0) {
                     this.stop();
                     PopUp.createPopup("YOU SUCK! GAME OVER!", false);

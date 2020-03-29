@@ -88,9 +88,9 @@ class Spawnpoint {
         return tee.getFinalPath();
     }
 
-    public void monstersTakeDamage() {
+    public void monstersTakeDamage(boolean onlyAnimate) {
         for (Tower tower : Main.getMap().getTowers()) {
-            tower.shoot(this.monsters);
+            tower.shoot(this.monsters, onlyAnimate);
         }
     }
 

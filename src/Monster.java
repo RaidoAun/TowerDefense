@@ -1,5 +1,8 @@
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Monster {
 
     private int hp;
@@ -12,6 +15,7 @@ public class Monster {
     private Color color;
     private int money;
     private boolean reachedNexus;
+    private List<Projectile> lockedOnMissles;
 
     Monster(Monsters type, double x_coord, double y_coord) {
         this.x = x_coord;
@@ -24,11 +28,12 @@ public class Monster {
         this.color = type.getColor();
         this.money = type.getMoney();
         this.reachedNexus = false;
+        this.lockedOnMissles = new ArrayList<>();
     }
 
     public void drawMonster() {
         Main.getGc().setFill(this.color);
-        double diameeter = Main.getMap().getSize() / 2;
+        double diameeter = (double) Main.getMap().getSize() / 2;
         Main.getGc().fillOval(this.x - diameeter / 2, this.y - diameeter / 2, diameeter, diameeter);
     }
 
@@ -107,6 +112,28 @@ public class Monster {
         } else {
             this.reachedNexus = true;
         }
+    }
+
+    public void addMissle(Projectile missle) {
+        lockedOnMissles.add(missle);
+    }
+
+    public void updateMisslesEndpoint() {
+        for (Projectile missle : this.lockedOnMissles) {
+            missle.setEndPoint(this.x, this.y);
+        }
+    }
+
+    public void pullMissles() {
+        List<Projectile> toRemove = new ArrayList<>();
+        for (Projectile missle : lockedOnMissles) {
+            missle.moveMissle();
+            if (missle.hasReachedEnd()) {
+                this.hp -= missle.getDamage();
+                toRemove.add(missle);
+            }
+        }
+        this.lockedOnMissles.removeAll(toRemove);
     }
 
 }

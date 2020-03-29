@@ -2,9 +2,9 @@ import javafx.scene.paint.Color;
 
 public enum Towers {
 
-    LASER("Laser", 0, 5, 100, 5, Color.DARKRED, 100),//range peaks scalima mapi blocki suurusega (Main.getMap().getSize())
+    LASER("Laser", 0, 10, 100, 5, Color.DARKRED, 100),  //range peaks scalima mapi blocki suurusega (Main.getMap().getSize())
     KAHUR("Kahur", 1, 20, 200, 3, Color.CYAN, 50),
-    KUULIPILDUJA("Kuulipilduja", 2, 10, 150, 5, Color.DARKOLIVEGREEN, 75),
+    KUULIPILDUJA("Kuulipilduja", 2, 15, 150, 5, Color.DARKOLIVEGREEN, 75),
     KÜLMUTAJA("Külmutaja", 3, 0, 300, 10, Color.DEEPPINK, 50),
     MÜÜR("Müür", 4, 0, 100, 10, Color.GOLD, 0);
 

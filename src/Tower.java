@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Tower extends Block {
 
-    private double x;
-    private double y;
+    private int x;
+    private int y;
     private int level;
     private double range;
     private boolean active;
@@ -13,7 +13,7 @@ public class Tower extends Block {
     private int hind;
     private int maxLevel;
 
-    public Tower(Towers type, double x, double y) {
+    public Tower(Towers type, int x, int y) {
         super(type.getId() + 10, type.getDmg(), type.getColor(), 0);
         this.x = x;
         this.y = y;
@@ -47,11 +47,11 @@ public class Tower extends Block {
         this.active = active;
     }
 
-    public double getPixelX() {
+    public int getPixelX() {
         return x;
     }
 
-    public double getPixelY() {
+    public int getPixelY() {
         return y;
     }
 
@@ -103,5 +103,12 @@ public class Tower extends Block {
     public int getDamage() {
         return damage;
     }
+    public void sell() {
+        Main.getMap().getTowers().remove(this);
+        Main.getMap().editMap_matrix(Game.convertPixelToIndex(this.getPixelX()),Game.convertPixelToIndex(this.getPixelY()),new Block(0, 0, new Color(1, 1 , 1, 1), 0));
+    }
 
+    public int getHind() {
+        return hind;
+    }
 }

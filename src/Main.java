@@ -5,6 +5,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -14,6 +16,7 @@ public class Main extends Application {
     private static Map map = new Map(160, 85, canvas);
     private static Scene menu_scene;
     private static Stage window;
+    private static int screenH = (int)  Screen.getPrimary().getBounds().getHeight();
 
     public static void main(String[] args) {
         launch(args);
@@ -36,9 +39,12 @@ public class Main extends Application {
         return gc;
     }
 
+    public static int getScreenH() {
+        return screenH;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-
         window = primaryStage;
         VBox menu_button_box = new VBox();
         menu_button_box.setSpacing(10);

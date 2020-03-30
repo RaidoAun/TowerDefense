@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 
 public class CanvasWindow {
 
@@ -25,7 +26,7 @@ public class CanvasWindow {
         this.c = c;
         this.gc = c.getGraphicsContext2D();
         this.block_size = Main.getMap().getSize();
-        this.text_size = (int) (c.getWidth() / 100);
+        this.text_size = (int) (Main.getScreenH() / 60);
     }
 
     public void draw() {
@@ -77,8 +78,8 @@ public class CanvasWindow {
 
     public void setTower(Tower tower) {
         this.tower = tower;
-        this.w = (int) (c.getWidth() / 12);
-        this.h = (int) (this.w * 0.8);
+        this.w = (int) Main.getScreenH()/6;
+        this.h = (int) (this.w * 0.6);
         int tempx = (int) (tower.getPixelX() - this.w / 2);
         int tempy = (int) (this.tower.getPixelY() - this.block_size * 2 - this.h);
         this.x = Math.max(tempx, 0);
@@ -87,9 +88,21 @@ public class CanvasWindow {
         } else {
             this.y = tempy;
         }
-        CanvasButton temp = new CanvasButton(tower::lvlUp);
-        temp.setCoords(this.x + this.w / 2 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
-        this.buttons = new CanvasButton[]{temp};
+        CanvasButton temp = new CanvasButton(()->{
+            int upgradePrice = (int) (tower.getHind()*0.1);
+            if(Game.getRaha()>=upgradePrice){
+                Game.updateMoney(-upgradePrice);
+                tower.lvlUp();
+            }
+        });
+        temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
+        CanvasButton temp2 = new CanvasButton(()->{
+            tower.sell();
+            this.active = false;
+        });
+        temp2.setColor(Color.RED);
+        temp2.setCoords(this.x+2*(this.w/3) - this.text_size / 2,this.y + this.h - this.text_size,this.text_size, this.text_size);
+        this.buttons = new CanvasButton[]{temp,temp2};
     }
 
     public void setShow_tower(Boolean show_tower) {

@@ -92,7 +92,7 @@ public class Game {
                     lastShootTime = t;
                 }
                 map.drawMap(blocksize);
-                drawTowerRanges();
+                tickTowers();
 
                 updateMoney(0);
                 updateHealth(0);
@@ -127,15 +127,16 @@ public class Game {
             if (e.getButton() == MouseButton.SECONDARY && !cWindow.isClickOnWindow(clickx, clicky)) {
                 cWindow.setActive(true);
                 cWindow.setShow_tower(false);
-                cWindow.setCoords(clickx - cWindow.getW() / 2, clicky - cWindow.getH());
                 cWindow.setH(cWindow.getText_size() * 2);
+                cWindow.setW((int) (canvas.getWidth() / 12));
+                cWindow.setCoords(clickx - cWindow.getW() / 2, clicky - cWindow.getH());
                 CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
                 for (int i = 0; i < Towers.values().length; i++) {
                     int index = i;
                     CanvasButton button_temp = new CanvasButton(() -> setTowerToMakeId(index));
                     button_temp.setColor(Towers.values()[index].getColor());
                     int button_padding = cWindow.getW() / Towers.values().length;
-                    button_temp.setCoords(cWindow.getX() + button_padding * index, cWindow.getY() + cWindow.getH() - cWindow.getText_size(), cWindow.getText_size(), cWindow.getText_size());
+                    button_temp.setCoords((int) (cWindow.getX() + button_padding * (index+0.5)), cWindow.getY() + cWindow.getH()/2 - cWindow.getText_size()/2, cWindow.getText_size(), cWindow.getText_size());
                     buttons_temp[i] = button_temp;
                 }
                 cWindow.setButtons(buttons_temp);
@@ -148,29 +149,31 @@ public class Game {
                 //Blokk, millel klikkati.
                 Block eventBlock = map.getBlock(x, y);
                 if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
+                    if (Game.raha>=Towers.values()[TowerToMakeId].getHind()){
+                        Game.raha-=Towers.values()[TowerToMakeId].getHind();
+                        List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
+                        map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
 
-                    List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
-                    map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
+                        if (eiTakistaTeed(updatableSpawns)) {
+                            genNewPaths(updatableSpawns);
+                            for (Tower tower : map.getTowers()) {
+                                tower.setActive(false);
+                            }
 
-                    if (eiTakistaTeed(updatableSpawns)) {
-                        genNewPaths(updatableSpawns);
-                        for (Tower tower : map.getTowers()) {
-                            tower.setActive(false);
+                            //Uue toweri genereerimine.
+                            int towerX = x * map.getSize() + map.getSize() / 2;
+                            int towerY = y * map.getSize() + map.getSize() / 2;
+                            Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
+                            map.getTowers().add(newTower);
+                            map.editMap_matrix(x, y, newTower.getBlock());
+                            newTower.setActive(true);
+
+                        } else {
+                            map.editMap_matrix(x, y, eventBlock);
+                            PopUp.createPopup("Tower takistaks spawnpointi teed nexuseni!\nProovi uuesti!", true);
                         }
 
-                        //Uue toweri genereerimine.
-                        double towerX = x * map.getSize() + (double) map.getSize() / 2;
-                        double towerY = y * map.getSize() + (double) map.getSize() / 2;
-                        Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
-                        map.getTowers().add(newTower);
-                        map.editMap_matrix(x, y, newTower.getBlock());
-                        newTower.setActive(true);
-
-                    } else {
-                        map.editMap_matrix(x, y, eventBlock);
-                        PopUp.createPopup("Tower takistaks spawnpointi teed nexuseni!\nProovi uuesti!", true);
                     }
-
                 } else if (eventBlock.getId() >= 10) {
                     for (Tower tower : map.getTowers()) {
                         tower.setActive(false);
@@ -208,11 +211,11 @@ public class Game {
         return (int) Math.min(screenSizes.getWidth() / Main.getMap().getX(), screenSizes.getHeight() / Main.getMap().getY());
     }
 
-    private static int convertPixelToIndex(int pixel_coords) {
+    static int convertPixelToIndex(int pixel_coords) {
         return pixel_coords / map.getSize();
     }
 
-    private static void drawTowerRanges() {
+    private static void tickTowers() {
         for (Tower tower : map.getTowers()) {
             if (tower.isActive()) {
                 tower.drawRange();
@@ -223,17 +226,17 @@ public class Game {
     public static void updateMoney(int money) {
         raha += money;
         String text = String.format("Raha: %s $", raha);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth() / 40));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, Main.getScreenH() / 20));
         g.setFill(Paint.valueOf("#2aa32e"));
-        g.fillText(text, canvas.getWidth() * 0.85, canvas.getHeight() * 0.05);
+        g.fillText(text, canvas.getWidth() - 300, 50);
     }
 
     public static void updateHealth(int hp) {
         health += hp;
         String text = String.format("Tervis: %s", health);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, canvas.getWidth() / 40));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, Main.getScreenH() / 20));
         g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, canvas.getWidth() * 0.85, canvas.getHeight() * 0.10);
+        g.fillText(text, canvas.getWidth() -300, 100);
     }
 
     public static void setTowerToMakeId(int towerToMakeId) {
@@ -242,5 +245,9 @@ public class Game {
 
     public static double getLastFrameTime() {
         return lastFrameTime;
+    }
+
+    public static int getRaha() {
+        return raha;
     }
 }

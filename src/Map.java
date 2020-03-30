@@ -317,8 +317,8 @@ public class Map {
         return null;
     }
 
-    private int pixToIndex(double pix) {
-        return (int) (2 * pix - this.size) / (2 * this.size);
+    private int pixToIndex(int pix) {
+        return (2 * pix - this.size) / (2 * this.size);
     }
 
 }

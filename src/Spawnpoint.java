@@ -90,7 +90,16 @@ class Spawnpoint {
 
     public void monstersTakeDamage(boolean onlyAnimate) {
         for (Tower tower : Main.getMap().getTowers()) {
-            tower.shoot(this.monsters, onlyAnimate);
+            if (this.monsters.size() > 0 && tower.getId() == 10) {
+                tower.shootLaser(this.monsters, onlyAnimate);
+            } else if (this.monsters.size() > 0 && tower.getId() == 11 && !onlyAnimate) {
+                Monster closestMonster = tower.getClosestMonster(this.monsters);
+                if (closestMonster != null) tower.cannonNewMissle(closestMonster);
+            }
+        }
+        for (Monster monster : this.monsters) {
+            monster.updateMisslesEndpoint();
+            monster.pullMissles();
         }
     }
 

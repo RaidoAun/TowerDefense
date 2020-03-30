@@ -23,6 +23,7 @@ public class Game {
     private static int spawnspeed = 1; //Mitme sekundi tagant spawnib üks monster!!
     private static CanvasWindow cWindow;
     private static int health;
+    private static double lastFrameTime;
 
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
@@ -67,9 +68,11 @@ public class Game {
 
     public static void startRounds() {
 
-        Random r = new Random();
-
         AnimationTimer animate = new AnimationTimer() {
+
+            Random r = new Random();
+            long startTime;
+            long endTime;
             int blocksize = getBlockSize();
             boolean generateMonster = false;
             boolean shoot = false;
@@ -78,6 +81,7 @@ public class Game {
             long startNanoTime = System.nanoTime();
 
             public void handle(long currentNanoTime) {
+                startTime = System.nanoTime();
                 long t = (currentNanoTime - startNanoTime) / 1000000000;
                 if (t % spawnspeed == 0 && t != lastSpawnTime) {
                     generateMonster = true;
@@ -109,6 +113,8 @@ public class Game {
                     this.stop();
                     PopUp.createPopup("YOU SUCK! GAME OVER!", false);
                 }
+                endTime = System.nanoTime();
+                lastFrameTime = (double) (endTime - startTime) / 1000000000;
             }
         };
         animate.start();
@@ -143,19 +149,11 @@ public class Game {
                 Block eventBlock = map.getBlock(x, y);
                 if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
 
-                    //Spawnpoindid, mille teele jääb tower ette.
                     List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
-
-                    //Ajutise seina loomine.
                     map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
 
-                    //Kontrollib, kas tee nexuseni on veel võimalik.
                     if (eiTakistaTeed(updatableSpawns)) {
-
-                        //Genereeib uued teed ja kustutab vanad.
                         genNewPaths(updatableSpawns);
-
-                        //Seab kõik towerid mitte aktiivseks.
                         for (Tower tower : map.getTowers()) {
                             tower.setActive(false);
                         }
@@ -174,6 +172,9 @@ public class Game {
                     }
 
                 } else if (eventBlock.getId() >= 10) {
+                    for (Tower tower : map.getTowers()) {
+                        tower.setActive(false);
+                    }
                     Tower currentTower = map.getTowerWithXY(x, y);
                     currentTower.setActive(true);
                     cWindow.setTower(currentTower);
@@ -237,5 +238,9 @@ public class Game {
 
     public static void setTowerToMakeId(int towerToMakeId) {
         TowerToMakeId = towerToMakeId;
+    }
+
+    public static double getLastFrameTime() {
+        return lastFrameTime;
     }
 }

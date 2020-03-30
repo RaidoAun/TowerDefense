@@ -42,3 +42,7 @@ soovid placida.
 29.03.2020 Leo
 Kaotasin toweritelt hp ära, sest see on kasutu. Tegin Towerite ehitamise koodijupile suure remondi. Kaotasin selle annoying
 if else spagetti ära ning optimiseerisin koodi märgatavalt. Kaotasin bug-i, kus overlapping teed vahel üksteist ära kustutasid.
+
+30.03.2020 Leo
+Tegin kahurile animatsioonid. Uus klass nimega Projectile, milles talletada igasuguseid kuule, mida towerid lasevad. Praegu
+eksisteerib bug, kus kahur laseb rohkem kui ühte koletist korraga. See tuleb fixida.

@@ -1,6 +1,5 @@
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Tower extends Block {
@@ -13,7 +12,6 @@ public class Tower extends Block {
     private int damage;
     private int hind;
     private int maxLevel;
-    private List<Projectile> shotMissles;
 
     public Tower(Towers type, double x, double y) {
         super(type.getId() + 10, type.getDmg(), type.getColor(), 0);
@@ -25,7 +23,6 @@ public class Tower extends Block {
         this.damage = this.value;
         this.hind = type.getHind();
         this.maxLevel = type.getMaxLevel();
-        this.shotMissles = new ArrayList<>();
     }
 
     public Block getBlock() {
@@ -62,24 +59,38 @@ public class Tower extends Block {
         return range;
     }
 
-    void shoot(List<Monster> monsters, boolean onlyAnimate) {
+    public void shootLaser(List<Monster> monsters, boolean onlyAnimate) {
         for (Monster monster : monsters) {
-            int dist = (int) Math.round(Math.sqrt(Math.pow(this.x - monster.getX(), 2) + Math.pow(this.y - monster.getY(), 2)));
-            if (dist <= this.range && this.id == 11) {
-                if (!onlyAnimate) { //Tähendab, et tuleb tulistada (uus projectile luua).
-                    Projectile missle = new Projectile(this.x, this.y, this.damage, 0.25, 10, this.color);
-                    shotMissles.add(missle);
-                    monster.addMissle(missle);
-                }
-            } else if (dist <= this.range && this.id == 10) {
+            double distance = Math.hypot(this.x - monster.getX(), this.y - monster.getY());
+            if (distance <= this.range) {
                 if (!onlyAnimate) monster.setHp(monster.getHp() - this.damage);
                 Main.getGc().setStroke(getColor());
                 Main.getGc().setLineWidth(0.5);
                 Main.getGc().strokeLine(this.x, this.y, monster.getX(), monster.getY());
             }
-            monster.updateMisslesEndpoint();
-            monster.pullMissles();
         }
+    }
+
+    public Monster getClosestMonster(List<Monster> monsters) {
+        Monster closestMonster = monsters.get(0);
+        double closestDistance = Math.hypot(this.x - closestMonster.getX(), this.y - closestMonster.getY());
+        for (Monster monster : monsters) {
+            double distance = Math.hypot(this.x - monster.getX(), this.y - monster.getY());
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestMonster = monster;
+            }
+        }
+        if (closestDistance <= this.range) {
+            return closestMonster;
+        } else {
+            return null;
+        }
+    }
+
+    public void cannonNewMissle(Monster monster) {
+        Projectile missle = new Projectile(this.x, this.y, this.damage, 500, 10, this.color);
+        monster.addMissle(missle);
     }
 
     void drawRange() {

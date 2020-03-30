@@ -3,7 +3,7 @@ import javafx.scene.paint.Color;
 public class Projectile {
 
     private final int damage;
-    private final double step; //Mitu pikslit liigub ühe sammuga.
+    private final double step; //Mitu pikslit liigub ühes sekundis.
     private final double diameter;
     private final Color color;
     private double currnetX;
@@ -26,12 +26,13 @@ public class Projectile {
     }
 
     public void moveMissle() {
+        double currentStep = Game.getLastFrameTime() * this.step;
         double xDist = endX - currnetX;
         double yDist = endY - currnetY;
         double distance = Math.hypot(xDist, yDist);
-        if (step <= distance) {
-            this.currnetX += (xDist * step) / distance;
-            this.currnetY += (yDist * step) / distance;
+        if (currentStep <= distance) {
+            this.currnetX += (xDist * currentStep) / distance;
+            this.currnetY += (yDist * currentStep) / distance;
         } else {
             this.currnetX = endX;
             this.currnetY = endY;
@@ -46,5 +47,9 @@ public class Projectile {
 
     public int getDamage() {
         return damage;
+    }
+
+    public double getStep() {
+        return step;
     }
 }

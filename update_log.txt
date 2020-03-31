@@ -46,3 +46,7 @@ if else spagetti ära ning optimiseerisin koodi märgatavalt. Kaotasin bug-i, ku
 30.03.2020 Leo
 Tegin kahurile animatsioonid. Uus klass nimega Projectile, milles talletada igasuguseid kuule, mida towerid lasevad. Praegu
 eksisteerib bug, kus kahur laseb rohkem kui ühte koletist korraga. See tuleb fixida.
+
+31.03.2020 Leo
+Kahur laseb nüüd ainult ühte monsterit korraga. Liigutasin rohkem asju Map klassi, kõik koletised on nüüdsest Map klassis talletatud.
+Koletise klassil on eraldi väärtus, mis koletise spawnimisel määratakse, mis näitab, millisest spawnpoindist koletis pärineb.

@@ -4,7 +4,6 @@ import java.util.List;
 class Spawnpoint {
 
     private boolean nexusWithPath;
-    private List<Monster> monsters;
     private int[] spawnpointxy;
     private int[] nexusxy;
     private int[][] path;
@@ -12,7 +11,6 @@ class Spawnpoint {
 
     Spawnpoint(int[] spawnpointxy, int[][] map) {
         nexusWithPath = false;
-        monsters = new ArrayList<>();
         this.spawnpointxy = spawnpointxy;
         this.map = map;
     }
@@ -37,36 +35,11 @@ class Spawnpoint {
         this.nexusxy = xy;
     }
 
-    void moveMonsters() {
-        for (Monster monster : this.monsters) {
-            monster.move(this.path);
-        }
-    }
-
     public void genMonster(Monsters type) {
         double x = (this.spawnpointxy[0] + 0.5) * Main.getMap().getSize();
         double y = (this.spawnpointxy[1] + 0.5) * Main.getMap().getSize();
-        monsters.add(new Monster(type, x, y));
-    }
-
-    void drawMonsters() {
-        for (int i = getMonsters().size() - 1; i >= 0; i--) {
-            Monster monster = getMonsters().get(i);
-            if (monster.getHp() <= 0) {
-                Game.updateMoney(monster.getMoney());
-                monsters.remove(monster);
-            } else if (monster.hasReachedNexus()) {
-                Game.updateHealth(-monster.getDmg());
-                monsters.remove(monster);
-            }
-        }
-        for (Monster monster : monsters) {
-            monster.drawMonster();
-        }
-    }
-
-    private List<Monster> getMonsters() {
-        return monsters;
+        Monster monster = new Monster(type, x, y, this);
+        Main.getMap().addMonster(monster);
     }
 
     void genPath(int gCost) {
@@ -87,20 +60,4 @@ class Spawnpoint {
         Pathfinder tee = new Pathfinder(map, spawnpointxy, nexusxy, gCost);
         return tee.getFinalPath();
     }
-
-    public void monstersTakeDamage(boolean onlyAnimate) {
-        for (Tower tower : Main.getMap().getTowers()) {
-            if (this.monsters.size() > 0 && tower.getId() == 10) {
-                tower.shootLaser(this.monsters, onlyAnimate);
-            } else if (this.monsters.size() > 0 && tower.getId() == 11 && !onlyAnimate) {
-                Monster closestMonster = tower.getClosestMonster(this.monsters);
-                if (closestMonster != null) tower.cannonNewMissle(closestMonster);
-            }
-        }
-        for (Monster monster : this.monsters) {
-            monster.updateMisslesEndpoint();
-            monster.pullMissles();
-        }
-    }
-
 }

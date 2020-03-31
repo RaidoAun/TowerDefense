@@ -19,6 +19,7 @@ public class Map {
     private int[][] map;
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
+    private List<Monster> allMonsters;
 
     public Map(int rectCountx, int rectCounty, Canvas map_canvas) {
         this.towers = new ArrayList<>();
@@ -31,6 +32,7 @@ public class Map {
         this.openBlocks = new ArrayList<>();
         this.minDisdanceBetweenSpawns = 50;
         this.spawnCount = 4;
+        this.allMonsters = new ArrayList<>();
     }
 
     void initMap() {
@@ -319,6 +321,51 @@ public class Map {
 
     private int pixToIndex(int pix) {
         return (2 * pix - this.size) / (2 * this.size);
+    }
+
+    public List<Monster> getAllMonsters() {
+        return allMonsters;
+    }
+
+    public void addMonster(Monster monster) {
+        this.allMonsters.add(monster);
+    }
+
+    void drawMonsters() {
+        List<Monster> toRemove = new ArrayList<>();
+        for (Monster monster : this.allMonsters) {
+            if (monster.getHp() <= 0) {
+                Game.updateMoney(monster.getMoney());
+                toRemove.add(monster);
+            } else if (monster.hasReachedNexus()) {
+                Game.updateHealth(-monster.getDmg());
+                toRemove.add(monster);
+            } else {
+                monster.drawMonster();
+            }
+        }
+        this.allMonsters.removeAll(toRemove);
+    }
+
+    void moveMonsters() {
+        for (Monster monster : this.allMonsters) {
+            monster.move();
+        }
+    }
+
+    public void monstersTakeDamage(boolean onlyAnimate) {
+        for (Tower tower : this.towers) {
+            if (this.allMonsters.size() > 0 && tower.getId() == 10) {
+                tower.shootLaser(this.allMonsters, onlyAnimate);
+            } else if (this.allMonsters.size() > 0 && tower.getId() == 11 && !onlyAnimate) {
+                Monster closestMonster = tower.getClosestMonster(this.allMonsters);
+                if (closestMonster != null) tower.cannonNewMissle(closestMonster);
+            }
+        }
+        for (Monster monster : this.allMonsters) {
+            monster.updateMisslesEndpoint();
+            monster.pullMissles();
+        }
     }
 
 }

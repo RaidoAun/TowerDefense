@@ -16,8 +16,9 @@ public class Monster {
     private int money;
     private boolean reachedNexus;
     private List<Projectile> lockedOnMissles;
+    private Spawnpoint spawnPoint; //Spawnpoint, kust koletis alguse sai.
 
-    Monster(Monsters type, double x_coord, double y_coord) {
+    Monster(Monsters type, double x_coord, double y_coord, Spawnpoint spawnPoint) {
         this.x = x_coord;
         this.y = y_coord;
         this.step = 0;
@@ -29,6 +30,7 @@ public class Monster {
         this.money = type.getMoney();
         this.reachedNexus = false;
         this.lockedOnMissles = new ArrayList<>();
+        this.spawnPoint = spawnPoint;
     }
 
     public void drawMonster() {
@@ -65,8 +67,8 @@ public class Monster {
         return reachedNexus;
     }
 
-    void move(int[][] path) {
-        move(path, this.speed);
+    void move() {
+        move(this.spawnPoint.getPath(), this.speed);
     }
 
     void move(int[][] path, double speed) {
@@ -136,4 +138,7 @@ public class Monster {
         this.lockedOnMissles.removeAll(toRemove);
     }
 
+    public Spawnpoint getSpawnPoint() {
+        return spawnPoint;
+    }
 }

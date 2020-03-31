@@ -102,10 +102,11 @@ public class Game {
                         Monsters[] monsters = Monsters.values();
                         spawn.genMonster(monsters[r.nextInt(monsters.length)]);
                     }
-                    spawn.moveMonsters();
-                    spawn.drawMonsters();
-                    spawn.monstersTakeDamage(!shoot);
                 }
+
+                map.moveMonsters();
+                map.drawMonsters();
+                map.monstersTakeDamage(!shoot);
                 cWindow.draw();
                 if (generateMonster) generateMonster = false;
                 if (shoot) shoot = false;
@@ -136,7 +137,7 @@ public class Game {
                     CanvasButton button_temp = new CanvasButton(() -> setTowerToMakeId(index));
                     button_temp.setColor(Towers.values()[index].getColor());
                     int button_padding = cWindow.getW() / Towers.values().length;
-                    button_temp.setCoords((int) (cWindow.getX() + button_padding * (index+0.5)), cWindow.getY() + cWindow.getH()/2 - cWindow.getText_size()/2, cWindow.getText_size(), cWindow.getText_size());
+                    button_temp.setCoords((int) (cWindow.getX() + button_padding * (index + 0.5)), cWindow.getY() + cWindow.getH() / 2 - cWindow.getText_size() / 2, cWindow.getText_size(), cWindow.getText_size());
                     buttons_temp[i] = button_temp;
                 }
                 cWindow.setButtons(buttons_temp);
@@ -149,8 +150,8 @@ public class Game {
                 //Blokk, millel klikkati.
                 Block eventBlock = map.getBlock(x, y);
                 if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
-                    if (Game.raha>=Towers.values()[TowerToMakeId].getHind()){
-                        Game.raha-=Towers.values()[TowerToMakeId].getHind();
+                    if (Game.raha >= Towers.values()[TowerToMakeId].getHind()) {
+                        Game.raha -= Towers.values()[TowerToMakeId].getHind();
                         List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
                         map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
 
@@ -226,7 +227,7 @@ public class Game {
     public static void updateMoney(int money) {
         raha += money;
         String text = String.format("Raha: %s $", raha);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, Main.getScreenH() / 20));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.getScreenH() / 20));
         g.setFill(Paint.valueOf("#2aa32e"));
         g.fillText(text, canvas.getWidth() - 300, 50);
     }
@@ -234,9 +235,9 @@ public class Game {
     public static void updateHealth(int hp) {
         health += hp;
         String text = String.format("Tervis: %s", health);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, Main.getScreenH() / 20));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.getScreenH() / 20));
         g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, canvas.getWidth() -300, 100);
+        g.fillText(text, canvas.getWidth() - 300, 100);
     }
 
     public static void setTowerToMakeId(int towerToMakeId) {

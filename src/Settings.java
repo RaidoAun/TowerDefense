@@ -2,6 +2,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -12,6 +13,7 @@ public class Settings {
     private static int ajutineY = Main.getMap().getY();
     private static int ajutineSpawnCount = Main.getMap().getSpawnCount();
     private static int ajutineSpawnDist = Main.getMap().getMinDisdanceBetweenSpawns();
+    private static int ajutineBlockSize = Main.getBlockSize();
 
     public static Scene settingsScene() {
 
@@ -29,19 +31,46 @@ public class Settings {
         TextField d_input = new TextField(Integer.toString(Main.getMap().getMinDisdanceBetweenSpawns()));
         distance.getChildren().addAll(d_text, d_input);
 
-        HBox mapSizeX = new HBox();
-        mapSizeX.setSpacing(10);
-        mapSizeX.setAlignment(Pos.CENTER);
+        Slider slider = new Slider(0, 100, ajutineBlockSize);
+        slider.setBlockIncrement(1);
+        slider.setMajorTickUnit(10);
+        slider.setMinorTickCount(9);
+        slider.setShowTickMarks(true);
+        slider.setShowTickLabels(true);
+        slider.setSnapToTicks(true);
+
+        VBox x = new VBox();
+        x.setAlignment(Pos.CENTER);
+        x.setSpacing(20);
         Label x_text = new Label("Map's x size:");
         TextField x_input = new TextField(Integer.toString(Main.getMap().getX()));
-        mapSizeX.getChildren().addAll(x_text, x_input);
+        x_input.setAlignment(Pos.CENTER);
+        x_input.setDisable(true);
+        x_input.setStyle("-fx-opacity: 1;");
+        x.getChildren().addAll(x_text, x_input);
 
-        HBox mapSizeY = new HBox();
-        mapSizeY.setSpacing(10);
-        mapSizeY.setAlignment(Pos.CENTER);
+        VBox blockSize = new VBox();
+        blockSize.setAlignment(Pos.CENTER);
+        blockSize.setSpacing(20);
+        Label blockSizeText = new Label("Block size:");
+        TextField blockSizeInput = new TextField(Integer.toString(ajutineBlockSize));
+        blockSizeInput.setAlignment(Pos.CENTER);
+        blockSize.getChildren().addAll(blockSizeText, blockSizeInput);
+
+        VBox y = new VBox();
+        y.setAlignment(Pos.CENTER);
+        y.setSpacing(20);
         Label y_text = new Label("Map's y size:");
         TextField y_input = new TextField(Integer.toString(Main.getMap().getY()));
-        mapSizeY.getChildren().addAll(y_text, y_input);
+        y_input.setAlignment(Pos.CENTER);
+        y_input.setDisable(true);
+        y_input.setStyle("-fx-opacity: 1;");
+        y.getChildren().addAll(y_text, y_input);
+
+        HBox kuldneTriio = new HBox();
+        kuldneTriio.setAlignment(Pos.CENTER);
+        kuldneTriio.setSpacing(10);
+        kuldneTriio.getChildren().addAll(x, blockSize, y);
 
         HBox button_row = new HBox();
         button_row.setSpacing(40);
@@ -54,15 +83,16 @@ public class Settings {
         VBox settings_layout = new VBox();
         settings_layout.setSpacing(20);
         settings_layout.setAlignment(Pos.CENTER);
-        settings_layout.getChildren().addAll(spawnpointCount, distance, mapSizeX, mapSizeY, button_row);
-        Scene settings = new Scene(settings_layout, 500, 250);
+        settings_layout.getChildren().addAll(spawnpointCount, distance, slider, kuldneTriio, button_row);
+        Scene settings = new Scene(settings_layout, 550, 300);
 
         back.setOnAction(e -> Main.switchToMenu());
         apply.setOnAction(e -> {
-            Main.getMap().setX(getAjutineX());
-            Main.getMap().setY(getAjutineY());
-            Main.getMap().setSpawnCount(getAjutineS());
-            Main.getMap().setMinDisdanceBetweenSpawns(getAjutineSpawnD());
+            Main.getMap().setX(ajutineX);
+            Main.getMap().setY(ajutineY);
+            Main.getMap().setSpawnCount(ajutineSpawnCount);
+            Main.getMap().setMinDisdanceBetweenSpawns(ajutineSpawnDist);
+            Main.setBlockSize(ajutineBlockSize);
         });
         reset.setOnAction(e -> {
             s_input.setText(Integer.toString(Main.getMap().getSpawnCount()));
@@ -71,22 +101,10 @@ public class Settings {
             y_input.setText(Integer.toString(Main.getMap().getY()));
         });
 
-        d_input.focusedProperty().addListener((v, oldValue, newValue) -> {
-            if (!newValue) {
-                try {
-                    setAjutineSpawnD(Integer.parseInt(d_input.getCharacters().toString()));
-                } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!", true);
-                    d_input.clear();
-                    d_input.requestFocus();
-                }
-            }
-        });
-
         s_input.focusedProperty().addListener((v, oldValue, newValue) -> {
             if (!newValue) {
                 try {
-                    setAjutineS(Integer.parseInt(s_input.getCharacters().toString()));
+                    ajutineSpawnCount = Integer.parseInt(s_input.getCharacters().toString());
                 } catch (NumberFormatException error) {
                     PopUp.createPopup("Error! Sisestage number!", true);
                     s_input.clear();
@@ -95,68 +113,39 @@ public class Settings {
             }
         });
 
-        x_input.focusedProperty().addListener((v, oldValue, newValue) -> {
+        d_input.focusedProperty().addListener((v, oldValue, newValue) -> {
             if (!newValue) {
                 try {
-                    setAjutineX(Integer.parseInt(x_input.getCharacters().toString()));
-                    setAjutineY((int) Math.ceil(ajutineX * Math.pow(Main.getAspectRatio(), -1)));
-                    y_input.setText(Integer.toString(ajutineY));
+                    ajutineSpawnDist = Integer.parseInt(d_input.getCharacters().toString());
                 } catch (NumberFormatException error) {
                     PopUp.createPopup("Error! Sisestage number!", true);
-                    x_input.clear();
-                    x_input.requestFocus();
+                    d_input.clear();
+                    d_input.requestFocus();
                 }
             }
         });
 
-        y_input.focusedProperty().addListener((v, oldValue, newValue) -> {
+        slider.valueProperty().addListener((v, oldValue, newValue) -> {
+            if (!newValue.equals(oldValue)) {
+                ajutineBlockSize = (int) Math.round(newValue.doubleValue());
+                if (ajutineBlockSize == 0) ajutineBlockSize = 1;
+                ajutineY = Main.getScreenH() / ajutineBlockSize;
+                ajutineX = Main.getScreenW() / ajutineBlockSize;
+                y_input.setText(Integer.toString(ajutineY));
+                x_input.setText(Integer.toString(ajutineX));
+                blockSizeInput.setText(Integer.toString(ajutineBlockSize));
+            }
+        });
+
+        blockSizeInput.focusedProperty().addListener((v, oldValue, newValue) -> {
             if (!newValue) {
-                try {
-                    setAjutineY(Integer.parseInt(y_input.getCharacters().toString()));
-                    setAjutineX((int) Math.ceil(ajutineY * Main.getAspectRatio()));
-                    x_input.setText(Integer.toString(ajutineX));
-                } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!", true);
-                    y_input.clear();
-                    y_input.requestFocus();
-                }
+                ajutineBlockSize = Integer.parseInt(blockSizeInput.getCharacters().toString());
+                if (ajutineBlockSize == 0) ajutineBlockSize = 1;
+                slider.setValue(ajutineBlockSize);
             }
         });
 
         return settings;
 
     }
-
-    private static int getAjutineX() {
-        return ajutineX;
-    }
-
-    private static void setAjutineX(int x) {
-        ajutineX = x;
-    }
-
-    private static int getAjutineY() {
-        return ajutineY;
-    }
-
-    private static void setAjutineY(int y) {
-        ajutineY = y;
-    }
-
-    private static int getAjutineS() {
-        return ajutineSpawnCount;
-    }
-
-    private static void setAjutineS(int ajutineSpawnCount) {
-        Settings.ajutineSpawnCount = ajutineSpawnCount;
-    }
-
-    public static int getAjutineSpawnD() {
-        return ajutineSpawnDist;
-    }
-
-    public static void setAjutineSpawnD(int ajutineSpawnDist) {
-        Settings.ajutineSpawnDist = ajutineSpawnDist;
-    }
-
 }

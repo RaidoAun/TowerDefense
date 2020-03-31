@@ -1,5 +1,4 @@
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,7 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Screen;
 
 import java.util.List;
 import java.util.Random;
@@ -39,8 +37,6 @@ public class Game {
     }
 
     public static void generateGame() {
-
-        int blocksize = getBlockSize();
         map.initMap();
         map.genMap(2);
         map.genFlippedMap();
@@ -48,7 +44,7 @@ public class Game {
         map.genOpenBlocks();
         map.generateSpawnpoints();
         map.spawnSpawnpoints();
-        map.drawMap(blocksize);
+        map.drawMap(Main.getBlockSize());
         cWindow = new CanvasWindow(canvas);
         updateMoney(500);
         updateHealth(100);
@@ -80,7 +76,6 @@ public class Game {
             Random r = new Random();
             long startTime;
             long endTime;
-            int blocksize = getBlockSize();
             boolean generateMonster = false;
             boolean shoot = false;
             long lastSpawnTime = 0;
@@ -98,7 +93,7 @@ public class Game {
                     shoot = true;
                     lastShootTime = t;
                 }
-                map.drawMap(blocksize);
+                map.drawMap(Main.getBlockSize());
                 tickTowers();
 
                 updateMoney(0);
@@ -209,11 +204,6 @@ public class Game {
             map.deletePath(oldPath);
             map.drawPath(s.getPath());
         }
-    }
-
-    private static int getBlockSize() {
-        Rectangle2D screenSizes = Screen.getPrimary().getBounds();
-        return (int) Math.min(screenSizes.getWidth() / Main.getMap().getX(), screenSizes.getHeight() / Main.getMap().getY());
     }
 
     static int convertPixelToIndex(int pixel_coords) {

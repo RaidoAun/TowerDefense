@@ -13,11 +13,20 @@ public class Main extends Application {
 
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
-    private static Map map = new Map(160, 90, canvas);
     private static Scene menu_scene;
     private static Stage window;
     private static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
     private static int screenW = (int) Screen.getPrimary().getBounds().getWidth();
+    private static int blockSize = 15;
+    private static Map map = new Map(screenW / blockSize, screenH / blockSize, canvas);
+
+    public static int getBlockSize() {
+        return blockSize;
+    }
+
+    public static void setBlockSize(int blockSize) {
+        Main.blockSize = blockSize;
+    }
 
     public static Stage getWindow() {
         return window;
@@ -50,10 +59,6 @@ public class Main extends Application {
 
     public static int getScreenW() {
         return screenW;
-    }
-
-    public static double getAspectRatio() {
-        return (double) screenW / screenH;
     }
 
     public static void toggleFullscreen() {

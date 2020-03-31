@@ -359,13 +359,17 @@ public class Map {
                 tower.shootLaser(this.allMonsters, onlyAnimate);
             } else if (this.allMonsters.size() > 0 && tower.getId() == 11 && !onlyAnimate) {
                 Monster closestMonster = tower.getClosestMonster(this.allMonsters);
-                if (closestMonster != null) tower.cannonNewMissle(closestMonster);
+                if (closestMonster != null) tower.cannonNewMissile(closestMonster);
             }
         }
         for (Monster monster : this.allMonsters) {
-            monster.updateMisslesEndpoint();
-            monster.pullMissles();
+            monster.updateMissilesEndpoint();
+            monster.pullMissiles();
         }
+    }
+
+    public void noTowerRanges() {
+        for (Tower tower : this.towers) tower.setActive(false);
     }
 
 }

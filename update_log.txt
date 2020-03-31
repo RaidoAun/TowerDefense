@@ -50,3 +50,4 @@ eksisteerib bug, kus kahur laseb rohkem kui ühte koletist korraga. See tuleb fi
 31.03.2020 Leo
 Kahur laseb nüüd ainult ühte monsterit korraga. Liigutasin rohkem asju Map klassi, kõik koletised on nüüdsest Map klassis talletatud.
 Koletise klassil on eraldi väärtus, mis koletise spawnimisel määratakse, mis näitab, millisest spawnpoindist koletis pärineb.
+Missle --> missile. Igasugune liikumine canvase sõltub nüüd ajast. Fullscreen toggleks on F11.

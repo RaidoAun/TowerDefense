@@ -15,7 +15,7 @@ public class Monster {
     private Color color;
     private int money;
     private boolean reachedNexus;
-    private List<Projectile> lockedOnMissles;
+    private List<Projectile> lockedOnMissiles;
     private Spawnpoint spawnPoint; //Spawnpoint, kust koletis alguse sai.
 
     Monster(Monsters type, double x_coord, double y_coord, Spawnpoint spawnPoint) {
@@ -29,7 +29,7 @@ public class Monster {
         this.color = type.getColor();
         this.money = type.getMoney();
         this.reachedNexus = false;
-        this.lockedOnMissles = new ArrayList<>();
+        this.lockedOnMissiles = new ArrayList<>();
         this.spawnPoint = spawnPoint;
     }
 
@@ -68,7 +68,7 @@ public class Monster {
     }
 
     void move() {
-        move(this.spawnPoint.getPath(), this.speed);
+        move(this.spawnPoint.getPath(), Game.getLastFrameTime() * this.speed);
     }
 
     void move(int[][] path, double speed) {
@@ -116,26 +116,26 @@ public class Monster {
         }
     }
 
-    public void addMissle(Projectile missle) {
-        lockedOnMissles.add(missle);
+    public void addMissile(Projectile missile) {
+        lockedOnMissiles.add(missile);
     }
 
-    public void updateMisslesEndpoint() {
-        for (Projectile missle : this.lockedOnMissles) {
-            missle.setEndPoint(this.x, this.y);
+    public void updateMissilesEndpoint() {
+        for (Projectile missile : this.lockedOnMissiles) {
+            missile.setEndPoint(this.x, this.y);
         }
     }
 
-    public void pullMissles() {
+    public void pullMissiles() {
         List<Projectile> toRemove = new ArrayList<>();
-        for (Projectile missle : lockedOnMissles) {
-            missle.moveMissle();
-            if (missle.hasReachedEnd()) {
-                this.hp -= missle.getDamage();
-                toRemove.add(missle);
+        for (Projectile missile : lockedOnMissiles) {
+            missile.moveMissile();
+            if (missile.hasReachedEnd()) {
+                this.hp -= missile.getDamage();
+                toRemove.add(missile);
             }
         }
-        this.lockedOnMissles.removeAll(toRemove);
+        this.lockedOnMissiles.removeAll(toRemove);
     }
 
     public Spawnpoint getSpawnPoint() {

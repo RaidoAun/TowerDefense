@@ -13,6 +13,8 @@ public class PopUp {
 
     public static void createPopup(String labelText, boolean focus) { //focus true tähendab, et mängija ei saa muude akendega samal ajal suhelda.
         Stage popup = new Stage();
+        popup.initOwner(Main.getWindow());
+        popup.setAlwaysOnTop(true);
         popup.setTitle("Pop-up");
         if (focus) popup.initModality(Modality.APPLICATION_MODAL);
         VBox layout = new VBox(20);

@@ -88,9 +88,9 @@ public class Tower extends Block {
         }
     }
 
-    public void cannonNewMissle(Monster monster) {
-        Projectile missle = new Projectile(this.x, this.y, this.damage, 500, 10, this.color);
-        monster.addMissle(missle);
+    public void cannonNewMissile(Monster monster) {
+        Projectile missile = new Projectile(this.x, this.y, this.damage, 500, 10, this.color);
+        monster.addMissile(missile);
     }
 
     void drawRange() {

@@ -25,7 +25,7 @@ public class Projectile {
         this.endY = endY;
     }
 
-    public void moveMissle() {
+    public void moveMissile() {
         double currentStep = Game.getLastFrameTime() * this.step;
         double xDist = endX - currnetX;
         double yDist = endY - currnetY;

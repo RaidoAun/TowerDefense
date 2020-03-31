@@ -4,8 +4,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
-
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -13,10 +13,15 @@ public class Main extends Application {
 
     private static Canvas canvas = new Canvas();
     private static GraphicsContext gc = canvas.getGraphicsContext2D();
-    private static Map map = new Map(160, 85, canvas);
+    private static Map map = new Map(160, 90, canvas);
     private static Scene menu_scene;
     private static Stage window;
-    private static int screenH = (int)  Screen.getPrimary().getBounds().getHeight();
+    private static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
+    private static int screenW = (int) Screen.getPrimary().getBounds().getWidth();
+
+    public static Stage getWindow() {
+        return window;
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -43,6 +48,23 @@ public class Main extends Application {
         return screenH;
     }
 
+    public static int getScreenW() {
+        return screenW;
+    }
+
+    public static double getAspectRatio() {
+        return (double) screenW / screenH;
+    }
+
+    public static void toggleFullscreen() {
+        if (window.isFullScreen()) {
+            window.setFullScreen(false);
+            window.setMaximized(true);
+        } else {
+            window.setFullScreen(true);
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) {
         window = primaryStage;
@@ -61,9 +83,11 @@ public class Main extends Application {
 
         play_btn.setOnAction(event -> {
 
+            window.setFullScreenExitHint("Press F11 to turn fullscreen on/off");
+            window.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
             window.setScene(Game.getGameScene());
-            window.setMaximized(true);
             Game.generateGame();
+            window.setFullScreen(true);
             PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
 
             canvas.setOnMouseClicked(e -> {

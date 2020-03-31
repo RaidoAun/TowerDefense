@@ -99,6 +99,8 @@ public class Settings {
             if (!newValue) {
                 try {
                     setAjutineX(Integer.parseInt(x_input.getCharacters().toString()));
+                    setAjutineY((int) Math.ceil(ajutineX * Math.pow(Main.getAspectRatio(), -1)));
+                    y_input.setText(Integer.toString(ajutineY));
                 } catch (NumberFormatException error) {
                     PopUp.createPopup("Error! Sisestage number!", true);
                     x_input.clear();
@@ -111,6 +113,8 @@ public class Settings {
             if (!newValue) {
                 try {
                     setAjutineY(Integer.parseInt(y_input.getCharacters().toString()));
+                    setAjutineX((int) Math.ceil(ajutineY * Main.getAspectRatio()));
+                    x_input.setText(Integer.toString(ajutineX));
                 } catch (NumberFormatException error) {
                     PopUp.createPopup("Error! Sisestage number!", true);
                     y_input.clear();

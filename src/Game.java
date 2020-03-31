@@ -3,6 +3,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -28,7 +29,13 @@ public class Game {
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
         game_layout.getChildren().add(canvas);
-        return new Scene(game_layout);
+        Scene scene = new Scene(game_layout);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.F11) {
+                Main.toggleFullscreen();
+            }
+        });
+        return scene;
     }
 
     public static void generateGame() {
@@ -157,10 +164,7 @@ public class Game {
 
                         if (eiTakistaTeed(updatableSpawns)) {
                             genNewPaths(updatableSpawns);
-                            for (Tower tower : map.getTowers()) {
-                                tower.setActive(false);
-                            }
-
+                            map.noTowerRanges();
                             //Uue toweri genereerimine.
                             int towerX = x * map.getSize() + map.getSize() / 2;
                             int towerY = y * map.getSize() + map.getSize() / 2;
@@ -172,19 +176,19 @@ public class Game {
                         } else {
                             map.editMap_matrix(x, y, eventBlock);
                             PopUp.createPopup("Tower takistaks spawnpointi teed nexuseni!\nProovi uuesti!", true);
+                            map.noTowerRanges();
                         }
 
                     }
                 } else if (eventBlock.getId() >= 10) {
-                    for (Tower tower : map.getTowers()) {
-                        tower.setActive(false);
-                    }
+                    map.noTowerRanges();
                     Tower currentTower = map.getTowerWithXY(x, y);
                     currentTower.setActive(true);
                     cWindow.setTower(currentTower);
                     cWindow.setActive(true);
                     cWindow.setShow_tower(true);
                 } else {
+                    map.noTowerRanges();
                     PopUp.createPopup("Sellele ruudule ei saa ehitada!\n Proovi uuesti!", true);
                 }
             } else {

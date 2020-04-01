@@ -15,63 +15,30 @@ import java.util.Random;
 
 public class Game {
     private static int TowerToMakeId;
-    private static Map map = Main.getMap();
-    private static Canvas canvas = Main.getCanvas();
-    private static GraphicsContext g = canvas.getGraphicsContext2D();
-    private static int raha = 0;
-    private static int spawnspeed = 1; //Mitme sekundi tagant spawnib üks monster!!
+    private static Map map;
+    private static Canvas canvas;
+    private static GraphicsContext g;
+    private static int raha;
+    private static int spawnspeed; //Mitme sekundi tagant spawnib üks monster!!
     private static CanvasWindow cWindow;
     private static int health;
     private static double lastFrameTime;
+    private static boolean isNexus;
+    private static AnimationTimer animate;
 
-    public static Scene getGameScene() {
-        GridPane game_layout = new GridPane();
-        game_layout.getChildren().add(canvas);
-        Scene scene = new Scene(game_layout);
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.F11) {
-                Main.toggleFullscreen();
-            }
-        });
-        return scene;
-    }
-
-    public static void generateGame() {
-        map.initMap();
-        map.genMap(2);
-        map.genFlippedMap();
-        //Genereerib nii palju spawnpointe, kui võimalik on.
-        map.genOpenBlocks();
-        map.generateSpawnpoints();
-        map.spawnSpawnpoints();
-        map.drawMap(Main.getBlockSize());
+    public static void setValues() {
+        TowerToMakeId = 0;
+        map = Main.getMap();
+        canvas = Main.getCanvas();
+        g = canvas.getGraphicsContext2D();
+        raha = 500;
+        spawnspeed = 1;
         cWindow = new CanvasWindow(canvas);
-        updateMoney(500);
-        updateHealth(100);
-    }
+        health = 100;
+        lastFrameTime = 0;
+        isNexus = false;
 
-    public static boolean chooseNexus(int xPixel, int yPixel) {
-        int x = convertPixelToIndex(xPixel);
-        int y = convertPixelToIndex(yPixel);
-        Block eventBlock = map.getMap_matrix()[x][y];
-        map.setNexusxy(new int[]{x, y});
-        if (eventBlock.getId() != 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!", true);
-        } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!", true);
-        } else {
-            map.genNexus();
-            map.genPathstoNexus(500);
-            for (Spawnpoint spawn : map.getSpawnpoints()) {
-                map.drawPath(spawn.getPath());
-            }
-        }
-        return map.getSpawnpoints().get(0).isNexusWithPath();
-    }
-
-    public static void startRounds() {
-
-        AnimationTimer animate = new AnimationTimer() {
+        animate = new AnimationTimer() {
 
             Random r = new Random();
             long startTime;
@@ -82,9 +49,10 @@ public class Game {
             long lastShootTime = 0;
             long startNanoTime = System.nanoTime();
 
-            public void handle(long currentNanoTime) {
+            @Override
+            public void handle(long now) {
                 startTime = System.nanoTime();
-                long t = (currentNanoTime - startNanoTime) / 1000000000;
+                long t = (now - startNanoTime) / 1000000000;
                 if (t % spawnspeed == 0 && t != lastSpawnTime) {
                     generateMonster = true;
                     lastSpawnTime = t;
@@ -120,8 +88,66 @@ public class Game {
                 lastFrameTime = (double) (endTime - startTime) / 1000000000;
             }
         };
-        animate.start();
 
+    }
+
+    public static void resumeAnimation() {
+        animate.start();
+    }
+
+    public static boolean isNexus() {
+        return isNexus;
+    }
+
+    public static Scene getGameScene() {
+        GridPane game_layout = new GridPane();
+        game_layout.getChildren().add(canvas);
+        Scene scene = new Scene(game_layout);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.F11) {
+                Main.toggleFullscreen();
+            } else if (e.getCode() == KeyCode.ESCAPE) {
+                animate.stop();
+                Main.getWindow().setScene(Pause.getPauseScreen());
+                Main.getWindow().setFullScreen(true);
+            }
+        });
+        return scene;
+    }
+
+    public static void generateGame() {
+        map.initMap();
+        map.genMap(2);
+        map.genFlippedMap();
+        //Genereerib nii palju spawnpointe, kui võimalik on.
+        map.genOpenBlocks();
+        map.generateSpawnpoints();
+        map.spawnSpawnpoints();
+        map.drawMap(Main.getBlockSize());
+    }
+
+    public static void chooseNexus(int xPixel, int yPixel) {
+        int x = convertPixelToIndex(xPixel);
+        int y = convertPixelToIndex(yPixel);
+        Block eventBlock = map.getMap_matrix()[x][y];
+        map.setNexusxy(new int[]{x, y});
+        if (eventBlock.getId() != 0) {
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!", true);
+        } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!", true);
+        } else {
+            map.genNexus();
+            map.genPathstoNexus(500);
+            for (Spawnpoint spawn : map.getSpawnpoints()) {
+                map.drawPath(spawn.getPath());
+            }
+        }
+        isNexus = map.getSpawnpoints().get(0).isNexusWithPath();
+    }
+
+    public static void startRounds() {
+
+        animate.start();
 
         canvas.setOnMouseClicked(e -> {
             int clickx = (int) e.getX();

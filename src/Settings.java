@@ -9,11 +9,11 @@ import javafx.scene.layout.VBox;
 
 public class Settings {
 
-    private static int ajutineX = Main.getMap().getX();
-    private static int ajutineY = Main.getMap().getY();
-    private static int ajutineSpawnCount = Main.getMap().getSpawnCount();
-    private static int ajutineSpawnDist = Main.getMap().getMinDisdanceBetweenSpawns();
     private static int ajutineBlockSize = Main.getBlockSize();
+    private static int defaultX = (int) Math.ceil((double) Main.getScreenW() / ajutineBlockSize);
+    private static int defaultY = (int) Math.ceil((double) Main.getScreenH() / ajutineBlockSize);
+    private static int ajutineSpawnCount = Main.getSpawnCount();
+    private static int ajutineSpawnDist = Main.getSpawnSpacing();
 
     public static Scene settingsScene() {
 
@@ -21,14 +21,14 @@ public class Settings {
         spawnpointCount.setSpacing(10);
         spawnpointCount.setAlignment(Pos.CENTER);
         Label s_text = new Label("Spawnpoint count:");
-        TextField s_input = new TextField(Integer.toString(Main.getMap().getSpawnCount()));
+        TextField s_input = new TextField(Integer.toString(ajutineSpawnCount));
         spawnpointCount.getChildren().addAll(s_text, s_input);
 
         HBox distance = new HBox();
         distance.setSpacing(10);
         distance.setAlignment(Pos.CENTER);
         Label d_text = new Label("Minimum distance between spawns:");
-        TextField d_input = new TextField(Integer.toString(Main.getMap().getMinDisdanceBetweenSpawns()));
+        TextField d_input = new TextField(Integer.toString(ajutineSpawnDist));
         distance.getChildren().addAll(d_text, d_input);
 
         Slider slider = new Slider(0, 100, ajutineBlockSize);
@@ -43,7 +43,7 @@ public class Settings {
         x.setAlignment(Pos.CENTER);
         x.setSpacing(20);
         Label x_text = new Label("Map's x size:");
-        TextField x_input = new TextField(Integer.toString(Main.getMap().getX()));
+        TextField x_input = new TextField(Integer.toString(defaultX));
         x_input.setAlignment(Pos.CENTER);
         x_input.setDisable(true);
         x_input.setStyle("-fx-opacity: 1;");
@@ -61,7 +61,7 @@ public class Settings {
         y.setAlignment(Pos.CENTER);
         y.setSpacing(20);
         Label y_text = new Label("Map's y size:");
-        TextField y_input = new TextField(Integer.toString(Main.getMap().getY()));
+        TextField y_input = new TextField(Integer.toString(defaultY));
         y_input.setAlignment(Pos.CENTER);
         y_input.setDisable(true);
         y_input.setStyle("-fx-opacity: 1;");
@@ -88,17 +88,16 @@ public class Settings {
 
         back.setOnAction(e -> Main.switchToMenu());
         apply.setOnAction(e -> {
-            Main.getMap().setX(ajutineX);
-            Main.getMap().setY(ajutineY);
-            Main.getMap().setSpawnCount(ajutineSpawnCount);
-            Main.getMap().setMinDisdanceBetweenSpawns(ajutineSpawnDist);
+            Main.setSpawnCount(ajutineSpawnCount);
+            Main.setSpawnSpacing(ajutineSpawnDist);
             Main.setBlockSize(ajutineBlockSize);
         });
         reset.setOnAction(e -> {
-            s_input.setText(Integer.toString(Main.getMap().getSpawnCount()));
-            d_input.setText(Integer.toString(Main.getMap().getMinDisdanceBetweenSpawns()));
-            x_input.setText(Integer.toString(Main.getMap().getX()));
-            y_input.setText(Integer.toString(Main.getMap().getY()));
+            s_input.setText(Integer.toString(Main.getSpawnCount()));
+            d_input.setText(Integer.toString(Main.getSpawnSpacing()));
+            x_input.setText(Integer.toString(defaultX));
+            y_input.setText(Integer.toString(defaultY));
+            slider.setValue(Main.getBlockSize());
         });
 
         s_input.focusedProperty().addListener((v, oldValue, newValue) -> {
@@ -129,10 +128,10 @@ public class Settings {
             if (!newValue.equals(oldValue)) {
                 ajutineBlockSize = (int) Math.round(newValue.doubleValue());
                 if (ajutineBlockSize == 0) ajutineBlockSize = 1;
-                ajutineY = Main.getScreenH() / ajutineBlockSize;
-                ajutineX = Main.getScreenW() / ajutineBlockSize;
-                y_input.setText(Integer.toString(ajutineY));
-                x_input.setText(Integer.toString(ajutineX));
+                int currentX = (int) Math.ceil((double) Main.getScreenW() / ajutineBlockSize);
+                int currentY = (int) Math.ceil((double) Main.getScreenH() / ajutineBlockSize);
+                x_input.setText(Integer.toString(currentX));
+                y_input.setText(Integer.toString(currentY));
                 blockSizeInput.setText(Integer.toString(ajutineBlockSize));
             }
         });

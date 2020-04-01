@@ -52,3 +52,7 @@ Kahur laseb nüüd ainult ühte monsterit korraga. Liigutasin rohkem asju Map kl
 Koletise klassil on eraldi väärtus, mis koletise spawnimisel määratakse, mis näitab, millisest spawnpoindist koletis pärineb.
 Missle --> missile. Igasugune liikumine canvase sõltub nüüd ajast. Fullscreen toggleks on F11. Settings screen muudetud. Blocksize
 saab muuta settings screenil, x ja y olenevad sellest.
+
+01.04.2020 Leo
+Tegin animate objekti staatiliseks. Mängu ajal ESC-i vajutades läheb mäng pausile ning ilmub pause screen, kus saab mängu jätkata,
+uuesti hakata või mängust väljuda.

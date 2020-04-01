@@ -30,8 +30,8 @@ public class Map {
         this.map_matrix = new Block[rectCountx][rectCounty];
         this.map = new int[rectCounty][rectCountx];
         this.openBlocks = new ArrayList<>();
-        this.minDisdanceBetweenSpawns = 50;
-        this.spawnCount = 4;
+        this.minDisdanceBetweenSpawns = Main.getSpawnSpacing();
+        this.spawnCount = Main.getSpawnCount();
         this.allMonsters = new ArrayList<>();
     }
 
@@ -293,22 +293,6 @@ public class Map {
         this.y = y;
     }
 
-    public int getMinDisdanceBetweenSpawns() {
-        return minDisdanceBetweenSpawns;
-    }
-
-    public void setMinDisdanceBetweenSpawns(int minDisdanceBetweenSpawns) {
-        this.minDisdanceBetweenSpawns = minDisdanceBetweenSpawns;
-    }
-
-    public int getSpawnCount() {
-        return spawnCount;
-    }
-
-    public void setSpawnCount(int spawnCount) {
-        this.spawnCount = spawnCount;
-    }
-
     public Tower getTowerWithXY(int x, int y) {
         //Pixlite x ja y tuleb tagasi indexi x ja y muuta.
         for (Tower tower : towers) {
@@ -321,10 +305,6 @@ public class Map {
 
     private int pixToIndex(int pix) {
         return (2 * pix - this.size) / (2 * this.size);
-    }
-
-    public List<Monster> getAllMonsters() {
-        return allMonsters;
     }
 
     public void addMonster(Monster monster) {

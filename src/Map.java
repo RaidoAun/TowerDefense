@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Map {
-    private List<int[]> openBlocks;
     private int x;
     private int y;
     private Block[][] map_matrix;
@@ -29,7 +28,6 @@ public class Map {
         this.spawnpoints = new ArrayList<>();
         this.map_matrix = new Block[rectCountx][rectCounty];
         this.map = new int[rectCounty][rectCountx];
-        this.openBlocks = new ArrayList<>();
         this.minDisdanceBetweenSpawns = Main.getSpawnSpacing();
         this.spawnCount = Main.getSpawnCount();
         this.allMonsters = new ArrayList<>();
@@ -125,7 +123,7 @@ public class Map {
         return size;
     }
 
-    void genOpenBlocks() {
+     private List<int[]> genOpenBlocks() {
         List<int[]> open = new ArrayList<>();
         for (int i = 0; i < map_matrix.length; i++) {
             for (int j = 0; j < map_matrix[0].length; j++) {
@@ -134,7 +132,7 @@ public class Map {
                 }
             }
         }
-        this.openBlocks = open;
+        return open;
     }
 
     List<Spawnpoint> getSpawnpoints() {
@@ -180,11 +178,11 @@ public class Map {
         if (count > optimaalne) {
             System.out.println("Praeguste parameetritega on võimalik luua maksimum " + (int) optimaalne + " spawnpointi!");
         }
-        List<int[]> openBlocksajutine;
+        List<int[]> openBlocks = genOpenBlocks();
+        List<int[]> openBlocksajutine = new ArrayList<>(openBlocks);
         List<int[]> spawns = new ArrayList<>();
         Random r = new Random();
         //Esimese spawnpoindi loomine.
-        openBlocksajutine = new ArrayList<>(this.openBlocks);
         int index = r.nextInt(openBlocksajutine.size());
         int[] point = openBlocksajutine.get(index);
         openBlocksajutine.remove(index);

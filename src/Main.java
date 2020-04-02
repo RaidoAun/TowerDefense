@@ -117,8 +117,9 @@ public class Main extends Application {
         menu_scene = new Scene(menu_button_box, 500, 250);
         Button play_btn = new Button("Play");
         Button settings_btn = new Button("Settings");
+        Button exit = new Button("Exit");
 
-        menu_button_box.getChildren().addAll(play_btn, settings_btn);
+        menu_button_box.getChildren().addAll(play_btn, settings_btn, exit);
         menu_button_box.setAlignment(Pos.CENTER);
 
         window.setTitle("TowerDefense");
@@ -135,6 +136,8 @@ public class Main extends Application {
             window.setScene(Settings.settingsScene());
 
         });
+
+        exit.setOnAction(e -> window.close());
 
     }
 

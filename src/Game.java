@@ -120,7 +120,6 @@ public class Game {
         map.genMap(2);
         map.genFlippedMap();
         //Genereerib nii palju spawnpointe, kui võimalik on.
-        map.genOpenBlocks();
         map.generateSpawnpoints();
         map.spawnSpawnpoints();
         map.drawMap(Main.getBlockSize());

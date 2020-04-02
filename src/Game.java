@@ -121,6 +121,11 @@ public class Game {
         map.genFlippedMap();
         //Genereerib nii palju spawnpointe, kui võimalik on.
         map.generateSpawnpoints();
+        Spawnpoint firstSpawn = map.getSpawnpoints().get(0);
+        NewPathfinder testPath = new NewPathfinder(firstSpawn.getSpawnpointxy()[0], firstSpawn.getSpawnpointxy()[1], 1, 1);
+        testPath.generateMatrix(map);
+        testPath.scanMap();
+        System.out.println(testPath.getVisited().size());
         map.spawnSpawnpoints();
         map.drawMap(Main.getBlockSize());
     }

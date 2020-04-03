@@ -107,6 +107,7 @@ public class Main extends Application {
                 Game.startRounds();
             }
         });
+
     }
 
     @Override

@@ -1,3 +1,9 @@
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,17 +36,12 @@ public class NewPathfinder {
 
     List<Node> visited;
     private Node[][] map;
-    private int[][] path;
     private int startX;
     private int startY;
-    private int endX;
-    private int endY;
 
-    public NewPathfinder(int startX, int startY, int endX, int endY) {
+    public NewPathfinder(int startX, int startY) {
         this.startX = startX;
         this.startY = startY;
-        this.endX = endX;
-        this.endY = endY;
         this.visited = new ArrayList<>();
     }
 
@@ -48,14 +49,25 @@ public class NewPathfinder {
         map = new Node[mapClass.getY()][mapClass.getX()];
         for (int y = 0; y < map.length; y++) {
             for (int x = 0; x < map[0].length; x++) {
-                if (x != startX && y != startY) {
-                    map[y][x] = new Node(x, y, mapClass.getBlock(x, y).getId(), false);
-                    System.out.println("begger");
-                } else {
+                if (x == startX && y == startY) {
                     map[y][x] = new Node(x, y, mapClass.getBlock(x, y).getId(), true);
+                } else {
+                    map[y][x] = new Node(x, y, mapClass.getBlock(x, y).getId(), false);
                 }
             }
         }
+    }
+
+    public int[][] getPath(int endX, int endY) {
+        Node current = map[endY][endX];
+        Node startNode = map[startY][startX];
+        List<int[]> path = new ArrayList<>();
+        while (current != startNode) {
+            path.add(new int[]{current.getX(), current.getY()});
+            current = current.getParent();
+        }
+        path.add(new int[]{startX, startY});
+        return path.toArray(new int[path.size()][2]);
     }
 
     public void scanMap() {
@@ -66,11 +78,9 @@ public class NewPathfinder {
             Node current = cheapestNode(unvisited);
             for (Node neighbour : getSuitableNeighbours(current.getX(), current.getY())) {
                 double costAfterMoving = current.getCost() + 1;
-                System.out.println(neighbour.getCost());
-                if (neighbour.getCost() > costAfterMoving || Double.isInfinite(neighbour.getCost())) {
-                    System.out.println("nope");
+                if (neighbour.getCost() > costAfterMoving) {
                     neighbour.setCost(costAfterMoving);
-                    neighbour.setParent(current.getX(), current.getY());
+                    neighbour.setParent(current);
                     if (!neighbour.isInUnvisitedList()) {
                         unvisited.add(neighbour);
                         neighbour.setInUnvisitedList(true);
@@ -100,6 +110,25 @@ public class NewPathfinder {
         return neighbours;
     }
 
+    public void drawCost() {
+        //Ühe bloki külje suurus pikslites
+        int blockSize = Main.getBlockSize();
+        Canvas canvas = Main.getCanvas();
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        for (Node node : visited) {
+            String cost = Double.toString(node.getCost());
+            int centreX = indexCentrePixel(node.getX(), blockSize);
+            int centreY = indexCentrePixel(node.getY(), blockSize);
+            g.setFont(Font.font("Calibri", FontWeight.BOLD, 10));
+            g.setFill(Paint.valueOf("#20fc03"));
+            g.fillText(cost, centreX, centreY);
+        }
+    }
+
+    private int indexCentrePixel(int index, int blockSize) {
+        return index * blockSize + blockSize / 2;
+    }
+
     private Node cheapestNode(List<Node> unvisited) {
         Node cheapest = unvisited.get(0);
         for (Node node : unvisited) {
@@ -119,8 +148,7 @@ class Node {
     private int y;
     private int id;
     private double cost;
-    private double parentX;
-    private double parentY;
+    private Node parent;
     private boolean visited;
     private boolean inUnvisitedList;
 
@@ -132,12 +160,10 @@ class Node {
         this.inUnvisitedList = false;
         if (start) {
             this.cost = 0;
-            this.parentX = x;
-            this.parentY = y;
+            parent = this;
         } else {
             this.cost = Double.POSITIVE_INFINITY;
-            this.parentX = Double.NaN;
-            this.parentY = Double.NaN;
+            parent = null;
         }
     }
 
@@ -169,16 +195,19 @@ class Node {
         return y;
     }
 
-    public void setParent(int x, int y) {
-        parentX = x;
-        parentY = y;
-    }
-
     public boolean isInUnvisitedList() {
         return inUnvisitedList;
     }
 
     public void setInUnvisitedList(boolean inUnvisitedList) {
         this.inUnvisitedList = inUnvisitedList;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
     }
 }

@@ -121,13 +121,22 @@ public class Game {
         map.genFlippedMap();
         //Genereerib nii palju spawnpointe, kui võimalik on.
         map.generateSpawnpoints();
-        Spawnpoint firstSpawn = map.getSpawnpoints().get(0);
-        NewPathfinder testPath = new NewPathfinder(firstSpawn.getSpawnpointxy()[0], firstSpawn.getSpawnpointxy()[1], 1, 1);
-        testPath.generateMatrix(map);
-        testPath.scanMap();
-        System.out.println(testPath.getVisited().size());
         map.spawnSpawnpoints();
         map.drawMap(Main.getBlockSize());
+        /*
+        Spawnpoint firstSpawn = map.getSpawnpoints().get(0);
+        NewPathfinder testPath = new NewPathfinder(firstSpawn.getSpawnpointxy()[0], firstSpawn.getSpawnpointxy()[1]);
+        testPath.generateMatrix(map);
+        testPath.scanMap();
+        testPath.drawCost();
+        canvas.setOnMouseClicked(e -> {
+            int endX = map.pixToIndex((int) e.getX());
+            int endY = map.pixToIndex((int) e.getY());
+            int[][] path = testPath.getPath(endX, endY);
+            if (path != null) map.drawPath(path);
+            map.drawMap(Main.getBlockSize());
+        });
+        */
     }
 
     public static void chooseNexus(int xPixel, int yPixel) {

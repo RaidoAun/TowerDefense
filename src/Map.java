@@ -301,7 +301,7 @@ public class Map {
         return null;
     }
 
-    private int pixToIndex(int pix) {
+    public int pixToIndex(int pix) {
         return (2 * pix - this.size) / (2 * this.size);
     }
 

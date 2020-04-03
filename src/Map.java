@@ -19,6 +19,8 @@ public class Map {
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
     private List<Monster> allMonsters;
+    private Block nexus;
+    private NewPathfinder pathfinder;
 
     public Map(int rectCountx, int rectCounty, Canvas map_canvas, int size) {
         this.towers = new ArrayList<>();
@@ -32,19 +34,20 @@ public class Map {
         this.spawnCount = Main.getSpawnCount();
         this.allMonsters = new ArrayList<>();
         this.size = size;
+        this.nexus = null;
     }
 
     void initMap() {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
-                    map_matrix[i][j] = new Block(1, 1, new Color(0, 0, 0, 1), 0);
+                    map_matrix[i][j] = Block.SEIN(i, j);
                 } else {
                     int rand = new Random().nextInt(2);
                     if (new Random().nextInt(40) == 1) {
-                        map_matrix[i][j] = new Block(rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
+                        map_matrix[i][j] = new Block(i, j, rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
                     } else {
-                        map_matrix[i][j] = new Block(rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
+                        map_matrix[i][j] = new Block(i, j, rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
                     }
                 }
 
@@ -122,7 +125,7 @@ public class Map {
         return size;
     }
 
-     private List<int[]> genOpenBlocks() {
+    private List<int[]> genOpenBlocks() {
         List<int[]> open = new ArrayList<>();
         for (int i = 0; i < map_matrix.length; i++) {
             for (int j = 0; j < map_matrix[0].length; j++) {
@@ -143,12 +146,21 @@ public class Map {
             for (int i = 0; i < path.length - 1; i++) {
                 int indexX = path[i][0];
                 int indexY = path[i][1];
-                int pathCount = getBlock(indexX, indexY).getPathCount();
+                Block block = getBlock(indexX, indexY);
+                int pathCount = block.getPathCount();
+                block.reconstruct(9, 5, Color.LIGHTGRAY, pathCount + 1);
 
-                Block newBlock = new Block(9, 5, Color.LIGHTGRAY, pathCount + 1);
-                editMap_matrix(indexX, indexY, newBlock);
+                //Block newBlock = new Block(9, 5, Color.LIGHTGRAY, pathCount + 1);
+                //editMap_matrix(indexX, indexY, newBlock);
             }
         }
+    }
+
+    public void runDijkstra() {
+        pathfinder = new NewPathfinder(nexus.x, nexus.y);
+        pathfinder.generateMatrix(this);
+        pathfinder.scanMap();
+        pathfinder.drawCost();
     }
 
     void deletePath(int[][] path) {
@@ -156,14 +168,21 @@ public class Map {
             for (int i = 0; i < path.length - 1; i++) {
                 int indexX = path[i][0];
                 int indexY = path[i][1];
-                int pathCount = getBlock(indexX, indexY).getPathCount();
+                Block block = getBlock(indexX, indexY);
+                int pathCount = block.getPathCount();
 
+                if (pathCount - 1 <= 0) {
+                    block.reconstruct(0, 5, Color.WHITE, pathCount - 1);
+                }
+
+                /*
                 Block newBlock = new Block(9, 5, Color.LIGHTGRAY, pathCount - 1);
                 if (newBlock.getPathCount() == 0) {
                     newBlock.setId(0);
                     newBlock.setColor(Color.WHITE);
                 }
                 if (getBlock(indexX, indexY).getId() == 9) editMap_matrix(indexX, indexY, newBlock);
+                */
             }
         }
     }
@@ -220,38 +239,13 @@ public class Map {
         }
         //Spawnpointide kirjutamine klassi.
         for (int[] spawn : spawns) {
-            //x - 100 y - 50 on nexus hetkel!
-            this.spawnpoints.add(new Spawnpoint(spawn, this.map));
+            this.spawnpoints.add(new Spawnpoint(spawn[0], spawn[1]));
         }
-        //System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
-    }
-
-    void spawnSpawnpoints() {
-        for (Spawnpoint p : spawnpoints) {
-            editMap_matrix(p.getSpawnpointxy()[0], p.getSpawnpointxy()[1], new Block(2, 5, new Color(0.5, 1, 0, 0.9), 0));
-        }
+        System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
 
     public List<Tower> getTowers() {
         return towers;
-    }
-
-    void setNexusxy(int[] nexusxy) {
-        for (Spawnpoint spawn : this.spawnpoints) {
-            spawn.setNexusxy(nexusxy);
-        }
-    }
-
-    void genNexus() {
-        int[] n = this.spawnpoints.get(0).getNexusxy();
-        editMap_matrix(n[0], n[1], new Block(3, 0, new Color(1, 0, 1, 1), 0));
-    }
-
-    void genPathstoNexus(int gCost) {
-        for (Spawnpoint spawn : this.spawnpoints) {
-            spawn.genPath(gCost);
-            spawn.setNexusWithPath(true);
-        }
     }
 
     List<Spawnpoint> pathsContain(int[] point) {
@@ -343,6 +337,15 @@ public class Map {
 
     public void noTowerRanges() {
         for (Tower tower : this.towers) tower.setActive(false);
+    }
+
+    public boolean isNexus() {
+        return nexus != null;
+    }
+
+    public void setNexus(Block nexus) {
+        nexus.reconstruct(3, 0, Color.VIOLET, 0);
+        this.nexus = nexus;
     }
 
 }

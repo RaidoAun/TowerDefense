@@ -75,16 +75,19 @@ public class Main extends Application {
 
         Game.setValues();
         window.setScene(Game.getGameScene());
-        Game.generateGame();
+        Game.generateMap();
         window.setFullScreen(true);
         PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
 
         Game.getCanvas().setOnMouseClicked(e -> {
-            if (!Game.isNexus()) {
+            if (!Game.getMap().isNexus()) {
                 Game.chooseNexus(e);
-                if (Game.isNexus()) Game.resumeAnimation();
+                if (Game.getMap().isNexus()) {
+                    Game.runDijkstra();
+                    //Game.resumeAnimation();
+                }
             } else {
-                Game.clickDurigGame(e);
+                //Game.clickDurigGame(e);
             }
         });
 

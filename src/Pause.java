@@ -31,7 +31,7 @@ public class Pause {
     private static void resume() {
         Main.getWindow().setScene(Game.getGameScene());
         Main.getWindow().setFullScreen(true);
-        if (Game.isNexus()) Game.resumeAnimation();
+        if (Game.getMap().isNexus()) Game.resumeAnimation();
     }
 
     private static void restart() {

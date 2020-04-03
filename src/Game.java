@@ -24,7 +24,6 @@ public class Game {
     private static CanvasWindow cWindow;
     private static int health;
     private static double lastFrameTime;
-    private static boolean isNexus;
     private static AnimationTimer animate;
     private static int blockSize;
 
@@ -43,7 +42,6 @@ public class Game {
         cWindow = new CanvasWindow(canvas);
         health = 100;
         lastFrameTime = 0;
-        isNexus = false;
 
         animate = new AnimationTimer() {
 
@@ -106,10 +104,6 @@ public class Game {
         animate.start();
     }
 
-    public static boolean isNexus() {
-        return isNexus;
-    }
-
     public static Scene getGameScene() {
         GridPane game_layout = new GridPane();
         game_layout.getChildren().add(canvas);
@@ -138,47 +132,28 @@ public class Game {
         return map;
     }
 
-    public static void generateGame() {
+    public static void generateMap() {
         map.initMap();
         map.genMap(2);
         map.genFlippedMap();
-        //Genereerib nii palju spawnpointe, kui võimalik on.
-        map.generateSpawnpoints();
-        map.spawnSpawnpoints();
         map.drawMap();
-        /*
-        Spawnpoint firstSpawn = map.getSpawnpoints().get(0);
-        NewPathfinder testPath = new NewPathfinder(firstSpawn.getSpawnpointxy()[0], firstSpawn.getSpawnpointxy()[1]);
-        testPath.generateMatrix(map);
-        testPath.scanMap();
-        testPath.drawCost();
-        canvas.setOnMouseClicked(e -> {
-            int endX = map.pixToIndex((int) e.getX());
-            int endY = map.pixToIndex((int) e.getY());
-            int[][] path = testPath.getPath(endX, endY);
-            if (path != null) map.drawPath(path);
-            map.drawMap(Main.getBlockSize());
-        });
-        */
     }
 
     public static void chooseNexus(MouseEvent e) {
         int x = pixelToIndex((int) e.getX());
         int y = pixelToIndex((int) e.getY());
-        Block eventBlock = map.getMap_matrix()[x][y];
-        map.setNexusxy(new int[]{x, y});
+        Block eventBlock = map.getBlock(x, y);
         if (eventBlock.getId() != 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!", true);
-        } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
-            PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!", true);
+            PopUp.createPopup("Valitud nexuse asukoht ei sobi! \nProovi uuesti!", true);
         } else {
-            map.genNexus();
-            map.genPathstoNexus(500);
-            for (Spawnpoint spawn : map.getSpawnpoints()) {
-                map.drawPath(spawn.getPath());
-            }
+            eventBlock.reconstruct(Blocks.NEXUS);
+            map.setNexus(eventBlock);
+            map.drawMap();
         }
-        isNexus = map.getSpawnpoints().get(0).isNexusWithPath();
+    }
+
+    public static void runDijkstra() {
+        map.runDijkstra();
     }
 
     public static void clickDurigGame(MouseEvent e) {
@@ -213,17 +188,18 @@ public class Game {
                 if (Game.raha >= Towers.values()[TowerToMakeId].getHind()) {
                     Game.raha -= Towers.values()[TowerToMakeId].getHind();
                     List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
-                    map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
+                    eventBlock.reconstruct(1, 0, Color.BLACK, 0);
+                    //map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
 
-                    if (eiTakistaTeed(updatableSpawns)) {
-                        genNewPaths(updatableSpawns);
+                    if (/*eiTakistaTeed(updatableSpawns)*/ true) {
+                        //genNewPaths(updatableSpawns);
                         map.noTowerRanges();
                         //Uue toweri genereerimine.
                         int towerX = x * map.getSize() + map.getSize() / 2;
                         int towerY = y * map.getSize() + map.getSize() / 2;
                         Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
                         map.getTowers().add(newTower);
-                        map.editMap_matrix(x, y, newTower.getBlock());
+                        map.editMap_matrix(x, y, newTower);
                         newTower.setActive(true);
 
                     } else {
@@ -246,20 +222,6 @@ public class Game {
             }
         } else {
             cWindow.checkButtons(clickx, clicky);
-        }
-    }
-
-    private static boolean eiTakistaTeed(List<Spawnpoint> spawns) {
-        for (Spawnpoint s : spawns) if (s.genPathReturn(1).length == 0) return false;
-        return true;
-    }
-
-    private static void genNewPaths(List<Spawnpoint> spawns) {
-        for (Spawnpoint s : spawns) {
-            int[][] oldPath = s.getPath();
-            s.genPath(500);
-            map.deletePath(oldPath);
-            map.drawPath(s.getPath());
         }
     }
 

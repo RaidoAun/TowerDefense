@@ -4,8 +4,6 @@ import java.util.List;
 
 public class Tower extends Block {
 
-    private int x;
-    private int y;
     private int level;
     private double range;
     private boolean active;
@@ -14,19 +12,13 @@ public class Tower extends Block {
     private int maxLevel;
 
     public Tower(Towers type, int x, int y) {
-        super(type.getId() + 10, type.getDmg(), type.getColor(), 0);
-        this.x = x;
-        this.y = y;
+        super(x, y, type.getId() + 10, type.getDmg(), type.getColor(), 0);
         this.level = 1;
         this.range = type.getRange();
         this.active = false;
         this.damage = this.value;
         this.hind = type.getHind();
         this.maxLevel = type.getMaxLevel();
-    }
-
-    public Block getBlock() {
-        return new Block(this.id, this.value, this.color, this.getPathCount());
     }
 
     void lvlUp() {
@@ -106,7 +98,9 @@ public class Tower extends Block {
 
     public void sell() {
         Game.getMap().getTowers().remove(this);
-        Game.getMap().editMap_matrix(Game.pixelToIndex(this.getPixelX()), Game.pixelToIndex(this.getPixelY()), new Block(0, 0, new Color(1, 1, 1, 1), 0));
+        Block block = Game.getMap().getBlock(this.x, this.y);
+        block.reconstruct(0, 0, Color.WHITE, 0);
+        //Game.getMap().editMap_matrix(Game.pixelToIndex(this.getPixelX()), Game.pixelToIndex(this.getPixelY()), new Block(0, 0, new Color(1, 1, 1, 1), 0));
     }
 
     public int getHind() {

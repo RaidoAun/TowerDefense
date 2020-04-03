@@ -1,8 +1,6 @@
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.VBox;
@@ -11,8 +9,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static Canvas canvas;
-    private static GraphicsContext gc;
     private static Scene menu_scene;
     private static Stage window;
     private static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
@@ -20,7 +16,6 @@ public class Main extends Application {
     private static int blockSize = 15;
     private static int spawnCount = 3;
     private static int spawnSpacing = 20;
-    private static Map map;
 
     public static int getSpawnCount() {
         return spawnCount;
@@ -59,18 +54,6 @@ public class Main extends Application {
         window.setScene(menu_scene);
     }
 
-    public static Canvas getCanvas() {
-        return canvas;
-    }
-
-    public static Map getMap() {
-        return map;
-    }
-
-    public static GraphicsContext getGc() {
-        return gc;
-    }
-
     public static int getScreenH() {
         return screenH;
     }
@@ -89,11 +72,6 @@ public class Main extends Application {
     }
 
     public static void startGame() {
-        canvas = new Canvas();
-        gc = canvas.getGraphicsContext2D();
-        int x = (int) Math.ceil((double) screenW / blockSize);
-        int y = (int) Math.ceil((double) screenH / blockSize);
-        map = new Map(x, y, canvas);
 
         Game.setValues();
         window.setScene(Game.getGameScene());
@@ -101,10 +79,12 @@ public class Main extends Application {
         window.setFullScreen(true);
         PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
 
-        canvas.setOnMouseClicked(e -> {
-            Game.chooseNexus((int) e.getX(), (int) e.getY());
-            if (Game.isNexus()) {
-                Game.startRounds();
+        Game.getCanvas().setOnMouseClicked(e -> {
+            if (!Game.isNexus()) {
+                Game.chooseNexus(e);
+                if (Game.isNexus()) Game.resumeAnimation();
+            } else {
+                Game.clickDurigGame(e);
             }
         });
 

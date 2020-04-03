@@ -112,21 +112,16 @@ public class NewPathfinder {
 
     public void drawCost() {
         //Ühe bloki külje suurus pikslites
-        int blockSize = Main.getBlockSize();
-        Canvas canvas = Main.getCanvas();
+        Canvas canvas = Game.getCanvas();
         GraphicsContext g = canvas.getGraphicsContext2D();
         for (Node node : visited) {
             String cost = Double.toString(node.getCost());
-            int centreX = indexCentrePixel(node.getX(), blockSize);
-            int centreY = indexCentrePixel(node.getY(), blockSize);
+            int centreX = Game.indexToPixel(node.getX());
+            int centreY = Game.indexToPixel(node.getY());
             g.setFont(Font.font("Calibri", FontWeight.BOLD, 10));
             g.setFill(Paint.valueOf("#20fc03"));
             g.fillText(cost, centreX, centreY);
         }
-    }
-
-    private int indexCentrePixel(int index, int blockSize) {
-        return index * blockSize + blockSize / 2;
     }
 
     private Node cheapestNode(List<Node> unvisited) {

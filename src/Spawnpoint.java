@@ -33,10 +33,10 @@ class Spawnpoint {
     }
 
     public void genMonster(Monsters type) {
-        double x = (this.spawnpointxy[0] + 0.5) * Main.getMap().getSize();
-        double y = (this.spawnpointxy[1] + 0.5) * Main.getMap().getSize();
+        double x = (this.spawnpointxy[0] + 0.5) * Game.getBlockSize();
+        double y = (this.spawnpointxy[1] + 0.5) * Game.getBlockSize();
         Monster monster = new Monster(type, x, y, this);
-        Main.getMap().addMonster(monster);
+        Game.getMap().addMonster(monster);
     }
 
     void genPath(int gCost) {

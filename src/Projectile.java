@@ -37,8 +37,8 @@ public class Projectile {
             this.currnetX = endX;
             this.currnetY = endY;
         }
-        Main.getGc().setFill(this.color);
-        Main.getGc().fillOval(currnetX - diameter / 2, currnetY - diameter / 2, diameter, diameter);
+        Game.getG().setFill(this.color);
+        Game.getG().fillOval(currnetX - diameter / 2, currnetY - diameter / 2, diameter, diameter);
     }
 
     public boolean hasReachedEnd() {

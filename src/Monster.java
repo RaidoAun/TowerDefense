@@ -1,3 +1,4 @@
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -34,9 +35,10 @@ public class Monster {
     }
 
     public void drawMonster() {
-        Main.getGc().setFill(this.color);
-        double diameeter = (double) Main.getMap().getSize() / 2;
-        Main.getGc().fillOval(this.x - diameeter / 2, this.y - diameeter / 2, diameeter, diameeter);
+        GraphicsContext g = Game.getG();
+        g.setFill(this.color);
+        double diameeter = (double) Game.getBlockSize() / 2;
+        g.fillOval(this.x - diameeter / 2, this.y - diameeter / 2, diameeter, diameeter);
     }
 
     public int getMoney() {
@@ -73,8 +75,8 @@ public class Monster {
 
     void move(int[][] path, double speed) {
         if (this.step < path.length) {
-            int distx = (int) (((path[this.step][0] + 0.5) * Main.getMap().getSize()) - this.x);
-            int disty = (int) (((path[this.step][1] + 0.5) * Main.getMap().getSize()) - this.y);
+            int distx = (int) (((path[this.step][0] + 0.5) * Game.getBlockSize()) - this.x);
+            int disty = (int) (((path[this.step][1] + 0.5) * Game.getBlockSize()) - this.y);
             if (distx < 0) {
                 if (speed >= -distx) {
                     this.x = distx + this.x;

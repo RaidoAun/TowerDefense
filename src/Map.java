@@ -20,7 +20,7 @@ public class Map {
     private int spawnCount;
     private List<Monster> allMonsters;
 
-    public Map(int rectCountx, int rectCounty, Canvas map_canvas) {
+    public Map(int rectCountx, int rectCounty, Canvas map_canvas, int size) {
         this.towers = new ArrayList<>();
         this.x = rectCountx;
         this.y = rectCounty;
@@ -31,6 +31,7 @@ public class Map {
         this.minDisdanceBetweenSpawns = Main.getSpawnSpacing();
         this.spawnCount = Main.getSpawnCount();
         this.allMonsters = new ArrayList<>();
+        this.size = size;
     }
 
     void initMap() {
@@ -87,11 +88,9 @@ public class Map {
         this.map = flippedMap;
     }
 
-    void drawMap(int blocksize) {
-        this.size = blocksize;
+    void drawMap() {
         this.canvas.setWidth(size * this.x);
         this.canvas.setHeight(size * this.y);
-
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setLineWidth(0.1);
         gc.setStroke(Color.BLACK);
@@ -294,15 +293,11 @@ public class Map {
     public Tower getTowerWithXY(int x, int y) {
         //Pixlite x ja y tuleb tagasi indexi x ja y muuta.
         for (Tower tower : towers) {
-            int towerX = pixToIndex(tower.getPixelX());
-            int towerY = pixToIndex(tower.getPixelY());
+            int towerX = Game.pixelToIndex(tower.getPixelX());
+            int towerY = Game.pixelToIndex(tower.getPixelY());
             if (towerX == x && towerY == y) return tower;
         }
         return null;
-    }
-
-    public int pixToIndex(int pix) {
-        return (2 * pix - this.size) / (2 * this.size);
     }
 
     public void addMonster(Monster monster) {

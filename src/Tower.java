@@ -64,9 +64,9 @@ public class Tower extends Block {
             double distance = Math.hypot(this.x - monster.getX(), this.y - monster.getY());
             if (distance <= this.range) {
                 if (!onlyAnimate) monster.setHp(monster.getHp() - this.damage);
-                Main.getGc().setStroke(getColor());
-                Main.getGc().setLineWidth(0.5);
-                Main.getGc().strokeLine(this.x, this.y, monster.getX(), monster.getY());
+                Game.getG().setStroke(getColor());
+                Game.getG().setLineWidth(0.5);
+                Game.getG().strokeLine(this.x, this.y, monster.getX(), monster.getY());
             }
         }
     }
@@ -95,17 +95,18 @@ public class Tower extends Block {
 
     void drawRange() {
 
-        Main.getGc().setFill(new Color(0, 0, 0, 0.5));
-        Main.getGc().fillOval(this.x - this.range, this.y - this.range, this.range * 2, this.range * 2);
+        Game.getG().setFill(new Color(0, 0, 0, 0.5));
+        Game.getG().fillOval(this.x - this.range, this.y - this.range, this.range * 2, this.range * 2);
 
     }
 
     public int getDamage() {
         return damage;
     }
+
     public void sell() {
-        Main.getMap().getTowers().remove(this);
-        Main.getMap().editMap_matrix(Game.convertPixelToIndex(this.getPixelX()),Game.convertPixelToIndex(this.getPixelY()),new Block(0, 0, new Color(1, 1 , 1, 1), 0));
+        Game.getMap().getTowers().remove(this);
+        Game.getMap().editMap_matrix(Game.pixelToIndex(this.getPixelX()), Game.pixelToIndex(this.getPixelY()), new Block(0, 0, new Color(1, 1, 1, 1), 0));
     }
 
     public int getHind() {

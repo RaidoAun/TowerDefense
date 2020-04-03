@@ -25,7 +25,7 @@ public class CanvasWindow {
     CanvasWindow(Canvas c) {
         this.c = c;
         this.gc = c.getGraphicsContext2D();
-        this.block_size = Main.getMap().getSize();
+        this.block_size = Game.getBlockSize();
         this.text_size = (int) (Main.getScreenH() / 60);
     }
 
@@ -109,9 +109,9 @@ public class CanvasWindow {
         this.show_tower = show_tower;
     }
 
-    public void setCoords(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public void setCoords(double x, double y) {
+        this.x = (int) x;
+        this.y = (int) y;
     }
 
     public int getH() {

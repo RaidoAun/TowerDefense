@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -25,11 +26,17 @@ public class Game {
     private static double lastFrameTime;
     private static boolean isNexus;
     private static AnimationTimer animate;
+    private static int blockSize;
 
     public static void setValues() {
+
+        blockSize = Main.getBlockSize();
+        int x = (int) Math.ceil((double) Main.getScreenW() / blockSize);
+        int y = (int) Math.ceil((double) Main.getScreenH() / blockSize);
+        canvas = new Canvas();
+        map = new Map(x, y, canvas, blockSize);
+
         TowerToMakeId = 0;
-        map = Main.getMap();
-        canvas = Main.getCanvas();
         g = canvas.getGraphicsContext2D();
         raha = 500;
         spawnspeed = 1;
@@ -61,7 +68,7 @@ public class Game {
                     shoot = true;
                     lastShootTime = t;
                 }
-                map.drawMap(Main.getBlockSize());
+                map.drawMap();
                 tickTowers();
 
                 updateMoney(0);
@@ -91,6 +98,10 @@ public class Game {
 
     }
 
+    public static GraphicsContext getG() {
+        return g;
+    }
+
     public static void resumeAnimation() {
         animate.start();
     }
@@ -115,6 +126,18 @@ public class Game {
         return scene;
     }
 
+    public static Canvas getCanvas() {
+        return canvas;
+    }
+
+    public static int getBlockSize() {
+        return blockSize;
+    }
+
+    public static Map getMap() {
+        return map;
+    }
+
     public static void generateGame() {
         map.initMap();
         map.genMap(2);
@@ -122,7 +145,7 @@ public class Game {
         //Genereerib nii palju spawnpointe, kui võimalik on.
         map.generateSpawnpoints();
         map.spawnSpawnpoints();
-        map.drawMap(Main.getBlockSize());
+        map.drawMap();
         /*
         Spawnpoint firstSpawn = map.getSpawnpoints().get(0);
         NewPathfinder testPath = new NewPathfinder(firstSpawn.getSpawnpointxy()[0], firstSpawn.getSpawnpointxy()[1]);
@@ -139,9 +162,9 @@ public class Game {
         */
     }
 
-    public static void chooseNexus(int xPixel, int yPixel) {
-        int x = convertPixelToIndex(xPixel);
-        int y = convertPixelToIndex(yPixel);
+    public static void chooseNexus(MouseEvent e) {
+        int x = pixelToIndex((int) e.getX());
+        int y = pixelToIndex((int) e.getY());
         Block eventBlock = map.getMap_matrix()[x][y];
         map.setNexusxy(new int[]{x, y});
         if (eventBlock.getId() != 0) {
@@ -158,77 +181,72 @@ public class Game {
         isNexus = map.getSpawnpoints().get(0).isNexusWithPath();
     }
 
-    public static void startRounds() {
+    public static void clickDurigGame(MouseEvent e) {
+        int clickx = (int) e.getX();
+        int clicky = (int) e.getY();
 
-        animate.start();
-
-        canvas.setOnMouseClicked(e -> {
-            int clickx = (int) e.getX();
-            int clicky = (int) e.getY();
-
-            if (e.getButton() == MouseButton.SECONDARY && !cWindow.isClickOnWindow(clickx, clicky)) {
-                cWindow.setActive(true);
-                cWindow.setShow_tower(false);
-                cWindow.setH(cWindow.getText_size() * 2);
-                cWindow.setW((int) (canvas.getWidth() / 12));
-                cWindow.setCoords(clickx - cWindow.getW() / 2, clicky - cWindow.getH());
-                CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
-                for (int i = 0; i < Towers.values().length; i++) {
-                    int index = i;
-                    CanvasButton button_temp = new CanvasButton(() -> setTowerToMakeId(index));
-                    button_temp.setColor(Towers.values()[index].getColor());
-                    int button_padding = cWindow.getW() / Towers.values().length;
-                    button_temp.setCoords((int) (cWindow.getX() + button_padding * (index + 0.5)), cWindow.getY() + cWindow.getH() / 2 - cWindow.getText_size() / 2, cWindow.getText_size(), cWindow.getText_size());
-                    buttons_temp[i] = button_temp;
-                }
-                cWindow.setButtons(buttons_temp);
-            } else if (e.getButton() == MouseButton.PRIMARY && !cWindow.isClickOnWindow(clickx, clicky)) {
-                cWindow.setActive(false);
-
-                //Pikslite muutmine mapi maatriksi indexiteks.
-                int x = convertPixelToIndex(clickx);
-                int y = convertPixelToIndex(clicky);
-                //Blokk, millel klikkati.
-                Block eventBlock = map.getBlock(x, y);
-                if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
-                    if (Game.raha >= Towers.values()[TowerToMakeId].getHind()) {
-                        Game.raha -= Towers.values()[TowerToMakeId].getHind();
-                        List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
-                        map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
-
-                        if (eiTakistaTeed(updatableSpawns)) {
-                            genNewPaths(updatableSpawns);
-                            map.noTowerRanges();
-                            //Uue toweri genereerimine.
-                            int towerX = x * map.getSize() + map.getSize() / 2;
-                            int towerY = y * map.getSize() + map.getSize() / 2;
-                            Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
-                            map.getTowers().add(newTower);
-                            map.editMap_matrix(x, y, newTower.getBlock());
-                            newTower.setActive(true);
-
-                        } else {
-                            map.editMap_matrix(x, y, eventBlock);
-                            PopUp.createPopup("Tower takistaks spawnpointi teed nexuseni!\nProovi uuesti!", true);
-                            map.noTowerRanges();
-                        }
-
-                    }
-                } else if (eventBlock.getId() >= 10) {
-                    map.noTowerRanges();
-                    Tower currentTower = map.getTowerWithXY(x, y);
-                    currentTower.setActive(true);
-                    cWindow.setTower(currentTower);
-                    cWindow.setActive(true);
-                    cWindow.setShow_tower(true);
-                } else {
-                    map.noTowerRanges();
-                    PopUp.createPopup("Sellele ruudule ei saa ehitada!\n Proovi uuesti!", true);
-                }
-            } else {
-                cWindow.checkButtons(clickx, clicky);
+        if (e.getButton() == MouseButton.SECONDARY && !cWindow.isClickOnWindow(clickx, clicky)) {
+            cWindow.setActive(true);
+            cWindow.setShow_tower(false);
+            cWindow.setH(cWindow.getText_size() * 2);
+            cWindow.setW((int) (canvas.getWidth() / 12));
+            cWindow.setCoords(clickx - (double) cWindow.getW() / 2, clicky - cWindow.getH());
+            CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
+            for (int i = 0; i < Towers.values().length; i++) {
+                int index = i;
+                CanvasButton button_temp = new CanvasButton(() -> setTowerToMakeId(index));
+                button_temp.setColor(Towers.values()[index].getColor());
+                int button_padding = cWindow.getW() / Towers.values().length;
+                button_temp.setCoords((int) (cWindow.getX() + button_padding * (index + 0.5)), cWindow.getY() + cWindow.getH() / 2 - cWindow.getText_size() / 2, cWindow.getText_size(), cWindow.getText_size());
+                buttons_temp[i] = button_temp;
             }
-        });
+            cWindow.setButtons(buttons_temp);
+        } else if (e.getButton() == MouseButton.PRIMARY && !cWindow.isClickOnWindow(clickx, clicky)) {
+            cWindow.setActive(false);
+
+            //Pikslite muutmine mapi maatriksi indexiteks.
+            int x = pixelToIndex(clickx);
+            int y = pixelToIndex(clicky);
+            //Blokk, millel klikkati.
+            Block eventBlock = map.getBlock(x, y);
+            if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
+                if (Game.raha >= Towers.values()[TowerToMakeId].getHind()) {
+                    Game.raha -= Towers.values()[TowerToMakeId].getHind();
+                    List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
+                    map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
+
+                    if (eiTakistaTeed(updatableSpawns)) {
+                        genNewPaths(updatableSpawns);
+                        map.noTowerRanges();
+                        //Uue toweri genereerimine.
+                        int towerX = x * map.getSize() + map.getSize() / 2;
+                        int towerY = y * map.getSize() + map.getSize() / 2;
+                        Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
+                        map.getTowers().add(newTower);
+                        map.editMap_matrix(x, y, newTower.getBlock());
+                        newTower.setActive(true);
+
+                    } else {
+                        map.editMap_matrix(x, y, eventBlock);
+                        PopUp.createPopup("Tower takistaks spawnpointi teed nexuseni!\nProovi uuesti!", true);
+                        map.noTowerRanges();
+                    }
+
+                }
+            } else if (eventBlock.getId() >= 10) {
+                map.noTowerRanges();
+                Tower currentTower = map.getTowerWithXY(x, y);
+                currentTower.setActive(true);
+                cWindow.setTower(currentTower);
+                cWindow.setActive(true);
+                cWindow.setShow_tower(true);
+            } else {
+                map.noTowerRanges();
+                PopUp.createPopup("Sellele ruudule ei saa ehitada!\n Proovi uuesti!", true);
+            }
+        } else {
+            cWindow.checkButtons(clickx, clicky);
+        }
     }
 
     private static boolean eiTakistaTeed(List<Spawnpoint> spawns) {
@@ -245,8 +263,13 @@ public class Game {
         }
     }
 
-    static int convertPixelToIndex(int pixel_coords) {
-        return pixel_coords / map.getSize();
+    public static int pixelToIndex(int pixel) {
+        return (int) Math.floor((double) pixel / blockSize);
+    }
+
+    //Annab indexi keskkoha piksli.
+    public static int indexToPixel(int index) {
+        return index * blockSize + blockSize / 2;
     }
 
     private static void tickTowers() {

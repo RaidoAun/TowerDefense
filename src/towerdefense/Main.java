@@ -1,10 +1,16 @@
 package towerdefense;
 
-import display.ScenesGroup;
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
+    public static Stage WINDOW;
+
+    public static void setScene(Scene scene) {
+        WINDOW.setScene(scene);
+    }
 
     public static void main(String[] args) {
         launch(args);
@@ -12,7 +18,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setScene(ScenesGroup.MENU);
-        primaryStage.show();
+        WINDOW = primaryStage;
+        WINDOW.show();
+        Game game = new Game();
+        game.start();
     }
 }

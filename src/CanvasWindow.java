@@ -22,10 +22,10 @@ public class CanvasWindow {
     private CanvasButton[] buttons;
     private Boolean show_tower;
 
-    CanvasWindow(Canvas c) {
+    CanvasWindow(Canvas c, int size) {
         this.c = c;
         this.gc = c.getGraphicsContext2D();
-        this.block_size = Game.getBlockSize();
+        this.block_size = size;
         this.text_size = (int) (Main.getScreenH() / 60);
     }
 
@@ -91,15 +91,12 @@ public class CanvasWindow {
         CanvasButton temp = new CanvasButton(()->{
             int upgradePrice = (int) (tower.getHind()*0.1);
             if(Game.getRaha()>=upgradePrice){
-                Game.updateMoney(-upgradePrice);
+                Game.updateMoney(-upgradePrice, this.c);
                 tower.lvlUp();
             }
         });
         temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
-        CanvasButton temp2 = new CanvasButton(()->{
-            tower.sell();
-            this.active = false;
-        });
+        CanvasButton temp2 = new CanvasButton(()-> this.active = false);
         temp2.setColor(Color.RED);
         temp2.setCoords(this.x+2*(this.w/3) - this.text_size / 2,this.y + this.h - this.text_size,this.text_size, this.text_size);
         this.buttons = new CanvasButton[]{temp,temp2};

@@ -2,10 +2,10 @@ import javafx.scene.paint.Color;
 
 public class Block {
 
-    public static Block SEIN(int x, int y) {
-        return new Block(x, y, 1, 1, Color.BLACK, 0);
+    public static Block SEIN(int x, int y, int size) {
+        return new Block(x, y, 1, 1, Color.BLACK, 0, size);
     }
-
+    protected int size;
     protected int x;
     protected int y;
     protected int id;
@@ -13,7 +13,7 @@ public class Block {
     protected int value;
     protected int pathCount;  //Näitab, mitu pathi hetkel sellest blokist läbi läheb.
 
-    public Block(int x, int y, int block_id, int block_value, Color block_color, int pathCount) {
+    public Block(int x, int y, int block_id, int block_value, Color block_color, int pathCount, int size) {
         //0 - vaba; 1 - sein; 3 - nexus; 2 - start; 10 - tower; 9 - path
         this.x = x;
         this.y = y;
@@ -21,6 +21,7 @@ public class Block {
         this.color = block_color;
         this.value = block_value;
         this.pathCount = pathCount;
+        this.size = size;
     }
 
     public Block(int x, int y, int value) {

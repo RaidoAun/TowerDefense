@@ -25,6 +25,7 @@ public class Projectile {
         this.endY = endY;
     }
 
+    /*
     public void moveMissile() {
         double currentStep = Game.getLastFrameTime() * this.step;
         double xDist = endX - currnetX;
@@ -40,6 +41,8 @@ public class Projectile {
         Game.getG().setFill(this.color);
         Game.getG().fillOval(currnetX - diameter / 2, currnetY - diameter / 2, diameter, diameter);
     }
+
+     */
 
     public boolean hasReachedEnd() {
         return currnetX == endX && currnetY == endY;

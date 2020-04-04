@@ -16,6 +16,7 @@ public class Main extends Application {
     private static int blockSize = 15;
     private static int spawnCount = 3;
     private static int spawnSpacing = 20;
+    private static Game game = new Game(screenW, screenH, blockSize);
 
     public static int getSpawnCount() {
         return spawnCount;
@@ -72,29 +73,12 @@ public class Main extends Application {
     }
 
     public static void startGame() {
-
-        Game.setValues();
-        window.setScene(Game.getGameScene());
-        Game.generateMap();
-        window.setFullScreen(true);
-        PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!", true);
-
-        Game.getCanvas().setOnMouseClicked(e -> {
-            if (!Game.getMap().isNexus()) {
-                Game.chooseNexus(e);
-                if (Game.getMap().isNexus()) {
-                    Game.runDijkstra();
-                    //Game.resumeAnimation();
-                }
-            } else {
-                //Game.clickDurigGame(e);
-            }
-        });
-
+        game.start();
     }
 
     @Override
     public void start(Stage primaryStage) {
+        System.out.println(Thread.currentThread());
         window = primaryStage;
         VBox menu_button_box = new VBox();
         menu_button_box.setSpacing(20);
@@ -115,10 +99,15 @@ public class Main extends Application {
         play_btn.setOnAction(event -> startGame());
 
         settings_btn.setOnAction(e -> {
-
+            try {
+                game.stop();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            /*
             window.setTitle("Settings");
             window.setScene(Settings.settingsScene());
-
+            */
         });
 
         exit.setOnAction(e -> window.close());

@@ -4,8 +4,8 @@ class Spawnpoint extends Block {
 
     private int[][] path;
 
-    Spawnpoint(int x, int y) {
-        super(x, y, 2, 5, Color.LIGHTGREEN, 0);
+    Spawnpoint(int x, int y, int size) {
+        super(x, y, 2, 5, Color.LIGHTGREEN, 0, size);
     }
 
     int[][] getPath() {
@@ -17,10 +17,9 @@ class Spawnpoint extends Block {
     }
 
     public void genMonster(Monsters type) {
-        double x = (this.x + 0.5) * Game.getBlockSize();
-        double y = (this.y + 0.5) * Game.getBlockSize();
-        Monster monster = new Monster(type, x, y, this);
-        Game.getMap().addMonster(monster);
+        double x = (this.x + 0.5) * size;
+        double y = (this.y + 0.5) * size;
+        Monster monster = new Monster(type, x, y, this, size);
     }
 
 }

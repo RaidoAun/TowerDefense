@@ -1,147 +1,84 @@
-import javafx.animation.AnimationTimer;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.List;
-import java.util.Random;
 
-public class Game {
-    private static int TowerToMakeId;
-    private static Map map;
-    private static Canvas canvas;
-    private static GraphicsContext g;
-    private static int raha;
-    private static int spawnspeed; //Mitme sekundi tagant spawnib üks monster!!
-    private static CanvasWindow cWindow;
-    private static int health;
-    private static double lastFrameTime;
-    private static AnimationTimer animate;
-    private static int blockSize;
+public class Game extends Canvas implements Runnable {
+    private static int raha = 500;
+    private Thread towerDefense;
+    private boolean running;
+    private int TowerToMakeId = 10;
+    private Map map;
+    private CanvasWindow cWindow;
+    private static int health = 100;
+    private int blockSize;
 
-    public static void setValues() {
-
-        blockSize = Main.getBlockSize();
-        int x = (int) Math.ceil((double) Main.getScreenW() / blockSize);
-        int y = (int) Math.ceil((double) Main.getScreenH() / blockSize);
-        canvas = new Canvas();
-        map = new Map(x, y, canvas, blockSize);
-
-        TowerToMakeId = 0;
-        g = canvas.getGraphicsContext2D();
-        raha = 500;
-        spawnspeed = 1;
-        cWindow = new CanvasWindow(canvas);
-        health = 100;
-        lastFrameTime = 0;
-
-        animate = new AnimationTimer() {
-
-            Random r = new Random();
-            long startTime;
-            long endTime;
-            boolean generateMonster = false;
-            boolean shoot = false;
-            long lastSpawnTime = 0;
-            long lastShootTime = 0;
-            long startNanoTime = System.nanoTime();
-
-            @Override
-            public void handle(long now) {
-                startTime = System.nanoTime();
-                long t = (now - startNanoTime) / 1000000000;
-                if (t % spawnspeed == 0 && t != lastSpawnTime) {
-                    generateMonster = true;
-                    lastSpawnTime = t;
-                }
-                if (t != lastShootTime) {
-                    shoot = true;
-                    lastShootTime = t;
-                }
-                map.drawMap();
-                tickTowers();
-
-                updateMoney(0);
-                updateHealth(0);
-
-                for (Spawnpoint spawn : map.getSpawnpoints()) {
-                    if (generateMonster) {
-                        Monsters[] monsters = Monsters.values();
-                        spawn.genMonster(monsters[r.nextInt(monsters.length)]);
-                    }
-                }
-
-                map.moveMonsters();
-                map.drawMonsters();
-                map.monstersTakeDamage(!shoot);
-                cWindow.draw();
-                if (generateMonster) generateMonster = false;
-                if (shoot) shoot = false;
-                if (health <= 0) {
-                    this.stop();
-                    PopUp.createPopup("YOU SUCK! GAME OVER!", false);
-                }
-                endTime = System.nanoTime();
-                lastFrameTime = (double) (endTime - startTime) / 1000000000;
-            }
-        };
-
+    public Game(int pixelWidth, int pixelHeight, int blockSize) {
+        this.blockSize = blockSize;
+        this.setWidth(pixelWidth);
+        this.setHeight(pixelHeight);
+        //Mapi suurused on blokkidena väljendatud!
+        int mapWidth = (int) Math.ceil((double) pixelWidth / blockSize);
+        int mapHeight = (int) Math.ceil((double) pixelHeight / blockSize);
+        this.map = new Map(mapWidth, mapHeight, this.getGraphicsContext2D(), blockSize);
+        cWindow = new CanvasWindow(this, blockSize);
     }
 
-    public static GraphicsContext getG() {
-        return g;
+    public static int pixelToIndex(int pixel, int blockSize) {
+        return (int) Math.floor((double) pixel / blockSize);
     }
 
-    public static void resumeAnimation() {
-        animate.start();
+    //Annab indexi keskkoha piksli.
+    public static int indexToPixel(int index, int blockSize) {
+        return index * blockSize + blockSize / 2;
     }
 
-    public static Scene getGameScene() {
-        GridPane game_layout = new GridPane();
-        game_layout.getChildren().add(canvas);
-        Scene scene = new Scene(game_layout);
-        scene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.F11) {
-                Main.toggleFullscreen();
-            } else if (e.getCode() == KeyCode.ESCAPE) {
-                animate.stop();
-                Main.getWindow().setScene(Pause.getPauseScreen());
-                Main.getWindow().setFullScreen(true);
-            }
-        });
-        return scene;
+    public static void updateMoney(int money, Canvas c) {
+        GraphicsContext g = c.getGraphicsContext2D();
+        raha += money;
+        String text = String.format("Raha: %s $", raha);
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.getScreenH() / 20));
+        g.setFill(Paint.valueOf("#2aa32e"));
+        g.fillText(text, c.getWidth() - 300, 50);
     }
 
-    public static Canvas getCanvas() {
-        return canvas;
+    public static int getRaha() {
+        return raha;
     }
 
-    public static int getBlockSize() {
-        return blockSize;
+    public synchronized void start() {
+        if (running) return;
+        towerDefense = new Thread(this, "towerDefense");
+        running = true;
+        towerDefense.start();
     }
 
-    public static Map getMap() {
+    public synchronized void stop() throws InterruptedException {
+        if (!running) return;
+        running = false;
+        towerDefense.join();
+    }
+
+    public Map getMap() {
         return map;
     }
 
-    public static void generateMap() {
+    public void generateMap() {
         map.initMap();
         map.genMap(2);
         map.genFlippedMap();
         map.drawMap();
     }
 
-    public static void chooseNexus(MouseEvent e) {
-        int x = pixelToIndex((int) e.getX());
-        int y = pixelToIndex((int) e.getY());
+    public void chooseNexus(MouseEvent e) {
+        int x = pixelToIndex((int) e.getX(), this.blockSize);
+        int y = pixelToIndex((int) e.getY(), this.blockSize);
         Block eventBlock = map.getBlock(x, y);
         if (eventBlock.getId() != 0) {
             PopUp.createPopup("Valitud nexuse asukoht ei sobi! \nProovi uuesti!", true);
@@ -152,11 +89,11 @@ public class Game {
         }
     }
 
-    public static void runDijkstra() {
+    public void runDijkstra() {
         map.runDijkstra();
     }
 
-    public static void clickDurigGame(MouseEvent e) {
+    public void clickDurigGame(MouseEvent e) {
         int clickx = (int) e.getX();
         int clicky = (int) e.getY();
 
@@ -164,7 +101,7 @@ public class Game {
             cWindow.setActive(true);
             cWindow.setShow_tower(false);
             cWindow.setH(cWindow.getText_size() * 2);
-            cWindow.setW((int) (canvas.getWidth() / 12));
+            cWindow.setW((int) (this.getWidth() / 12));
             cWindow.setCoords(clickx - (double) cWindow.getW() / 2, clicky - cWindow.getH());
             CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
             for (int i = 0; i < Towers.values().length; i++) {
@@ -180,13 +117,13 @@ public class Game {
             cWindow.setActive(false);
 
             //Pikslite muutmine mapi maatriksi indexiteks.
-            int x = pixelToIndex(clickx);
-            int y = pixelToIndex(clicky);
+            int x = pixelToIndex(clickx, this.blockSize);
+            int y = pixelToIndex(clicky, this.blockSize);
             //Blokk, millel klikkati.
             Block eventBlock = map.getBlock(x, y);
             if (eventBlock.getId() == 0 || eventBlock.getId() == 9) {
-                if (Game.raha >= Towers.values()[TowerToMakeId].getHind()) {
-                    Game.raha -= Towers.values()[TowerToMakeId].getHind();
+                if (this.raha >= Towers.values()[TowerToMakeId].getHind()) {
+                    this.raha -= Towers.values()[TowerToMakeId].getHind();
                     List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
                     eventBlock.reconstruct(1, 0, Color.BLACK, 0);
                     //map.editMap_matrix(x, y, new Block(1, 0, Color.BLACK, 0));
@@ -197,7 +134,7 @@ public class Game {
                         //Uue toweri genereerimine.
                         int towerX = x * map.getSize() + map.getSize() / 2;
                         int towerY = y * map.getSize() + map.getSize() / 2;
-                        Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY);
+                        Tower newTower = new Tower(Towers.values()[TowerToMakeId], towerX, towerY, blockSize);
                         map.getTowers().add(newTower);
                         map.editMap_matrix(x, y, newTower);
                         newTower.setActive(true);
@@ -225,48 +162,31 @@ public class Game {
         }
     }
 
-    public static int pixelToIndex(int pixel) {
-        return (int) Math.floor((double) pixel / blockSize);
-    }
-
-    //Annab indexi keskkoha piksli.
-    public static int indexToPixel(int index) {
-        return index * blockSize + blockSize / 2;
-    }
-
-    private static void tickTowers() {
-        for (Tower tower : map.getTowers()) {
-            if (tower.isActive()) {
-                tower.drawRange();
-            }
-        }
-    }
-
-    public static void updateMoney(int money) {
-        raha += money;
-        String text = String.format("Raha: %s $", raha);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.getScreenH() / 20));
-        g.setFill(Paint.valueOf("#2aa32e"));
-        g.fillText(text, canvas.getWidth() - 300, 50);
-    }
-
-    public static void updateHealth(int hp) {
+    public static void updateHealth(int hp, Canvas c) {
+        GraphicsContext g = c.getGraphicsContext2D();
         health += hp;
         String text = String.format("Tervis: %s", health);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.getScreenH() / 20));
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, c.getHeight() / 20));
         g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, canvas.getWidth() - 300, 100);
+        g.fillText(text, c.getWidth() - 300, 100);
     }
 
-    public static void setTowerToMakeId(int towerToMakeId) {
+    public void setTowerToMakeId(int towerToMakeId) {
         TowerToMakeId = towerToMakeId;
     }
 
-    public static double getLastFrameTime() {
-        return lastFrameTime;
+    //Kõik siin sees hakkab pihta kui mäng alustatakse.
+    @Override
+    public void run() {
+        while (running) {
+            try {
+                System.out.println(Thread.currentThread());
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Ouch i am ded");
     }
 
-    public static int getRaha() {
-        return raha;
-    }
 }

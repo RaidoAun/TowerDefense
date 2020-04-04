@@ -10,6 +10,7 @@ import java.util.Random;
 public class Map {
     private int x;
     private int y;
+    private GraphicsContext gc;
     private Block[][] map_matrix;
     private List<Spawnpoint> spawnpoints;
     private Canvas canvas;
@@ -22,11 +23,11 @@ public class Map {
     private Block nexus;
     private NewPathfinder pathfinder;
 
-    public Map(int rectCountx, int rectCounty, Canvas map_canvas, int size) {
+    public Map(int rectCountx, int rectCounty, GraphicsContext gc, int size) {
         this.towers = new ArrayList<>();
         this.x = rectCountx;
         this.y = rectCounty;
-        this.canvas = map_canvas;
+        this.gc = gc;
         this.spawnpoints = new ArrayList<>();
         this.map_matrix = new Block[rectCountx][rectCounty];
         this.map = new int[rectCounty][rectCountx];
@@ -41,13 +42,13 @@ public class Map {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
-                    map_matrix[i][j] = Block.SEIN(i, j);
+                    map_matrix[i][j] = Block.SEIN(i, j, size);
                 } else {
                     int rand = new Random().nextInt(2);
                     if (new Random().nextInt(40) == 1) {
-                        map_matrix[i][j] = new Block(i, j, rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
+                        map_matrix[i][j] = new Block(i, j, rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0, size);
                     } else {
-                        map_matrix[i][j] = new Block(i, j, rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
+                        map_matrix[i][j] = new Block(i, j, rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0, size);
                     }
                 }
 
@@ -92,9 +93,6 @@ public class Map {
     }
 
     void drawMap() {
-        this.canvas.setWidth(size * this.x);
-        this.canvas.setHeight(size * this.y);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setLineWidth(0.1);
         gc.setStroke(Color.BLACK);
         for (int i = 0; i < this.x; i++) {
@@ -160,7 +158,6 @@ public class Map {
         pathfinder = new NewPathfinder(nexus.x, nexus.y);
         pathfinder.generateMatrix(this);
         pathfinder.scanMap();
-        pathfinder.drawCost();
     }
 
     void deletePath(int[][] path) {
@@ -239,7 +236,7 @@ public class Map {
         }
         //Spawnpointide kirjutamine klassi.
         for (int[] spawn : spawns) {
-            this.spawnpoints.add(new Spawnpoint(spawn[0], spawn[1]));
+            this.spawnpoints.add(new Spawnpoint(spawn[0], spawn[1], size));
         }
         System.out.println(spawns.size() + " spawnpoindi genereermine õnnestus!");
     }
@@ -287,8 +284,8 @@ public class Map {
     public Tower getTowerWithXY(int x, int y) {
         //Pixlite x ja y tuleb tagasi indexi x ja y muuta.
         for (Tower tower : towers) {
-            int towerX = Game.pixelToIndex(tower.getPixelX());
-            int towerY = Game.pixelToIndex(tower.getPixelY());
+            int towerX = Game.pixelToIndex(tower.getPixelX(), size);
+            int towerY = Game.pixelToIndex(tower.getPixelY(), size);
             if (towerX == x && towerY == y) return tower;
         }
         return null;
@@ -302,37 +299,14 @@ public class Map {
         List<Monster> toRemove = new ArrayList<>();
         for (Monster monster : this.allMonsters) {
             if (monster.getHp() <= 0) {
-                Game.updateMoney(monster.getMoney());
+                Game.updateMoney(monster.getMoney(), canvas);
                 toRemove.add(monster);
             } else if (monster.hasReachedNexus()) {
-                Game.updateHealth(-monster.getDmg());
+                Game.updateHealth(-monster.getDmg(), canvas);
                 toRemove.add(monster);
-            } else {
-                monster.drawMonster();
             }
         }
         this.allMonsters.removeAll(toRemove);
-    }
-
-    void moveMonsters() {
-        for (Monster monster : this.allMonsters) {
-            monster.move();
-        }
-    }
-
-    public void monstersTakeDamage(boolean onlyAnimate) {
-        for (Tower tower : this.towers) {
-            if (this.allMonsters.size() > 0 && tower.getId() == 10) {
-                tower.shootLaser(this.allMonsters, onlyAnimate);
-            } else if (this.allMonsters.size() > 0 && tower.getId() == 11 && !onlyAnimate) {
-                Monster closestMonster = tower.getClosestMonster(this.allMonsters);
-                if (closestMonster != null) tower.cannonNewMissile(closestMonster);
-            }
-        }
-        for (Monster monster : this.allMonsters) {
-            monster.updateMissilesEndpoint();
-            monster.pullMissiles();
-        }
     }
 
     public void noTowerRanges() {

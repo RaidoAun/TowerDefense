@@ -7,6 +7,7 @@ import java.util.List;
 public class Monster {
 
     private int hp;
+    private int size;
     private int dmg;
     private int id;
     private double x;
@@ -19,7 +20,7 @@ public class Monster {
     private List<Projectile> lockedOnMissiles;
     private Spawnpoint spawnPoint; //Spawnpoint, kust koletis alguse sai.
 
-    Monster(Monsters type, double x_coord, double y_coord, Spawnpoint spawnPoint) {
+    Monster(Monsters type, double x_coord, double y_coord, Spawnpoint spawnPoint, int size) {
         this.x = x_coord;
         this.y = y_coord;
         this.step = 0;
@@ -32,13 +33,7 @@ public class Monster {
         this.reachedNexus = false;
         this.lockedOnMissiles = new ArrayList<>();
         this.spawnPoint = spawnPoint;
-    }
-
-    public void drawMonster() {
-        GraphicsContext g = Game.getG();
-        g.setFill(this.color);
-        double diameeter = (double) Game.getBlockSize() / 2;
-        g.fillOval(this.x - diameeter / 2, this.y - diameeter / 2, diameeter, diameeter);
+        this.size = size;
     }
 
     public int getMoney() {
@@ -69,14 +64,15 @@ public class Monster {
         return reachedNexus;
     }
 
+    /*
     void move() {
         move(this.spawnPoint.getPath(), Game.getLastFrameTime() * this.speed);
     }
 
     void move(int[][] path, double speed) {
         if (this.step < path.length) {
-            int distx = (int) (((path[this.step][0] + 0.5) * Game.getBlockSize()) - this.x);
-            int disty = (int) (((path[this.step][1] + 0.5) * Game.getBlockSize()) - this.y);
+            int distx = (int) (((path[this.step][0] + 0.5) * size) - this.x);
+            int disty = (int) (((path[this.step][1] + 0.5) * size) - this.y);
             if (distx < 0) {
                 if (speed >= -distx) {
                     this.x = distx + this.x;
@@ -117,6 +113,7 @@ public class Monster {
             this.reachedNexus = true;
         }
     }
+    */
 
     public void addMissile(Projectile missile) {
         lockedOnMissiles.add(missile);
@@ -126,18 +123,6 @@ public class Monster {
         for (Projectile missile : this.lockedOnMissiles) {
             missile.setEndPoint(this.x, this.y);
         }
-    }
-
-    public void pullMissiles() {
-        List<Projectile> toRemove = new ArrayList<>();
-        for (Projectile missile : lockedOnMissiles) {
-            missile.moveMissile();
-            if (missile.hasReachedEnd()) {
-                this.hp -= missile.getDamage();
-                toRemove.add(missile);
-            }
-        }
-        this.lockedOnMissiles.removeAll(toRemove);
     }
 
     public Spawnpoint getSpawnPoint() {

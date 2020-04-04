@@ -11,7 +11,6 @@ public class Pause {
         pauseLayout.setSpacing(20);
         pauseLayout.setAlignment(Pos.CENTER);
         Button resume = new Button("Resume");
-        resume.setOnAction(e -> resume());
         Button restart = new Button("Restart");
         restart.setOnAction(e -> restart());
         Button exit = new Button("Exit to main menu");
@@ -21,17 +20,9 @@ public class Pause {
         pause.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.F11) {
                 Main.toggleFullscreen();
-            } else if (e.getCode() == KeyCode.ESCAPE) {
-                resume();
             }
         });
         return pause;
-    }
-
-    private static void resume() {
-        Main.getWindow().setScene(Game.getGameScene());
-        Main.getWindow().setFullScreen(true);
-        if (Game.getMap().isNexus()) Game.resumeAnimation();
     }
 
     private static void restart() {

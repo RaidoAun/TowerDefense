@@ -8,6 +8,7 @@ import entities.Monster;
 import entities.Projectile;
 import tools.Converter;
 import map.Map;
+import towerdefense.Main;
 
 import java.util.HashSet;
 import java.util.List;
@@ -107,5 +108,9 @@ public abstract class Tower extends Block {
 
     public HashSet<Projectile> getShotProjectiles() {
         return shotProjectiles;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
     }
 }

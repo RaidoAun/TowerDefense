@@ -97,7 +97,7 @@ public class CanvasWindow {
         }
         CanvasButton temp = new CanvasButton(() -> {
             int upgradePrice = (int) (tower.getHind() * 0.1);
-            if (GameState.raha >= upgradePrice) {
+            if (tower.getMaxLevel()>tower.getLevel()&&GameState.raha >= upgradePrice){
                 GameState.updateMoney(-upgradePrice);
                 tower.lvlUp();
             }

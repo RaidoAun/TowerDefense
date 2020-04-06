@@ -1,6 +1,8 @@
+package map;
+
 import java.util.*;
 
-class Pathfinder {
+public class Pathfinder {
 
     private int[][] map;
     private int[] start;
@@ -14,7 +16,7 @@ class Pathfinder {
     private int[][] finalPath;
     private int gCost;
 
-    Pathfinder(int[][] map, int[] start, int[] end, int gCost) {
+    public Pathfinder(int[][] map, int[] start, int[] end, int gCost) {
         this.gCost = gCost;
         this.map = map;
         this.start = start;
@@ -27,7 +29,7 @@ class Pathfinder {
         }
     }
 
-    int[][] getFinalPath() {
+    public int[][] getFinalPath() {
         return finalPath;
     }
 

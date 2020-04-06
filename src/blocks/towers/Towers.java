@@ -1,12 +1,14 @@
+package blocks.towers;
+
 import javafx.scene.paint.Color;
 
 public enum Towers {
 
-    LASER("Laser", 0, 10, 100, 5, Color.DARKRED, 100),  //range peaks scalima mapi blocki suurusega (Main.getMap().getSize())
-    KAHUR("Kahur", 1, 20, 200, 3, Color.CYAN, 50),
-    KUULIPILDUJA("Kuulipilduja", 2, 15, 150, 5, Color.DARKOLIVEGREEN, 75),
-    KÜLMUTAJA("Külmutaja", 3, 0, 300, 10, Color.DEEPPINK, 50),
-    MÜÜR("Müür", 4, 0, 100, 10, Color.GOLD, 0);
+    LASER("Laser", 0, 1, 100, 5, Color.DARKRED, 100, 0),  //range peaks scalima mapi blocki suurusega (towerdefense.Main.getMap().getSize())
+    KAHUR("Kahur", 1, 20, 200, 3, Color.CYAN, 50, 60),
+    KUULIPILDUJA("Kuulipilduja", 2, 15, 150, 5, Color.DARKOLIVEGREEN, 75, 20),
+    KÜLMUTAJA("Külmutaja", 3, 0, 300, 10, Color.DEEPPINK, 50, 30),
+    MÜÜR("Müür", 4, 0, 100, 10, Color.GOLD, 0, 0);
 
     private final String nimi;
     private final int id;
@@ -15,8 +17,9 @@ public enum Towers {
     private final int maxLevel;
     private final Color color;
     private final double range;
+    private final int cooldown;
 
-    Towers(String nimi, int id, int dmg, int hind, int maxLevel, Color color, int range) {
+    Towers(String nimi, int id, int dmg, int hind, int maxLevel, Color color, int range, int cooldown) {
         this.nimi = nimi;
         this.id = id;
         this.dmg = dmg;
@@ -24,6 +27,7 @@ public enum Towers {
         this.maxLevel = maxLevel;
         this.color = color;
         this.range = range;
+        this.cooldown = cooldown;
     }
 
     public String getNimi() {
@@ -54,4 +58,7 @@ public enum Towers {
         return range;
     }
 
+    public int getCooldown() {
+        return cooldown;
+    }
 }

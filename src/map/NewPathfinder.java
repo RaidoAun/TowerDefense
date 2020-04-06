@@ -1,8 +1,11 @@
+package map;
+
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import towerdefense.Main;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +115,8 @@ public class NewPathfinder {
 
     public void drawCost() {
         //Ühe bloki külje suurus pikslites
-        int blockSize = Main.getBlockSize();
-        Canvas canvas = Main.getCanvas();
+        int blockSize = Main.blockSize;
+        Canvas canvas = new Canvas();
         GraphicsContext g = canvas.getGraphicsContext2D();
         for (Node node : visited) {
             String cost = Double.toString(node.getCost());

@@ -1,0 +1,21 @@
+package blocks.towers;
+
+import javafx.scene.canvas.GraphicsContext;
+import map.Map;
+
+public class Müür extends Tower {
+
+    public Müür(int x, int y) {
+        super(Towers.MÜÜR, x, y);
+    }
+
+    @Override
+    public void tick(Map map) {
+
+    }
+
+    @Override
+    public void render(GraphicsContext g) {
+
+    }
+}

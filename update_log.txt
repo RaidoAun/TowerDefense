@@ -1,14 +1,14 @@
 20.03.2020 Leo
 Update_log.txt faili lisamine. See fail on oma saavutuste ja plaanide kirjapanemiseks, päevikuga võrreldav. Kõik suuremad
 muudatused võiks siia kirja panna. Üritan täna nii teha, et error sõnumid ilmuvad ekraanile, mitte konsooli. Nihutasin
-suurema osa Main.java faili koodist Game.java faili. Võiks natuke cleanima ning organiseerituma mulje jätta. Mõte
-on praegu, et Game.java hoolitseb mängu enda eest, Main.java-s saab siis ainult selle klassi meetoteid kasutada, mis on
+suurema osa towerdefense.Main.java faili koodist map.Game.java faili. Võiks natuke cleanima ning organiseerituma mulje jätta. Mõte
+on praegu, et map.Game.java hoolitseb mängu enda eest, towerdefense.Main.java-s saab siis ainult selle klassi meetoteid kasutada, mis on
 cleanim minu arust. Genereeritakse map, spawnpoindid ning valitakse nexuse asukoht. Towerite placemist ning koletiste loomist
 see klass ei võimalda, selleks tuleb erinev klass. Pop-upide loomine jääb homsesse täna enam ei jõua sellega tegeleda.
 Epic gamer leo_xxx out.
 
 21.03.2020 Leo
-Game.java töötab korralikult. Tegin kenasti koodi ümber organiseerimist, dunno võib-olla see tegi asja hoopis segasemask.
+map.Game.java töötab korralikult. Tegin kenasti koodi ümber organiseerimist, dunno võib-olla see tegi asja hoopis segasemask.
 Kui ei sobi siis saab alati GitHubis aega tagasi kerida. Mängul on nüüd ka pop-up aknad, mis teavitavad mängijat toimuvast.
 Seadete ekraan peaaegu completed, mõned pisiasjad vaja veel ära teha. Kustutasid mõned üleliigsed failid. Tänaseks aitab.
 
@@ -23,20 +23,20 @@ Enum klass koletiste jaoks loodud, parameetreid pole veel välja mõelnud. Kolet
 Koletise surres raha updateb, koletiste enum klass tehtud, hetkel on kolm erinevat koletist. Koletised genereerivad randomilt.
 
 26.03.2020 Raido
-CanvasWindow class näitab infot toweri kohta, mapi joonistamisel pikslite suurus int mitte double, mapil on ka nüüd grid pattern.
+gui.CanvasWindow class näitab infot toweri kohta, mapi joonistamisel pikslite suurus int mitte double, mapil on ka nüüd grid pattern.
 Muutsin raha suuruse ja asukoha sõltuma canvase suurustest.
 
 27.03.2020 Leo
 Mängijal on nüüd piiratud arv elusid, kui need otsa saavad, siis on game over.
 
 28.03.2020 Leo
-Tower klass, mis extendib Block klassi. Erinevate toweri tüüpide jaoks enum klass Tower.
+blocks.towers.Tower klass, mis extendib blocks.Block klassi. Erinevate toweri tüüpide jaoks enum klass blocks.towers.Tower.
 
 29.03.2020 Raido
-Leidsin mõned probleemid, mida võiks lahendada, kui mäng pmst valma. (või igav) CanvasWindow ja raha ja elude asjad võtavad
+Leidsin mõned probleemid, mida võiks lahendada, kui mäng pmst valma. (või igav) gui.CanvasWindow ja raha ja elude asjad võtavad
 oma suuruse canvase X laiusest, ehk kui X on väike siis need ka väiksed, võiksid võtta selle suuruse, mille järgi need tulevad
-kõige suuremad (map juba teeb seda ja teeb end alati kas alla või paremale vastu äärt abiks on Game.getBlockSize()). Tegin
-CanvasButton classi, nüüd saab ikkagi canvasele teha igasuguseid buttoneid. Nüüd paremat klikki tehes saab valida mis towerit
+kõige suuremad (map juba teeb seda ja teeb end alati kas alla või paremale vastu äärt abiks on map.Game.getBlockSize()). Tegin
+gui.CanvasButton classi, nüüd saab ikkagi canvasele teha igasuguseid buttoneid. Nüüd paremat klikki tehes saab valida mis towerit
 soovid placida.
 
 29.03.2020 Leo
@@ -44,13 +44,13 @@ Kaotasin toweritelt hp ära, sest see on kasutu. Tegin Towerite ehitamise koodij
 if else spagetti ära ning optimiseerisin koodi märgatavalt. Kaotasin bug-i, kus overlapping teed vahel üksteist ära kustutasid.
 
 30.03.2020 Leo
-Tegin kahurile animatsioonid. Uus klass nimega Projectile, milles talletada igasuguseid kuule, mida towerid lasevad. Praegu
+Tegin kahurile animatsioonid. Uus klass nimega entities.Projectile, milles talletada igasuguseid kuule, mida towerid lasevad. Praegu
 eksisteerib bug, kus kahur laseb rohkem kui ühte koletist korraga. See tuleb fixida.
 
 31.03.2020 Leo
-Kahur laseb nüüd ainult ühte monsterit korraga. Liigutasin rohkem asju Map klassi, kõik koletised on nüüdsest Map klassis talletatud.
+Kahur laseb nüüd ainult ühte monsterit korraga. Liigutasin rohkem asju map.Map klassi, kõik koletised on nüüdsest map.Map klassis talletatud.
 Koletise klassil on eraldi väärtus, mis koletise spawnimisel määratakse, mis näitab, millisest spawnpoindist koletis pärineb.
-Missle --> missile. Igasugune liikumine canvase sõltub nüüd ajast. Fullscreen toggleks on F11. Settings screen muudetud. Blocksize
+Missle --> missile. Igasugune liikumine canvase sõltub nüüd ajast. Fullscreen toggleks on F11. states.SettingsState screen muudetud. Blocksize
 saab muuta settings screenil, x ja y olenevad sellest.
 
 01.04.2020 Leo

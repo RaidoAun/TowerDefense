@@ -1,3 +1,5 @@
+package gui;
+
 import javafx.scene.paint.Color;
 
 public class CanvasButton {

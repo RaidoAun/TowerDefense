@@ -1,3 +1,6 @@
+package states;
+
+import gui.PopUp;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -6,16 +9,26 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import towerdefense.Main;
 
-public class Settings {
+public class SettingsState implements State {
 
-    private static int ajutineBlockSize = Main.getBlockSize();
-    private static int defaultX = (int) Math.ceil((double) Main.getScreenW() / ajutineBlockSize);
-    private static int defaultY = (int) Math.ceil((double) Main.getScreenH() / ajutineBlockSize);
-    private static int ajutineSpawnCount = Main.getSpawnCount();
-    private static int ajutineSpawnDist = Main.getSpawnSpacing();
+    private int ajutineBlockSize = Main.blockSize;
+    private int defaultX = (int) Math.ceil((double) Main.screenW / ajutineBlockSize);
+    private int defaultY = (int) Math.ceil((double) Main.screenH / ajutineBlockSize);
+    private int ajutineSpawnCount = Main.spawnCount;
+    private int ajutineSpawnDist = Main.spawnSpacing;
+    private StateManager sm;
+    private Scene settings;
+    private States state;
 
-    public static Scene settingsScene() {
+    public SettingsState(StateManager sm) {
+        this.sm = sm;
+        this.settings = getSettingsScene();
+        this.state = States.SETTINGS;
+    }
+
+    public Scene getSettingsScene() {
 
         HBox spawnpointCount = new HBox();
         spawnpointCount.setSpacing(10);
@@ -86,18 +99,18 @@ public class Settings {
         settings_layout.getChildren().addAll(spawnpointCount, distance, slider, kuldneTriio, button_row);
         Scene settings = new Scene(settings_layout, 550, 300);
 
-        back.setOnAction(e -> Main.switchToMenu());
+        back.setOnAction(e -> sm.setState(States.MENU));
         apply.setOnAction(e -> {
-            Main.setSpawnCount(ajutineSpawnCount);
-            Main.setSpawnSpacing(ajutineSpawnDist);
-            Main.setBlockSize(ajutineBlockSize);
+            Main.spawnCount = ajutineSpawnCount;
+            Main.spawnSpacing = ajutineSpawnDist;
+            Main.blockSize = ajutineBlockSize;
         });
         reset.setOnAction(e -> {
-            s_input.setText(Integer.toString(Main.getSpawnCount()));
-            d_input.setText(Integer.toString(Main.getSpawnSpacing()));
+            s_input.setText(Integer.toString(Main.spawnCount));
+            d_input.setText(Integer.toString(Main.spawnSpacing));
             x_input.setText(Integer.toString(defaultX));
             y_input.setText(Integer.toString(defaultY));
-            slider.setValue(Main.getBlockSize());
+            slider.setValue(Main.blockSize);
         });
 
         s_input.focusedProperty().addListener((v, oldValue, newValue) -> {
@@ -105,7 +118,7 @@ public class Settings {
                 try {
                     ajutineSpawnCount = Integer.parseInt(s_input.getCharacters().toString());
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!", true);
+                    PopUp.createPopup("Error! Sisestage number!");
                     s_input.clear();
                     s_input.requestFocus();
                 }
@@ -117,7 +130,7 @@ public class Settings {
                 try {
                     ajutineSpawnDist = Integer.parseInt(d_input.getCharacters().toString());
                 } catch (NumberFormatException error) {
-                    PopUp.createPopup("Error! Sisestage number!", true);
+                    PopUp.createPopup("Error! Sisestage number!");
                     d_input.clear();
                     d_input.requestFocus();
                 }
@@ -128,8 +141,8 @@ public class Settings {
             if (!newValue.equals(oldValue)) {
                 ajutineBlockSize = (int) Math.round(newValue.doubleValue());
                 if (ajutineBlockSize == 0) ajutineBlockSize = 1;
-                int currentX = (int) Math.ceil((double) Main.getScreenW() / ajutineBlockSize);
-                int currentY = (int) Math.ceil((double) Main.getScreenH() / ajutineBlockSize);
+                int currentX = (int) Math.ceil((double) Main.screenW / ajutineBlockSize);
+                int currentY = (int) Math.ceil((double) Main.screenH / ajutineBlockSize);
                 x_input.setText(Integer.toString(currentX));
                 y_input.setText(Integer.toString(currentY));
                 blockSizeInput.setText(Integer.toString(ajutineBlockSize));
@@ -145,6 +158,28 @@ public class Settings {
         });
 
         return settings;
+
+    }
+
+    @Override
+    public void tick() {
+
+    }
+
+    @Override
+    public void render() {
+        if (sm.getWindow().getScene() != settings) {
+            sm.changeScene(settings);
+        }
+    }
+
+    @Override
+    public States getState() {
+        return state;
+    }
+
+    @Override
+    public void reset() {
 
     }
 }

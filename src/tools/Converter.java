@@ -4,12 +4,12 @@ import towerdefense.Main;
 
 public class Converter {
 
-    public static int pixToIndex(int pixel) {
-        return (int) Math.floor((double) pixel / Main.blockSize);
+    public static int pixToIndex(double pixel) {
+        return (int) Math.floor(pixel / Main.blockSize);
     }
 
-    public static int indexToPix(int index) {
-        return index * Main.blockSize + Main.blockSize / 2;
+    public static double indexToPix(int index) {
+        return index * Main.blockSize + (double) Main.blockSize / 2;
     }
 
 }

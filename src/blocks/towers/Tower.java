@@ -1,17 +1,14 @@
 package blocks.towers;
 
 import blocks.Block;
-import entities.Entity;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import entities.Monster;
 import entities.Projectile;
-import tools.Converter;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import map.Map;
-import towerdefense.Main;
+import tools.Converter;
 
 import java.util.HashSet;
-import java.util.List;
 
 public abstract class Tower extends Block {
 
@@ -64,11 +61,11 @@ public abstract class Tower extends Block {
         this.active = active;
     }
 
-    public int getPixelX() {
+    public double getPixelX() {
         return Converter.indexToPix(indexX);
     }
 
-    public int getPixelY() {
+    public double getPixelY() {
         return Converter.indexToPix(indexY);
     }
 

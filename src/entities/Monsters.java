@@ -9,13 +9,13 @@ public enum Monsters {
     TUGEV(2, 1, 200, 20, 40, Color.CRIMSON);
 
     private final int id;
-    private final int kiirus;
+    private final double kiirus;
     private final int hp;
     private final int damage;
     private final int money;
     private final Color color;
 
-    Monsters(int id, int kiirus, int hp, int damage, int money, Color color) {
+    Monsters(int id, double kiirus, int hp, int damage, int money, Color color) {
         this.id = id;
         this.kiirus = kiirus;
         this.hp = hp;
@@ -24,7 +24,7 @@ public enum Monsters {
         this.color = color;
     }
 
-    public int getKiirus() {
+    public double getKiirus() {
         return kiirus;
     }
 

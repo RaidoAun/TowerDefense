@@ -6,12 +6,12 @@ import map.Map;
 
 public abstract class Entity {
 
-    protected int pixelY;
-    protected int pixelX;
+    protected double pixelY;
+    protected double pixelX;
     protected Color color;
-    protected int speed; //Mitu pikslit liigub ühe framega.
+    protected double speed; //Mitu pikslit liigub ühe framega.
 
-    public Entity(int pixelX, int pixelY, Color color, int speed) {
+    public Entity(double pixelX, double pixelY, Color color, double speed) {
         this.pixelX = pixelX;
         this.pixelY = pixelY;
         this.color = color;
@@ -22,27 +22,27 @@ public abstract class Entity {
 
     public abstract void render(GraphicsContext g);
 
-    public int getPixelX() {
+    public double getPixelX() {
         return pixelX;
     }
 
-    public int getPixelY() {
+    public double getPixelY() {
         return pixelY;
     }
 
-    public int distanceFrom(int pixelX, int pixelY) {
-        return (int) Math.hypot(pixelX - this.pixelX, pixelY - this.pixelY);
+    public double distanceFrom(double pixelX, double pixelY) {
+        return Math.hypot(pixelX - this.pixelX, pixelY - this.pixelY);
     }
 
     public Color getColor() {
         return color;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(double speed) {
         this.speed = speed;
     }
 }

@@ -1,9 +1,8 @@
 package entities;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import map.Map;
 import blocks.towers.Tower;
+import javafx.scene.canvas.GraphicsContext;
+import map.Map;
 
 public class Projectile extends Entity {
 
@@ -12,9 +11,9 @@ public class Projectile extends Entity {
     private final Tower towerOfOrigin;
     private Monster target;
 
-    public Projectile(int startX, int startY, int damage, int speed, double diameter, Color color, Monster target, Tower towerOfOrigin) {
-        super(startX, startY, color, speed);
-        this.damage = damage;
+    public Projectile(Tower towerOfOrigin, Monster target, int speed, double diameter) {
+        super(towerOfOrigin.pixelX, towerOfOrigin.pixelY, towerOfOrigin.getColor(), speed);
+        this.damage = towerOfOrigin.getDamage();
         this.diameter = diameter;
         this.target = target;
         this.towerOfOrigin = towerOfOrigin;
@@ -24,10 +23,11 @@ public class Projectile extends Entity {
     public void tick(Map map) {
         double xDist = target.getPixelX() - pixelX;
         double yDist = target.getPixelY() - pixelY;
+        double direction = Math.atan2(yDist, xDist);
         double distance = Math.hypot(xDist, yDist);
-        if (this.speed <= distance) {
-            this.pixelX += (xDist * this.speed) / distance;
-            this.pixelY += (yDist * this.speed) / distance;
+        if (this.speed < distance) {
+            this.pixelX = this.pixelX + (speed * Math.cos(direction));
+            this.pixelY = this.pixelY + (speed * Math.sin(direction));
         } else {
             this.pixelX = target.getPixelX();
             this.pixelY = target.getPixelY();
@@ -44,7 +44,7 @@ public class Projectile extends Entity {
 
     @Override
     public void render(GraphicsContext g) {
-       g.setFill(this.color);
-       g.fillOval(pixelX - diameter / 2, pixelY - diameter / 2, diameter, diameter);
+        g.setFill(this.color);
+        g.fillOval(pixelX - diameter / 2, pixelY - diameter / 2, diameter, diameter);
     }
 }

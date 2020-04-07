@@ -61,3 +61,5 @@ uuesti hakata või mängust väljuda.
 Kerge rework on plaanis. Teen selle jaoks uue branchi. Mõte oleks praegune pathfinderi algoritm (A*) asendada Dijkstra algoga,
 sest minu silmis sobib see meie mängule 1000x paremini. Uue pathfinderi algatus jääb master branchi, kõik järgnev arendamine
 jätkub uues branchis.
+
+06.04.2020 Leo

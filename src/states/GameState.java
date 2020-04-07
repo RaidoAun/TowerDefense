@@ -4,6 +4,7 @@ import blocks.Block;
 import blocks.Spawnpoint;
 import blocks.towers.*;
 import entities.Entity;
+import entities.Monster;
 import gui.CanvasButton;
 import gui.CanvasWindow;
 import gui.PopUp;
@@ -86,9 +87,9 @@ public class GameState implements State {
             spawn.tick();
         }
         //Koletiste liigutamine.
-        List<Entity> entities = new ArrayList<>(map.getAllEntities());
-        for (Entity entity : entities) {
-            entity.tick(map);
+        List<Monster> monsters = new ArrayList<>(map.getAllMonsters());
+        for (Monster monster : monsters) {
+            monster.tick(map);
         }
         //Towerite tulistamine (ei ole graafiline).
         for (Tower tower : map.getTowers()) {
@@ -98,6 +99,7 @@ public class GameState implements State {
 
     @Override
     public void render() {
+        GraphicsContext g = sm.getCanvas().getGraphicsContext2D();
         //Vajaduse scene vahetamine.
         if (sm.getWindow().getScene() != gameScene) {
             sm.changeScene(gameScene);
@@ -107,19 +109,19 @@ public class GameState implements State {
         map.drawMap(Main.blockSize);
         //Tower rangede joonistamine.
         renderTowerRanges();
-        //CanvasWindow joonistamine.
-        cWindow.draw();
         //Raha ja elude uuendamine graafiliselt.
-        drawMoney(sm.getCanvas().getGraphicsContext2D());
-        drawHealth(sm.getCanvas().getGraphicsContext2D());
+        drawMoney(g);
+        drawHealth(g);
         //Koletiste joonistamine (vajab ülevaatamist).
-        for (Entity entity : map.getAllEntities()) {
-            entity.render(sm.getCanvas().getGraphicsContext2D());
+        for (Monster monster : map.getAllMonsters()) {
+            monster.render(g);
         }
         //Towerite graafika joonistamine.
         for (Tower tower : map.getTowers()) {
-            tower.render(sm.getCanvas().getGraphicsContext2D());
+            tower.render(g);
         }
+        //CanvasWindow joonistamine.
+        cWindow.draw();
     }
 
     @Override

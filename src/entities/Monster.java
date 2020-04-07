@@ -15,7 +15,7 @@ public class Monster extends Entity {
     private boolean reachedNexus;
     private Spawnpoint spawnPoint; //blocks.Spawnpoint, kust koletis alguse sai.
 
-    public Monster(Monsters type, int pixelX, int pixelY, Spawnpoint spawnPoint) {
+    public Monster(Monsters type, double pixelX, double pixelY, Spawnpoint spawnPoint) {
         super(pixelX, pixelY, type.getColor(), type.getKiirus());
         this.step = 0;
         this.hp = type.getHp();
@@ -30,11 +30,9 @@ public class Monster extends Entity {
 
         if (hp <= 0) {
             GameState.updateMoney(money);
-            map.getAllEntities().remove(this);
             map.getAllMonsters().remove(this);
         } else if (reachedNexus) {
             GameState.updateHealth(-dmg);
-            map.getAllEntities().remove(this);
             map.getAllMonsters().remove(this);
         }
         move();

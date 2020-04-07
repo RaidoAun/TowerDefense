@@ -23,7 +23,6 @@ public class Map {
     private int[][] map;
     private int minDisdanceBetweenSpawns;
     private int spawnCount;
-    private List<Entity> allEntities;
     private HashSet<Monster> allMonsters;
 
     public Map(int rectCountx, int rectCounty, GraphicsContext gc) {
@@ -36,7 +35,6 @@ public class Map {
         this.map = new int[rectCounty][rectCountx];
         this.minDisdanceBetweenSpawns = Main.spawnSpacing;
         this.spawnCount = Main.spawnCount;
-        this.allEntities = new ArrayList<>();
         this.allMonsters = new HashSet<>();
     }
 
@@ -310,16 +308,11 @@ public class Map {
     }
 
     public void addMonster(Monster monster) {
-        this.allEntities.add(monster);
         this.allMonsters.add(monster);
     }
 
     public void noTowerRanges() {
         for (Tower tower : this.towers) tower.setActive(false);
-    }
-
-    public List<Entity> getAllEntities() {
-        return allEntities;
     }
 
     public HashSet<Monster> getAllMonsters() {

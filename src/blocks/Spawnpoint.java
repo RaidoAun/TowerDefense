@@ -1,11 +1,10 @@
 package blocks;
 
-import javafx.scene.paint.Color;
-import map.Map;
 import entities.Monster;
 import entities.Monsters;
+import javafx.scene.paint.Color;
+import map.Map;
 import map.Pathfinder;
-import tools.Converter;
 
 import java.util.Random;
 

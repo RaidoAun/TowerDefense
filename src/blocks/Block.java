@@ -6,8 +6,8 @@ import tools.Converter;
 public class Block {
     public int indexX;
     public int indexY;
-    public int pixelX;
-    public int pixelY;
+    public double pixelX;
+    public double pixelY;
     public int id;
     protected Color color;
     protected int value;

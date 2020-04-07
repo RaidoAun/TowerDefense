@@ -1,5 +1,6 @@
 package gui;
 
+import blocks.towers.Tower;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -7,7 +8,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import map.Map;
-import blocks.towers.Tower;
 import states.GameState;
 import towerdefense.Main;
 
@@ -87,17 +87,17 @@ public class CanvasWindow {
         this.tower = tower;
         this.w = Main.screenH / 6;
         this.h = (int) (this.w * 0.6);
-        int tempx = tower.getPixelX() - this.w / 2;
-        int tempy = this.tower.getPixelY() - this.block_size * 2 - this.h;
+        int tempx = (int) tower.getPixelX() - this.w / 2;
+        int tempy = (int) tower.getPixelY() - this.block_size * 2 - this.h;
         this.x = Math.max(tempx, 0);
         if (tempy < 0) {
-            this.y = this.tower.getPixelY() + 3 * this.block_size;
+            this.y = (int) tower.getPixelY() + 3 * this.block_size;
         } else {
             this.y = tempy;
         }
         CanvasButton temp = new CanvasButton(() -> {
             int upgradePrice = (int) (tower.getHind() * 0.1);
-            if (tower.getMaxLevel()>tower.getLevel()&&GameState.raha >= upgradePrice){
+            if (tower.getMaxLevel() > tower.getLevel() && GameState.raha >= upgradePrice) {
                 GameState.updateMoney(-upgradePrice);
                 tower.lvlUp();
             }

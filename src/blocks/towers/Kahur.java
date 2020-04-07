@@ -16,19 +16,19 @@ public class Kahur extends Tower {
 
     @Override
     public void tick(Map map) {
-        HashSet<Projectile> projectiles = new HashSet<>(shotProjectiles);
-        for (Projectile projectile : projectiles) {
-            projectile.tick(null);
-        }
         Monster monster = getClosestMonster(map.getAllMonsters());
         if (idleTime >= cooldown && monster != null) {
             if (monster.distanceFrom(this.pixelX, this.pixelY) <= this.range) {
-                Projectile missile = new Projectile(this.pixelX, this.pixelY, this.damage, 2, Main.blockSize, this.color, monster, this);
+                Projectile missile = new Projectile(this, monster, 3, Main.blockSize * 0.75);
                 shotProjectiles.add(missile);
             }
             idleTime = 0;
         } else {
             idleTime += 1;
+        }
+        HashSet<Projectile> projectiles = new HashSet<>(shotProjectiles);
+        for (Projectile projectile : projectiles) {
+            projectile.tick(null);
         }
     }
 

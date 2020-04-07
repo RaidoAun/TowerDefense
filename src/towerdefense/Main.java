@@ -2,7 +2,6 @@ package towerdefense;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;

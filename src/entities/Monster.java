@@ -2,12 +2,14 @@ package entities;
 
 import blocks.Spawnpoint;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import states.GameState;
 import towerdefense.Main;
 import map.Map;
 
 public class Monster extends Entity {
 
+    private boolean frozen;
     private int hp;
     private int dmg;
     private int step;
@@ -23,6 +25,7 @@ public class Monster extends Entity {
         this.money = type.getMoney();
         this.reachedNexus = false;
         this.spawnPoint = spawnPoint;
+        this.frozen = false;
     }
 
     @Override
@@ -47,6 +50,11 @@ public class Monster extends Entity {
         g.setFill(this.color);
         double diameeter = (double) Main.blockSize / 2;
         g.fillOval(this.pixelX - diameeter / 2, this.pixelY - diameeter / 2, diameeter, diameeter);
+        if (frozen) {
+            g.setStroke(Color.AQUA);
+            g.setLineWidth((double) Main.blockSize / 20);
+            g.strokeOval(this.pixelX - diameeter / 2, this.pixelY - diameeter / 2, diameeter, diameeter);
+        }
     }
 
     public int getHp() {
@@ -108,5 +116,13 @@ public class Monster extends Entity {
 
     public boolean isReachedNexus() {
         return reachedNexus;
+    }
+
+    public void setFrozen(boolean frozen) {
+        this.frozen = frozen;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
     }
 }

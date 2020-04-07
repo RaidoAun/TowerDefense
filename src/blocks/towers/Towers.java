@@ -1,14 +1,13 @@
 package blocks.towers;
 
 import javafx.scene.paint.Color;
-import towerdefense.Main;
 
 public enum Towers {
 
-    LASER("Laser", 0, 1, 100, 5, Color.DARKRED, Main.blockSize*6, 0),  //range peaks scalima mapi blocki suurusega (towerdefense.Main.getMap().getSize())
-    KAHUR("Kahur", 1, 20, 200, 3, Color.CYAN, Main.blockSize*3, 60),
-    KUULIPILDUJA("Kuulipilduja", 2, 15, 150, 5, Color.DARKOLIVEGREEN, Main.blockSize*5, 20),
-    KÜLMUTAJA("Külmutaja", 3, 30, 300, 10, Color.DEEPPINK, Main.blockSize*3, 30),
+    LASER("Laser", 0, 1, 100, 5, Color.CRIMSON, 6, 0),
+    KAHUR("Kahur", 1, 20, 200, 3, Color.CHARTREUSE, 3, 60),
+    KUULIPILDUJA("Kuulipilduja", 2, 10, 150, 5, Color.DARKBLUE, 5, 5),
+    KÜLMUTAJA("Külmutaja", 3, 60, 300, 10, Color.AQUA, 3, 45),
     MÜÜR("Müür", 4, 0, 100, 10, Color.GOLD, 0, 0);
 
     private final String nimi;

@@ -3,6 +3,7 @@ package blocks.towers;
 import entities.Monster;
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import towerdefense.Main;
 
 import java.util.HashSet;
 
@@ -34,9 +35,16 @@ public class Laser extends Tower {
     public void render(GraphicsContext g) {
         for (Monster monster : monstersToLaser) {
             g.setStroke(color);
-            g.setLineWidth(5);
+            g.setLineWidth((double) Main.blockSize / 10);
             g.strokeLine(monster.getPixelX(), monster.getPixelY(), this.pixelX, this.pixelY);
         }
         monstersToLaser.clear();
+    }
+
+    @Override
+    public void lvlUp() {
+        this.level += 1;
+        this.range += 10;
+        this.damage += 1;
     }
 }

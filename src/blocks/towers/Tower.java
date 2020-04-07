@@ -7,6 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import map.Map;
 import tools.Converter;
+import towerdefense.Main;
 
 import java.util.HashSet;
 
@@ -25,7 +26,7 @@ public abstract class Tower extends Block {
     public Tower(Towers type, int x, int y) {
         super(x, y, type.getId() + 10, type.getDmg(), type.getColor(), 0);
         this.level = 1;
-        this.range = type.getRange();
+        this.range = type.getRange() * Main.blockSize;
         this.active = false;
         this.damage = type.getDmg();
         this.hind = type.getHind();
@@ -43,11 +44,7 @@ public abstract class Tower extends Block {
 
     public abstract void render(GraphicsContext g);
 
-    public void lvlUp() {
-        this.level += 1;
-        this.range += 10;
-        this.damage += 1;
-    }
+    public abstract void lvlUp();
 
     public int getLevel() {
         return level;
@@ -91,7 +88,7 @@ public abstract class Tower extends Block {
     public void drawRange(GraphicsContext g) {
 
         g.setFill(new Color(0, 0, 0, 0.5));
-        g.fillOval(Converter.indexToPix(this.indexX) - this.range, Converter.indexToPix(this.indexY) - this.range, this.range * 2, this.range * 2);
+        g.fillOval(pixelX - this.range, pixelY - this.range, this.range * 2, this.range * 2);
 
     }
 

@@ -18,4 +18,9 @@ public class Müür extends Tower {
     public void render(GraphicsContext g) {
 
     }
+
+    @Override
+    public void lvlUp() {
+        this.level += 1;
+    }
 }

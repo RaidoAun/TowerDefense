@@ -38,4 +38,11 @@ public class Kahur extends Tower {
             projectile.render(g);
         }
     }
+
+    @Override
+    public void lvlUp() {
+        this.level += 1;
+        this.range += 10;
+        this.damage += 1;
+    }
 }

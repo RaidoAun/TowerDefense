@@ -3,6 +3,7 @@ package entities;
 import blocks.towers.Tower;
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import towerdefense.Main;
 
 public class Projectile extends Entity {
 
@@ -38,11 +39,15 @@ public class Projectile extends Entity {
                 target.setHp(target.getHp() - damage);
                 towerOfOrigin.getShotProjectiles().remove(this);
             } else if (target.isReachedNexus() || target.getHp() <= 0) {
-                target = getClosestMonster(map.getAllMonsters());
+                target = /*getClosestMonster(map.getAllMonsters())*/ null;
             }
         } else {
-            this.pixelX = this.pixelX + (speed * Math.cos(direction));
-            this.pixelY = this.pixelY + (speed * Math.sin(direction));
+            if (pixelX < 0 || pixelX > Main.screenW || pixelY < 0 || pixelY > Main.screenH) {
+                towerOfOrigin.getShotProjectiles().remove(this);
+            } else {
+                this.pixelX = this.pixelX + (speed * Math.cos(direction));
+                this.pixelY = this.pixelY + (speed * Math.sin(direction));
+            }
         }
     }
 

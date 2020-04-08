@@ -26,11 +26,18 @@ public class Külmutaja extends Tower {
             if (distance <= this.range && !frozenMonsters.contains(monster) && frozenMonsters.size() < (damage / 4)) {
                 frozenMonsters.add(monster);
                 monster.setSlowDebuff(monster.getSlowDebuff() + (double) this.damage / 100);
-            } else if (distance > this.range && frozenMonsters.contains(monster)) {
-                frozenMonsters.remove(monster);
-                monster.setSlowDebuff(monster.getSlowDebuff() - (double) this.damage / 100);
             }
         }
+
+        HashSet<Monster> frozenToRemove = new HashSet<>();
+        for (Monster frozen : frozenMonsters) {
+            double distance = frozen.distanceFrom(this.pixelX, this.pixelY);
+            if (distance > this.range || frozen.isReachedNexus() || frozen.getHp() <= 0) {
+                frozenToRemove.add(frozen);
+                frozen.setSlowDebuff(frozen.getSlowDebuff() - (double) this.damage / 100);
+            }
+        }
+        frozenMonsters.removeAll(frozenToRemove);
 
         if (idleTime >= cooldown) {
             activeCircles.add(0d);

@@ -23,13 +23,23 @@ public class MenuState implements State {
         menuLayout.setAlignment(Pos.CENTER);
         Button play = new Button("Play");
         Button settings = new Button("Settings");
+        Button dijkstra = new Button("Dijkstra Testing");
         Button exit = new Button("Exit");
 
-        play.setOnAction(e -> sm.setState(States.NEXUS));
+        play.setOnAction(e -> {
+            NexusState nexusState = new NexusState(sm);
+            sm.replaceState(States.NEXUS, nexusState);
+            sm.setState(States.NEXUS);
+        });
         settings.setOnAction(e -> sm.setState(States.SETTINGS));
+        dijkstra.setOnAction(e -> {
+            PathfinderState testingSite = new PathfinderState(sm);
+            sm.replaceState(States.PATHFINDING, testingSite);
+            sm.setState(States.PATHFINDING);
+        });
         exit.setOnAction(e -> sm.getWindow().close());
 
-        menuLayout.getChildren().addAll(play, settings, exit);
+        menuLayout.getChildren().addAll(play, settings, dijkstra, exit);
         return new Scene(menuLayout, 500, 250);
     }
 

@@ -43,12 +43,16 @@ public class PauseState implements State {
     }
 
     private void restart() {
-        sm.resetStates(States.NEXUS, States.GAME);
-        sm.setState(States.NEXUS);
+        if (sm.getPreviousState().getState() == States.PATHFINDING) {
+            sm.resetStates(States.PATHFINDING);
+            sm.setState(States.PATHFINDING);
+        } else {
+            sm.resetStates(States.NEXUS, States.GAME);
+            sm.setState(States.NEXUS);
+        }
     }
 
     private void exit() {
-        sm.resetStates(States.NEXUS, States.GAME);
         sm.setState(States.MENU);
     }
 

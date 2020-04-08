@@ -1,9 +1,9 @@
 package map;
 
 import blocks.Block;
+import blocks.Nexus;
 import blocks.Spawnpoint;
 import blocks.towers.Tower;
-import entities.Entity;
 import entities.Monster;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -14,7 +14,7 @@ import java.util.*;
 public class Map {
     private int x;
     private int y;
-    private Block nexus;
+    private Nexus nexus;
     private Block[][] map_matrix;
     private List<Spawnpoint> spawnpoints;
     private GraphicsContext gc;
@@ -141,6 +141,14 @@ public class Map {
             }
         }
         return open;
+    }
+
+    public Nexus getNexus() {
+        return nexus;
+    }
+
+    public void setNexus(Nexus nexus) {
+        this.nexus = nexus;
     }
 
     public List<Spawnpoint> getSpawnpoints() {

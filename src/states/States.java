@@ -1,5 +1,5 @@
 package states;
 
 public enum States {
-    MENU, PAUSE, GAME, SETTINGS, NEXUS
+    MENU, PAUSE, GAME, SETTINGS, NEXUS, PATHFINDING
 }

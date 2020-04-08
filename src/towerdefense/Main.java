@@ -28,8 +28,7 @@ public class Main extends Application {
         primaryStage.setTitle("TowerDefenseGaem");
         //Windowist tuleb lahti saada.
         window = primaryStage;
-        Canvas gameCanvas = new Canvas(screenW, screenW);
-        StateManager stateManager = new StateManager(primaryStage, gameCanvas);
+        StateManager stateManager = new StateManager(primaryStage);
         MenuState menu = new MenuState(stateManager);
         stateManager.addState(menu);
         SettingsState settings = new SettingsState(stateManager);

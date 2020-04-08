@@ -43,7 +43,7 @@ public class GameState implements State {
         this.cWindow = new CanvasWindow(sm.getCanvas(), map);
         this.towerToMakeId = 0;
 
-        sm.getCanvas().setOnMouseClicked(e -> click = new Click(e.getX(), e.getY(), map, e));
+        sm.getCanvas().setOnMouseClicked(e -> click = new Click(e, map));
 
     }
 
@@ -112,7 +112,7 @@ public class GameState implements State {
         //Raha ja elude uuendamine graafiliselt.
         drawMoney(g);
         drawHealth(g);
-        //Koletiste joonistamine (vajab ülevaatamist).
+
         for (Monster monster : map.getAllMonsters()) {
             monster.render(g);
         }
@@ -135,7 +135,6 @@ public class GameState implements State {
         click = null;
         raha = 1000;
         health = 100;
-        sm.getCanvas().getGraphicsContext2D().clearRect(0, 0, Main.screenW, Main.screenH);
     }
 
     private void towerClick() {

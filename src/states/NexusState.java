@@ -1,14 +1,15 @@
 package states;
 
+import blocks.Nexus;
+import blocks.Spawnpoint;
 import gui.PopUp;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import blocks.Block;
 import map.Map;
-import blocks.Spawnpoint;
+import tools.Click;
 import tools.Converter;
 import towerdefense.Main;
 
@@ -19,17 +20,14 @@ public class NexusState implements State {
     private States state;
     private GraphicsContext g;
     private Map map;
-    private Block clickedBlock;
+    private Click click;
 
     public NexusState(StateManager sm) {
         this.sm = sm;
         this.state = States.NEXUS;
         this.g = sm.getCanvas().getGraphicsContext2D();
+        this.map = getGeneratedMap();
         this.game = getGameScene();
-    }
-
-    public Scene getGame() {
-        return game;
     }
 
     private Map getGeneratedMap() {
@@ -41,6 +39,9 @@ public class NexusState implements State {
         notMap.genFlippedMap();
         notMap.generateSpawnpoints();
         notMap.spawnSpawnpoints();
+
+        sm.getCanvas().setOnMouseClicked(e -> click = new Click(e, this.map));
+
         return notMap;
     }
 
@@ -62,9 +63,13 @@ public class NexusState implements State {
 
     @Override
     public void tick() {
-        if (clickedBlock != null && !map.getSpawnpoints().get(0).isNexusWithPath()) {
-            map.setNexusxy(new int[]{clickedBlock.indexX, clickedBlock.indexY});
-            if (clickedBlock.getId() != 0) {
+        if (click != null) {
+            System.out.println("Click");
+        }
+        if (click != null && map.getNexus() == null) {
+            System.out.println("Clicky");
+            map.setNexusxy(new int[]{click.indexX, click.indexY});
+            if (click.eventblock.getId() != 0) {
                 Platform.runLater(() -> PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!"));
             } else if (map.getSpawnpoints().get(0).genPathReturn(0).length == 0) {
                 Platform.runLater(() -> PopUp.createPopup("Valitud nexuse asukoht ei sobi! (no path)\nProovi uuesti!"));
@@ -74,35 +79,23 @@ public class NexusState implements State {
                 for (Spawnpoint spawn : map.getSpawnpoints()) {
                     map.drawPath(spawn.getPath());
                 }
+                map.setNexus(new Nexus(0, 0));
                 GameState gameState = new GameState(sm, game, map);
                 sm.replaceState(States.GAME, gameState);
                 sm.setState(States.GAME);
             }
-            clickedBlock = null;
         }
+        click = null;
     }
 
     @Override
     public void render() {
 
-        if (map == null) {
-            System.out.println("Building the map...");
-            long start = System.currentTimeMillis();
-            map = getGeneratedMap();
-            long end = System.currentTimeMillis();
-            System.out.println("Done! Building took " + (end - start) + " milliseconds.");
-        } else {
-            map.drawMap(Main.blockSize);
-        }
+        map.drawMap(Main.blockSize);
 
         if (sm.getWindow().getScene() != this.game) {
             sm.changeScene(game);
             sm.toggleFullscreen();
-            sm.getCanvas().setOnMouseClicked(e -> {
-                if (map != null) {
-                    clickedBlock = map.getBlock(Converter.pixToIndex((int) e.getX()), Converter.pixToIndex((int) e.getY()));
-                }
-            });
             if (!map.getSpawnpoints().get(0).isNexusWithPath()) {
                 Platform.runLater(() -> PopUp.createPopup("Vali nexuse asukoht kaardil!\nMäng algab pärast nexuse maha panekut!"));
             }
@@ -116,8 +109,7 @@ public class NexusState implements State {
 
     @Override
     public void reset() {
-        map = null;
-        g.clearRect(0, 0, Main.screenW, Main.screenH);
-        clickedBlock = null;
+        map = getGeneratedMap();
+        click = null;
     }
 }

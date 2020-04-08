@@ -3,6 +3,7 @@ package states;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
+import towerdefense.Main;
 
 import java.util.HashMap;
 
@@ -14,9 +15,9 @@ public class StateManager {
     private Canvas canvas;
     private State previousState;
 
-    public StateManager(Stage window, Canvas canvas) {
+    public StateManager(Stage window) {
         this.window = window;
-        this.canvas = canvas;
+        this.canvas = new Canvas(Main.screenW, Main.screenH);
         allStates = new HashMap<>();
     }
 
@@ -83,14 +84,8 @@ public class StateManager {
         for (States state : states) {
             if (allStates.containsKey(state)) {
                 allStates.get(state).reset();
-            } else {
-                System.err.println("State " + state + " doesn't exist!");
             }
         }
-    }
-
-    public State getState(States state) {
-        return allStates.get(state);
     }
 
     public void replaceState(States whatState, State state) {

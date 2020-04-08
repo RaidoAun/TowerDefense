@@ -1,10 +1,13 @@
 package map;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
+import tools.Converter;
 import towerdefense.Main;
 
 import java.util.ArrayList;
@@ -113,23 +116,17 @@ public class NewPathfinder {
         return neighbours;
     }
 
-    public void drawCost() {
-        //Ühe bloki külje suurus pikslites
-        int blockSize = Main.blockSize;
-        Canvas canvas = new Canvas();
-        GraphicsContext g = canvas.getGraphicsContext2D();
+    public void drawCost(GraphicsContext g) {
         for (Node node : visited) {
-            String cost = Double.toString(node.getCost());
-            int centreX = indexCentrePixel(node.getX(), blockSize);
-            int centreY = indexCentrePixel(node.getY(), blockSize);
-            g.setFont(Font.font("Calibri", FontWeight.BOLD, 10));
+            String cost = Integer.toString((int) node.getCost());
+            double centreX = Converter.indexToPix(node.getX());
+            double centreY = Converter.indexToPix(node.getY());
+            g.setTextAlign(TextAlignment.CENTER);
+            g.setTextBaseline(VPos.CENTER);
+            g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.blockSize / 1.5));
             g.setFill(Paint.valueOf("#20fc03"));
             g.fillText(cost, centreX, centreY);
         }
-    }
-
-    private int indexCentrePixel(int index, int blockSize) {
-        return index * blockSize + blockSize / 2;
     }
 
     private Node cheapestNode(List<Node> unvisited) {

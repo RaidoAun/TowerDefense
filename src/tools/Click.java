@@ -16,9 +16,9 @@ public class Click {
     public boolean primary;
     public boolean secondary;
 
-    public Click(double pixelX, double pixelY, Map map, MouseEvent event) {
-        this.pixelX = pixelX;
-        this.pixelY = pixelY;
+    public Click(MouseEvent event, Map map) {
+        this.pixelX = event.getX();
+        this.pixelY = event.getY();
         this.indexX = Converter.pixToIndex((int) pixelX);
         this.indexY = Converter.pixToIndex((int) pixelY);
         this.event = event;

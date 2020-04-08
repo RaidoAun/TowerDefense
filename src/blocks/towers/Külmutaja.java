@@ -23,25 +23,12 @@ public class Külmutaja extends Tower {
 
         for (Monster monster : map.getAllMonsters()) {
             double distance = monster.distanceFrom(this.pixelX, this.pixelY);
-
-            if (monster.isFrozen()) {
-                if (distance <= this.range && !frozenMonsters.contains(monster) && frozenMonsters.size() < (damage / 4)) {
-                    monster.setSpeed(((100 - (double) this.damage) / 100) * monster.getSpeed());
-                    frozenMonsters.add(monster);
-                } else if (distance > this.range && frozenMonsters.contains(monster)) {
-                    monster.setSpeed((100 * monster.getSpeed()) / (100 - this.damage));
-                    frozenMonsters.remove(monster);
-                    monster.setFrozen(false);
-                }
-            } else {
-                if (distance <= this.range && !frozenMonsters.contains(monster) && frozenMonsters.size() < (damage / 4)) {
-                    monster.setSpeed(((100 - (double) this.damage) / 100) * monster.getSpeed());
-                    frozenMonsters.add(monster);
-                    monster.setFrozen(true);
-                } else if (distance > this.range && frozenMonsters.contains(monster)) {
-                    monster.setSpeed((100 * monster.getSpeed()) / (100 - this.damage));
-                    frozenMonsters.remove(monster);
-                }
+            if (distance <= this.range && !frozenMonsters.contains(monster) && frozenMonsters.size() < (damage / 4)) {
+                frozenMonsters.add(monster);
+                monster.setSlowDebuff(monster.getSlowDebuff() + (double) this.damage / 100);
+            } else if (distance > this.range && frozenMonsters.contains(monster)) {
+                frozenMonsters.remove(monster);
+                monster.setSlowDebuff(monster.getSlowDebuff() - (double) this.damage / 100);
             }
         }
 
@@ -80,6 +67,13 @@ public class Külmutaja extends Tower {
     public void lvlUp() {
         this.level += 1;
         this.range += 10;
-        this.damage += 1;
+        this.damage += 5;
+    }
+
+    @Override
+    public void sell() {
+        for (Monster monster : frozenMonsters) {
+            monster.setSlowDebuff(monster.getSlowDebuff() - (double) this.damage / 100);
+        }
     }
 }

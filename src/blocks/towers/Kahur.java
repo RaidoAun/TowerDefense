@@ -45,4 +45,9 @@ public class Kahur extends Tower {
         this.range += 10;
         this.damage += 1;
     }
+
+    @Override
+    public void sell() {
+
+    }
 }

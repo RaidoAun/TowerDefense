@@ -47,4 +47,9 @@ public class Laser extends Tower {
         this.range += 10;
         this.damage += 1;
     }
+
+    @Override
+    public void sell() {
+
+    }
 }

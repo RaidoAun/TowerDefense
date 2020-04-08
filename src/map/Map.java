@@ -117,6 +117,7 @@ public class Map {
     }
 
     public void sellTower(Tower tower) {
+        tower.sell();
         towers.remove(tower);
         editMap_matrix(tower.indexX, tower.indexY, new Block(tower.indexX, tower.indexY, 0, 1, Color.WHITE, 0));
     }

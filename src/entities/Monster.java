@@ -3,13 +3,13 @@ package entities;
 import blocks.Spawnpoint;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import map.Map;
 import states.GameState;
 import towerdefense.Main;
-import map.Map;
 
 public class Monster extends Entity {
 
-    private boolean frozen;
+    private double slowDebuff;
     private int hp;
     private int dmg;
     private int step;
@@ -25,7 +25,7 @@ public class Monster extends Entity {
         this.money = type.getMoney();
         this.reachedNexus = false;
         this.spawnPoint = spawnPoint;
-        this.frozen = false;
+        this.slowDebuff = 0;
     }
 
     @Override
@@ -38,6 +38,13 @@ public class Monster extends Entity {
             GameState.updateHealth(-dmg);
             map.getAllMonsters().remove(this);
         }
+
+        if (slowDebuff > 1) {
+            slowDebuff = 1;
+        } else if (slowDebuff < 0) {
+            slowDebuff = 0;
+        }
+
         move();
     }
 
@@ -50,7 +57,7 @@ public class Monster extends Entity {
         g.setFill(this.color);
         double diameeter = (double) Main.blockSize / 2;
         g.fillOval(this.pixelX - diameeter / 2, this.pixelY - diameeter / 2, diameeter, diameeter);
-        if (frozen) {
+        if (slowDebuff > 0) {
             g.setStroke(Color.AQUA);
             g.setLineWidth((double) Main.blockSize / 20);
             g.strokeOval(this.pixelX - diameeter / 2, this.pixelY - diameeter / 2, diameeter, diameeter);
@@ -66,7 +73,7 @@ public class Monster extends Entity {
     }
 
     public void move() {
-        move(this.spawnPoint.getPath(), this.speed);
+        move(this.spawnPoint.getPath(), this.speed * (1 - slowDebuff));
     }
 
     public void move(int[][] path, double speed) {
@@ -118,11 +125,11 @@ public class Monster extends Entity {
         return reachedNexus;
     }
 
-    public void setFrozen(boolean frozen) {
-        this.frozen = frozen;
+    public void setSlowDebuff(double slowDebuff) {
+        this.slowDebuff = slowDebuff;
     }
 
-    public boolean isFrozen() {
-        return frozen;
+    public double getSlowDebuff() {
+        return slowDebuff;
     }
 }

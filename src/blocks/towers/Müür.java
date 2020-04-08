@@ -23,4 +23,9 @@ public class Müür extends Tower {
     public void lvlUp() {
         this.level += 1;
     }
+
+    @Override
+    public void sell() {
+
+    }
 }

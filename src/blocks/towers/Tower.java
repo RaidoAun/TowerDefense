@@ -46,6 +46,8 @@ public abstract class Tower extends Block {
 
     public abstract void lvlUp();
 
+    public abstract void sell();
+
     public int getLevel() {
         return level;
     }

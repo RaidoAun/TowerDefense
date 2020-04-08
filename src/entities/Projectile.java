@@ -10,6 +10,7 @@ public class Projectile extends Entity {
     private final double diameter;
     private final Tower towerOfOrigin;
     private Monster target;
+    private double direction;
 
     public Projectile(Tower towerOfOrigin, Monster target, int speed, double diameter) {
         super(towerOfOrigin.pixelX, towerOfOrigin.pixelY, towerOfOrigin.getColor(), speed);
@@ -21,24 +22,27 @@ public class Projectile extends Entity {
 
     @Override
     public void tick(Map map) {
-        double xDist = target.getPixelX() - pixelX;
-        double yDist = target.getPixelY() - pixelY;
-        double direction = Math.atan2(yDist, xDist);
-        double distance = Math.hypot(xDist, yDist);
-        if (this.speed < distance) {
+        if (target != null) {
+            double xDist = target.getPixelX() - pixelX;
+            double yDist = target.getPixelY() - pixelY;
+            double distance = Math.hypot(xDist, yDist);
+            direction = Math.atan2(yDist, xDist);
+            if (this.speed < distance) {
+                this.pixelX = this.pixelX + (speed * Math.cos(direction));
+                this.pixelY = this.pixelY + (speed * Math.sin(direction));
+            } else {
+                this.pixelX = target.getPixelX();
+                this.pixelY = target.getPixelY();
+            }
+            if (pixelX == target.getPixelX() && pixelY == target.getPixelY()) {
+                target.setHp(target.getHp() - damage);
+                towerOfOrigin.getShotProjectiles().remove(this);
+            } else if (target.isReachedNexus() || target.getHp() <= 0) {
+                target = getClosestMonster(map.getAllMonsters());
+            }
+        } else {
             this.pixelX = this.pixelX + (speed * Math.cos(direction));
             this.pixelY = this.pixelY + (speed * Math.sin(direction));
-        } else {
-            this.pixelX = target.getPixelX();
-            this.pixelY = target.getPixelY();
-        }
-        if (pixelX == target.getPixelX() && pixelY == target.getPixelY()) {
-            target.setHp(target.getHp() - damage);
-            towerOfOrigin.getShotProjectiles().remove(this);
-        } else if (target.isReachedNexus()) {
-            towerOfOrigin.getShotProjectiles().remove(this);
-        } else if (target.getHp() <= 0) {
-            towerOfOrigin.getShotProjectiles().remove(this);
         }
     }
 

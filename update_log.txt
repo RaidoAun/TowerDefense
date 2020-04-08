@@ -63,3 +63,10 @@ sest minu silmis sobib see meie mängule 1000x paremini. Uue pathfinderi algatus
 jätkub uues branchis.
 
 06.04.2020 Leo
+Stagemanager tehtud, muudab erinevate stseenide vahel vahetamise palju lihtsamaks.
+
+07.04.2020 Leo
+Külmutaja ja kuulipilduja animatsioonid.
+
+08.04.2020 Leo
+Külmutaja natuke paremaks tehtud. Kui projetile target kaob, siis ta leiab endale automaatselt uue.

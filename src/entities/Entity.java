@@ -4,6 +4,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import map.Map;
 
+import java.util.HashSet;
+
 public abstract class Entity {
 
     protected double pixelY;
@@ -38,11 +40,19 @@ public abstract class Entity {
         return color;
     }
 
-    public double getSpeed() {
-        return speed;
+    public Monster getClosestMonster(HashSet<Monster> monsters) {
+
+        Monster closestMonster = null;
+        double closestDistance = Double.POSITIVE_INFINITY;
+
+        for (Monster monster : monsters) {
+            double distance = monster.distanceFrom(this.pixelX, this.pixelY);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestMonster = monster;
+            }
+        }
+        return closestMonster;
     }
 
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
 }

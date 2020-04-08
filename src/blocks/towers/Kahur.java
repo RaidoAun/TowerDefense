@@ -28,7 +28,7 @@ public class Kahur extends Tower {
         }
         HashSet<Projectile> projectiles = new HashSet<>(shotProjectiles);
         for (Projectile projectile : projectiles) {
-            projectile.tick(null);
+            projectile.tick(map);
         }
     }
 

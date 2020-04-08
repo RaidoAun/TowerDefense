@@ -37,7 +37,7 @@ public class Kuulipilduja extends Tower {
         }
         HashSet<Projectile> projectiles = new HashSet<>(shotProjectiles);
         for (Projectile projectile : projectiles) {
-            projectile.tick(null);
+            projectile.tick(map);
         }
     }
 

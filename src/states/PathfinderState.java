@@ -1,14 +1,18 @@
 package states;
 
 import blocks.Nexus;
+import blocks.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import map.Map;
 import map.NewPathfinder;
 import tools.Click;
 import towerdefense.Main;
+
+import java.util.HashSet;
 
 public class PathfinderState implements State {
 
@@ -19,6 +23,9 @@ public class PathfinderState implements State {
     private Map map;
     private Click click;
     private NewPathfinder pathfinder;
+    private HashSet<Node> changed;
+    private HashSet<Node> path;
+    private HashSet<Node> edge;
 
     public PathfinderState(StateManager sm) {
         this.sm = sm;
@@ -40,6 +47,16 @@ public class PathfinderState implements State {
             pathfinder.generateMatrix(map);
             pathfinder.scanMap();
             map.editMap_matrix(click.indexX, click.indexY, new Nexus(click.indexX, click.indexY));
+        } else if (click != null) {
+            if (click.secondary) {
+                changed = pathfinder.getAffectedNodes(click.indexX, click.indexY);
+                edge = pathfinder.getEdges(changed);
+                path = null;
+            } else {
+                path = pathfinder.getPathNodes(click.indexX, click.indexY);
+                changed = null;
+                edge = null;
+            }
         }
         this.click = null;
     }
@@ -47,6 +64,10 @@ public class PathfinderState implements State {
     @Override
     public void render() {
         map.drawMap(Main.blockSize);
+        map.colorAllBlocks(Color.CRIMSON, changed);
+        map.colorAllBlocks(Color.DARKBLUE, edge);
+        map.colorAllBlocks(Color.DARKOLIVEGREEN, path);
+        map.drawGrid(0.2, Color.BLACK);
         if (pathfinder != null) {
             pathfinder.drawCost(g);
         }
@@ -62,6 +83,9 @@ public class PathfinderState implements State {
         this.map = getGeneratedMap();
         this.pathfinder = null;
         this.click = null;
+        this.path = null;
+        this.changed = null;
+        this.edge = null;
     }
 
     private Scene getBuiltScene() {
@@ -95,7 +119,6 @@ public class PathfinderState implements State {
 
         return notMap;
     }
-
 
 
 }

@@ -107,6 +107,7 @@ public class GameState implements State {
         }
         //Mapi joonistamine.
         map.drawMap(Main.blockSize);
+        map.drawGrid(0.1, Color.BLACK);
         //Tower rangede joonistamine.
         renderTowerRanges();
         //Raha ja elude uuendamine graafiliselt.

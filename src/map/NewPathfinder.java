@@ -1,7 +1,7 @@
 package map;
 
+import blocks.Node;
 import javafx.geometry.VPos;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -11,36 +11,13 @@ import tools.Converter;
 import towerdefense.Main;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-enum Küljed {
-
-    PAREM(1, 0),
-    VASAK(-1, 0),
-    ÜLEMINE(0, 1),
-    ALUMINE(0, -1);
-
-    private final int xMuut;
-    private final int yMuut;
-
-    Küljed(int xMuut, int yMuut) {
-        this.xMuut = xMuut;
-        this.yMuut = yMuut;
-    }
-
-    public int getNewX(int currentX) {
-        return currentX + xMuut;
-    }
-
-    public int getNewY(int currentY) {
-        return currentY + yMuut;
-    }
-
-}
+import java.util.Random;
 
 public class NewPathfinder {
 
-    List<Node> visited;
+    HashSet<Node> visited;
     private Node[][] map;
     private int startX;
     private int startY;
@@ -48,7 +25,7 @@ public class NewPathfinder {
     public NewPathfinder(int startX, int startY) {
         this.startX = startX;
         this.startY = startY;
-        this.visited = new ArrayList<>();
+        this.visited = new HashSet<>();
     }
 
     public void generateMatrix(Map mapClass) {
@@ -62,18 +39,42 @@ public class NewPathfinder {
                 }
             }
         }
+        for (int y = 0; y < map.length; y++) {
+            for (int x = 0; x < map[0].length; x++) {
+                map[y][x].setNaabrid(getNeighbours(x, y));
+            }
+        }
     }
 
     public int[][] getPath(int endX, int endY) {
         Node current = map[endY][endX];
-        Node startNode = map[startY][startX];
-        List<int[]> path = new ArrayList<>();
-        while (current != startNode) {
-            path.add(new int[]{current.getX(), current.getY()});
-            current = current.getParent();
+        if (current.getParent() == null) {
+            return new int[0][0];
+        } else {
+            Node startNode = map[startY][startX];
+            List<int[]> path = new ArrayList<>();
+            while (current != startNode) {
+                path.add(new int[]{current.getX(), current.getY()});
+                current = current.getParent();
+            }
+            path.add(new int[]{startX, startY});
+            return path.toArray(new int[path.size()][2]);
         }
-        path.add(new int[]{startX, startY});
-        return path.toArray(new int[path.size()][2]);
+    }
+
+    public HashSet<Node> getPathNodes(int endX, int endY) {
+        Node current = map[endY][endX];
+        if (current.getParent() == null) {
+            return null;
+        } else {
+            Node startNode = map[startY][startX];
+            HashSet<Node> path = new HashSet<>();
+            while (current != startNode) {
+                path.add(current);
+                current = current.getParent();
+            }
+            return path;
+        }
     }
 
     public void scanMap() {
@@ -82,14 +83,23 @@ public class NewPathfinder {
         map[startY][startX].setInUnvisitedList(true);
         while (unvisited.size() > 0) {
             Node current = cheapestNode(unvisited);
-            for (Node neighbour : getSuitableNeighbours(current.getX(), current.getY())) {
-                double costAfterMoving = current.getCost() + 1;
-                if (neighbour.getCost() > costAfterMoving) {
-                    neighbour.setCost(costAfterMoving);
-                    neighbour.setParent(current);
-                    if (!neighbour.isInUnvisitedList()) {
-                        unvisited.add(neighbour);
-                        neighbour.setInUnvisitedList(true);
+            for (Node neighbour : current.get4Naabrit()) {
+                if (!neighbour.isWall() && !neighbour.isVisited()) {
+                    double costAfterMoving = current.getCost() + 1;
+                    if (neighbour.getCost() > costAfterMoving) {
+                        neighbour.setCost(costAfterMoving);
+                        neighbour.setParent(current);
+                        if (!neighbour.isInUnvisitedList()) {
+                            unvisited.add(neighbour);
+                            neighbour.setInUnvisitedList(true);
+                        }
+                    } else if (neighbour.getCost() == costAfterMoving) {
+                        Random r = new Random();
+                        int flip = r.nextInt(2);
+                        if (flip == 0) {
+                            neighbour.setCost(costAfterMoving);
+                            neighbour.setParent(current);
+                        }
                     }
                 }
             }
@@ -100,19 +110,21 @@ public class NewPathfinder {
         }
     }
 
-    private List<Node> getSuitableNeighbours(int currentX, int currentY) {
-        List<Node> neighbours = new ArrayList<>();
-        for (Küljed suund : Küljed.values()) {
-            int newX = suund.getNewX(currentX);
-            int newY = suund.getNewY(currentY);
-            boolean isInBorders = newX >= 0 && newX <= map[0].length && newY >= 0 && newY <= map.length;
-            if (isInBorders) {
-                Node neighbour = map[newY][newX];
-                if (!neighbour.isVisited() && !neighbour.isWall()) {
+    private HashSet<Node> getNeighbours(int currentX, int currentY) {
+        HashSet<Node> neighbours = new HashSet<>();
+
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                int newX = currentX + x;
+                int newY = currentY + y;
+                boolean isInBorders = newX >= 0 && newX < map[0].length && newY >= 0 && newY < map.length;
+                if (isInBorders) {
+                    Node neighbour = map[newY][newX];
                     neighbours.add(neighbour);
                 }
             }
         }
+
         return neighbours;
     }
 
@@ -137,77 +149,43 @@ public class NewPathfinder {
         return cheapest;
     }
 
-    public List<Node> getVisited() {
-        return visited;
-    }
-}
-
-class Node {
-
-    private int x;
-    private int y;
-    private int id;
-    private double cost;
-    private Node parent;
-    private boolean visited;
-    private boolean inUnvisitedList;
-
-    Node(int x, int y, int id, boolean start) {
-        this.x = x;
-        this.y = y;
-        this.id = id;
-        this.visited = false;
-        this.inUnvisitedList = false;
-        if (start) {
-            this.cost = 0;
-            parent = this;
-        } else {
-            this.cost = Double.POSITIVE_INFINITY;
-            parent = null;
+    public HashSet<Node> getAffectedNodes(int obstructionX, int obstructionY) {
+        HashSet<Node> unchecked = new HashSet<>(visited);
+        HashSet<Node> blocks = new HashSet<>();
+        HashSet<Node> needChecking = new HashSet<>();
+        needChecking.add(map[obstructionY][obstructionX]);
+        while (needChecking.size() > 0) {
+            HashSet<Node> newStuff = new HashSet<>();
+            for (Node node : needChecking) {
+                newStuff.addAll(getChildren(node, unchecked));
+            }
+            blocks.addAll(needChecking);
+            unchecked.removeAll(needChecking);
+            needChecking = newStuff;
         }
+        return blocks;
     }
 
-    public boolean isVisited() {
-        return visited;
+    public HashSet<Node> getEdges(HashSet<Node> blob) {
+        HashSet<Node> edges = new HashSet<>();
+        for (Node node : blob) {
+            for (Node naaber : node.get4Naabrit()) {
+                if (!blob.contains(naaber) && !naaber.isWall()) {
+                    edges.add(naaber);
+                }
+            }
+        }
+        return edges;
     }
 
-    public void setVisited(boolean visited) {
-        this.visited = visited;
+    private HashSet<Node> getChildren(Node node, HashSet<Node> nodes) {
+        HashSet<Node> children = new HashSet<>();
+        for (Node n : nodes) {
+            if (n.getParent() == node) {
+                children.add(n);
+            }
+        }
+        return children;
     }
 
-    public boolean isWall() {
-        return id != 0 && id != 9;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public boolean isInUnvisitedList() {
-        return inUnvisitedList;
-    }
-
-    public void setInUnvisitedList(boolean inUnvisitedList) {
-        this.inUnvisitedList = inUnvisitedList;
-    }
-
-    public Node getParent() {
-        return parent;
-    }
-
-    public void setParent(Node parent) {
-        this.parent = parent;
-    }
 }

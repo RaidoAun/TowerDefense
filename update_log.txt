@@ -71,3 +71,6 @@ Külmutaja ja kuulipilduja animatsioonid.
 08.04.2020 Leo
 Külmutaja natuke paremaks tehtud. Kui projetile target kaob, siis ta jätkab oma teed sama sirge peal kuni mapi servani,
 kus ta kustutatakse. Pathfinder state uue pathfinderiga mässamiseks.
+
+09.04.2020 Leo
+Uue pathfinderi testimise visuaalsemaks tegememine.

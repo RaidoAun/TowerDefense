@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import map.Map;
 import tools.Click;
 import tools.Converter;
@@ -63,11 +64,7 @@ public class NexusState implements State {
 
     @Override
     public void tick() {
-        if (click != null) {
-            System.out.println("Click");
-        }
         if (click != null && map.getNexus() == null) {
-            System.out.println("Clicky");
             map.setNexusxy(new int[]{click.indexX, click.indexY});
             if (click.eventblock.getId() != 0) {
                 Platform.runLater(() -> PopUp.createPopup("Valitud nexuse asukoht ei sobi! (sein)\nProovi uuesti!"));
@@ -92,6 +89,7 @@ public class NexusState implements State {
     public void render() {
 
         map.drawMap(Main.blockSize);
+        map.drawGrid(0.1, Color.BLACK);
 
         if (sm.getWindow().getScene() != this.game) {
             sm.changeScene(game);

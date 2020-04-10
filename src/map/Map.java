@@ -2,6 +2,7 @@ package map;
 
 import blocks.Block;
 import blocks.Nexus;
+import blocks.Node;
 import blocks.Spawnpoint;
 import blocks.towers.Tower;
 import entities.Monster;
@@ -98,22 +99,12 @@ public class Map {
 
     public void drawMap(int blocksize) {
         this.size = blocksize;
-
-        gc.setLineWidth(0.1);
-        gc.setStroke(Color.BLACK);
         for (int i = 0; i < this.x; i++) {
             for (int j = 0; j < this.y; j++) {
                 gc.setFill(map_matrix[i][j].getColor());
-                //System.out.print(map_matrix[i][j].getValue()+" ");
                 gc.fillRect(i * this.size, j * this.size, this.size, this.size);
             }
-            gc.strokeLine(i * this.size, 0, i * this.size, Main.screenH);
-            //System.out.println();
         }
-        for (int i = 0; i < this.y; i++) {
-            gc.strokeLine(0, i * this.size, Main.screenW, i * this.size);
-        }
-        gc.stroke();
     }
 
     public void sellTower(Tower tower) {
@@ -283,6 +274,29 @@ public class Map {
             }
         }
         return needChange;
+    }
+
+    public void colorAllBlocks(Color color, HashSet<Node> nodes) {
+        if (nodes != null) {
+            int size = Main.blockSize;
+            gc.setFill(color);
+            for (Node node : nodes) {
+                gc.fillRect(node.indexX * size, node.indexY * size, size, size);
+            }
+        }
+    }
+
+    public void drawGrid(double lineWidth, Color color) {
+        gc.setLineWidth(lineWidth);
+        gc.setStroke(color);
+        int size = Main.blockSize;
+        for (int x = 0; x < this.x; x++) {
+            gc.strokeLine(x * size, 0, x * size, Main.screenH);
+        }
+        for (int y = 0; y < this.y; y++) {
+            gc.strokeLine(0, y * size, Main.screenW, y * size);
+        }
+        gc.stroke();
     }
 
     public Block getBlock(int x, int y) {

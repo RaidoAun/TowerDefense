@@ -53,4 +53,11 @@ public class Block {
         this.value = value;
     }
 
+    public void setWall() {
+        this.id = 1;
+        this.pathCount = 0;
+        this.value = 1;
+        this.color = Color.BLACK;
+    }
+
 }

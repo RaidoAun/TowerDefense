@@ -341,4 +341,8 @@ public class Map {
     public HashSet<Monster> getAllMonsters() {
         return allMonsters;
     }
+
+    public void setWall(int indexX, int indexY) {
+        this.map_matrix[indexX][indexY].setWall();
+    }
 }

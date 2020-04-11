@@ -13,11 +13,11 @@ import towerdefense.Main;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 
 public class NewPathfinder {
 
     HashSet<Node> visited;
+    HashSet<Node> ends;
     private Node[][] map;
     private int startX;
     private int startY;
@@ -26,6 +26,7 @@ public class NewPathfinder {
         this.startX = startX;
         this.startY = startY;
         this.visited = new HashSet<>();
+        this.ends = new HashSet<>();
     }
 
     public void generateMatrix(Map mapClass) {
@@ -46,6 +47,24 @@ public class NewPathfinder {
         }
     }
 
+    public void resetMap() {
+        visited = new HashSet<>();
+        for (Node[] rida : map) {
+            for (Node node : rida) {
+                node.setInUnvisitedList(false);
+                node.setVisited(false);
+                if (!node.isStart()) {
+                    node.setParent(null);
+                    node.setCost(Double.POSITIVE_INFINITY);
+                }
+            }
+        }
+    }
+
+    public void addWall(int indexX, int indexY) {
+        map[indexY][indexX].setWall();
+    }
+
     public int[][] getPath(int endX, int endY) {
         Node current = map[endY][endX];
         if (current.getParent() == null) {
@@ -62,19 +81,27 @@ public class NewPathfinder {
         }
     }
 
-    public HashSet<Node> getPathNodes(int endX, int endY) {
-        Node current = map[endY][endX];
-        if (current.getParent() == null) {
-            return null;
-        } else {
-            Node startNode = map[startY][startX];
-            HashSet<Node> path = new HashSet<>();
-            while (current != startNode) {
-                path.add(current);
-                current = current.getParent();
+    public void addEnd(int indexX, int indeXY) {
+        this.ends.add(map[indeXY][indexX]);
+    }
+
+    public HashSet<Node> getPathNodes() {
+        HashSet<Node> path = new HashSet<>();
+        HashSet<Node> endsToRemove = new HashSet<>();
+        for (Node end : ends) {
+            if (end.getParent() == null) {
+                endsToRemove.add(end);
+            } else {
+                Node startNode = map[startY][startX];
+                Node current = end;
+                while (current != startNode) {
+                    path.add(current);
+                    current = current.getParent();
+                }
             }
-            return path;
         }
+        ends.removeAll(endsToRemove);
+        return path;
     }
 
     public void scanMap() {
@@ -82,6 +109,9 @@ public class NewPathfinder {
         unvisited.add(map[startY][startX]);
         map[startY][startX].setInUnvisitedList(true);
         while (unvisited.size() > 0) {
+            if (ends.size() > 0 && visited.containsAll(ends)) {
+                break;
+            }
             Node current = cheapestNode(unvisited);
             for (Node neighbour : current.get4Naabrit()) {
                 if (!neighbour.isWall() && !neighbour.isVisited()) {
@@ -93,14 +123,14 @@ public class NewPathfinder {
                             unvisited.add(neighbour);
                             neighbour.setInUnvisitedList(true);
                         }
-                    } else if (neighbour.getCost() == costAfterMoving) {
+                    } /*else if (neighbour.getCost() == costAfterMoving) {
                         Random r = new Random();
                         int flip = r.nextInt(2);
                         if (flip == 0) {
                             neighbour.setCost(costAfterMoving);
                             neighbour.setParent(current);
                         }
-                    }
+                    }*/
                 }
             }
             unvisited.remove(current);
@@ -149,43 +179,7 @@ public class NewPathfinder {
         return cheapest;
     }
 
-    public HashSet<Node> getAffectedNodes(int obstructionX, int obstructionY) {
-        HashSet<Node> unchecked = new HashSet<>(visited);
-        HashSet<Node> blocks = new HashSet<>();
-        HashSet<Node> needChecking = new HashSet<>();
-        needChecking.add(map[obstructionY][obstructionX]);
-        while (needChecking.size() > 0) {
-            HashSet<Node> newStuff = new HashSet<>();
-            for (Node node : needChecking) {
-                newStuff.addAll(getChildren(node, unchecked));
-            }
-            blocks.addAll(needChecking);
-            unchecked.removeAll(needChecking);
-            needChecking = newStuff;
-        }
-        return blocks;
+    public HashSet<Node> getVisited() {
+        return visited;
     }
-
-    public HashSet<Node> getEdges(HashSet<Node> blob) {
-        HashSet<Node> edges = new HashSet<>();
-        for (Node node : blob) {
-            for (Node naaber : node.get4Naabrit()) {
-                if (!blob.contains(naaber) && !naaber.isWall()) {
-                    edges.add(naaber);
-                }
-            }
-        }
-        return edges;
-    }
-
-    private HashSet<Node> getChildren(Node node, HashSet<Node> nodes) {
-        HashSet<Node> children = new HashSet<>();
-        for (Node n : nodes) {
-            if (n.getParent() == node) {
-                children.add(n);
-            }
-        }
-        return children;
-    }
-
 }

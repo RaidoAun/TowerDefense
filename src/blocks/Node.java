@@ -9,11 +9,13 @@ public class Node extends Block {
     private boolean visited;
     private boolean inUnvisitedList;
     private HashSet<Node> naabrid;
+    private boolean start;
 
     public Node(int x, int y, int id, boolean start) {
         super(x, y, id, id, null, 0);
         this.visited = false;
         this.inUnvisitedList = false;
+        this.start = start;
         if (start) {
             this.cost = 0;
             parent = this;
@@ -83,5 +85,9 @@ public class Node extends Block {
 
     public void setNaabrid(HashSet<Node> naabrid) {
         this.naabrid = naabrid;
+    }
+
+    public boolean isStart() {
+        return start;
     }
 }

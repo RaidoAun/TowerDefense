@@ -23,9 +23,7 @@ public class PathfinderState implements State {
     private Map map;
     private Click click;
     private NewPathfinder pathfinder;
-    private HashSet<Node> changed;
     private HashSet<Node> path;
-    private HashSet<Node> edge;
 
     public PathfinderState(StateManager sm) {
         this.sm = sm;
@@ -49,14 +47,14 @@ public class PathfinderState implements State {
             map.editMap_matrix(click.indexX, click.indexY, new Nexus(click.indexX, click.indexY));
         } else if (click != null) {
             if (click.secondary) {
-                changed = pathfinder.getAffectedNodes(click.indexX, click.indexY);
-                edge = pathfinder.getEdges(changed);
-                path = null;
+                map.setWall(click.indexX, click.indexY);
+                pathfinder.addWall(click.indexX, click.indexY);
+                pathfinder.resetMap();
+                pathfinder.scanMap();
             } else {
-                path = pathfinder.getPathNodes(click.indexX, click.indexY);
-                changed = null;
-                edge = null;
+                pathfinder.addEnd(click.indexX, click.indexY);
             }
+            path = pathfinder.getPathNodes();
         }
         this.click = null;
     }
@@ -64,8 +62,6 @@ public class PathfinderState implements State {
     @Override
     public void render() {
         map.drawMap(Main.blockSize);
-        map.colorAllBlocks(Color.CRIMSON, changed);
-        map.colorAllBlocks(Color.DARKBLUE, edge);
         map.colorAllBlocks(Color.DARKOLIVEGREEN, path);
         map.drawGrid(0.2, Color.BLACK);
         if (pathfinder != null) {
@@ -84,8 +80,6 @@ public class PathfinderState implements State {
         this.pathfinder = null;
         this.click = null;
         this.path = null;
-        this.changed = null;
-        this.edge = null;
     }
 
     private Scene getBuiltScene() {

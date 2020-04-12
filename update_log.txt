@@ -74,3 +74,6 @@ kus ta kustutatakse. Pathfinder state uue pathfinderiga mässamiseks.
 
 09.04.2020 Leo
 Uue pathfinderi testimise visuaalsemaks tegememine.
+
+12.04.2020 Leo
+Mapi klassis olev maatriks koosneb nüüd Node classist.

@@ -1,5 +1,7 @@
 package blocks;
 
+import javafx.scene.paint.Color;
+
 import java.util.HashSet;
 
 public class Node extends Block {
@@ -9,20 +11,13 @@ public class Node extends Block {
     private boolean visited;
     private boolean inUnvisitedList;
     private HashSet<Node> naabrid;
-    private boolean start;
 
-    public Node(int x, int y, int id, boolean start) {
+    public Node(int x, int y, int id) {
         super(x, y, id, id, null, 0);
         this.visited = false;
         this.inUnvisitedList = false;
-        this.start = start;
-        if (start) {
-            this.cost = 0;
-            parent = this;
-        } else {
-            this.cost = Double.POSITIVE_INFINITY;
-            parent = null;
-        }
+        this.cost = Double.POSITIVE_INFINITY;
+        parent = null;
     }
 
     public boolean isVisited() {
@@ -87,7 +82,18 @@ public class Node extends Block {
         this.naabrid = naabrid;
     }
 
-    public boolean isStart() {
-        return start;
+    public void setNexus() {
+        this.parent = this;
+        this.id = 3;
+        this.color = Color.PURPLE;
+        this.cost = 0;
     }
+
+    public void copyBlock(Block block) {
+        this.id = block.id;
+        this.value = block.value;
+        this.color = block.color;
+        setPathCount(block.getPathCount());
+    }
+
 }

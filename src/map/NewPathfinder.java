@@ -18,42 +18,26 @@ public class NewPathfinder {
 
     HashSet<Node> visited;
     HashSet<Node> ends;
-    private Node[][] map;
+    private Map map;
     private int startX;
     private int startY;
 
-    public NewPathfinder(int startX, int startY) {
+    public NewPathfinder(int startX, int startY, Map mapClass) {
         this.startX = startX;
         this.startY = startY;
         this.visited = new HashSet<>();
         this.ends = new HashSet<>();
-    }
-
-    public void generateMatrix(Map mapClass) {
-        map = new Node[mapClass.getY()][mapClass.getX()];
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[0].length; x++) {
-                if (x == startX && y == startY) {
-                    map[y][x] = new Node(x, y, mapClass.getBlock(x, y).getId(), true);
-                } else {
-                    map[y][x] = new Node(x, y, mapClass.getBlock(x, y).getId(), false);
-                }
-            }
-        }
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[0].length; x++) {
-                map[y][x].setNaabrid(getNeighbours(x, y));
-            }
-        }
+        this.map = mapClass;
+        map.getMap_matrix()[startX][startY].setNexus();
     }
 
     public void resetMap() {
         visited = new HashSet<>();
-        for (Node[] rida : map) {
-            for (Node node : rida) {
+        for (Node[] veerg : map.getMap_matrix()) {
+            for (Node node : veerg) {
                 node.setInUnvisitedList(false);
                 node.setVisited(false);
-                if (!node.isStart()) {
+                if (node.getCost() != 0) {
                     node.setParent(null);
                     node.setCost(Double.POSITIVE_INFINITY);
                 }
@@ -62,27 +46,11 @@ public class NewPathfinder {
     }
 
     public void addWall(int indexX, int indexY) {
-        map[indexY][indexX].setWall();
+        map.getMap_matrix()[indexX][indexY].setWall();
     }
 
-    public int[][] getPath(int endX, int endY) {
-        Node current = map[endY][endX];
-        if (current.getParent() == null) {
-            return new int[0][0];
-        } else {
-            Node startNode = map[startY][startX];
-            List<int[]> path = new ArrayList<>();
-            while (current != startNode) {
-                path.add(new int[]{current.getX(), current.getY()});
-                current = current.getParent();
-            }
-            path.add(new int[]{startX, startY});
-            return path.toArray(new int[path.size()][2]);
-        }
-    }
-
-    public void addEnd(int indexX, int indeXY) {
-        this.ends.add(map[indeXY][indexX]);
+    public void addEnd(int indexX, int indexY) {
+        this.ends.add(map.getMap_matrix()[indexX][indexY]);
     }
 
     public HashSet<Node> getPathNodes() {
@@ -92,7 +60,7 @@ public class NewPathfinder {
             if (end.getParent() == null) {
                 endsToRemove.add(end);
             } else {
-                Node startNode = map[startY][startX];
+                Node startNode = map.getMap_matrix()[startX][startY];
                 Node current = end;
                 while (current != startNode) {
                     path.add(current);
@@ -106,8 +74,8 @@ public class NewPathfinder {
 
     public void scanMap() {
         List<Node> unvisited = new ArrayList<>();
-        unvisited.add(map[startY][startX]);
-        map[startY][startX].setInUnvisitedList(true);
+        unvisited.add(map.getMap_matrix()[startX][startY]);
+        map.getMap_matrix()[startX][startY].setInUnvisitedList(true);
         while (unvisited.size() > 0) {
             if (ends.size() > 0 && visited.containsAll(ends)) {
                 break;
@@ -140,24 +108,6 @@ public class NewPathfinder {
         }
     }
 
-    private HashSet<Node> getNeighbours(int currentX, int currentY) {
-        HashSet<Node> neighbours = new HashSet<>();
-
-        for (int x = -1; x < 2; x++) {
-            for (int y = -1; y < 2; y++) {
-                int newX = currentX + x;
-                int newY = currentY + y;
-                boolean isInBorders = newX >= 0 && newX < map[0].length && newY >= 0 && newY < map.length;
-                if (isInBorders) {
-                    Node neighbour = map[newY][newX];
-                    neighbours.add(neighbour);
-                }
-            }
-        }
-
-        return neighbours;
-    }
-
     public void drawCost(GraphicsContext g) {
         for (Node node : visited) {
             String cost = Integer.toString((int) node.getCost());
@@ -182,4 +132,5 @@ public class NewPathfinder {
     public HashSet<Node> getVisited() {
         return visited;
     }
+
 }

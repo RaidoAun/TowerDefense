@@ -16,7 +16,7 @@ public class Map {
     private int x;
     private int y;
     private Nexus nexus;
-    private Block[][] map_matrix;
+    private Node[][] map_matrix;
     private List<Spawnpoint> spawnpoints;
     private GraphicsContext gc;
     private int size;
@@ -32,7 +32,7 @@ public class Map {
         this.y = rectCounty;
         this.gc = gc;
         this.spawnpoints = new ArrayList<>();
-        this.map_matrix = new Block[rectCountx][rectCounty];
+        this.map_matrix = new Node[rectCountx][rectCounty];
         this.map = new int[rectCounty][rectCountx];
         this.minDisdanceBetweenSpawns = Main.spawnSpacing;
         this.spawnCount = Main.spawnCount;
@@ -40,46 +40,77 @@ public class Map {
     }
 
     public void initMap() {
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                if (i == 0 || j == 0 || i == x - 1 || j == y - 1) {
-                    map_matrix[i][j] = new Block(i, j, 1, 1, new Color(0, 0, 0, 1), 0);
+        for (int x = 0; x < this.x; x++) {
+            for (int y = 0; y < this.y; y++) {
+                Node node;
+                if (x == 0 || y == 0 || x == this.x - 1 || y == this.y - 1) {
+                    //Value on by default id-ga võrdne.
+                    node = new Node(x, y, 1);
+                    node.setColor(Color.BLACK);
                 } else {
                     int rand = new Random().nextInt(2);
+                    node = new Node(x, y, rand);
                     if (new Random().nextInt(40) == 1) {
-                        map_matrix[i][j] = new Block(i, j, rand, 4, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
-                    } else {
-                        map_matrix[i][j] = new Block(i, j, rand, rand, new Color(1 - rand, 1 - rand, 1 - rand, 1), 0);
+                        node.setValue(4);
                     }
                 }
-
+                map_matrix[x][y] = node;
+            }
+        }
+        for (Node[] veerg : map_matrix) {
+            for (Node node : veerg) {
+                node.setNaabrid(getNeighbours(node));
             }
         }
     }
 
     public void genMap(int a) {
-        for (int w = 0; w < a; w++) {
-            for (int i = 1; i < x - 1; i++) {
-                for (int j = 1; j < y - 1; j++) {
+        for (int kordus = 0; kordus < a; kordus++) {
+            for (int x = 1; x < this.x - 1; x++) {
+                for (int y = 1; y < this.y - 1; y++) {
                     int block_value_sum = 0;
-                    for (int k = -1; k < 2; k++) {
-                        for (int l = -1; l < 2; l++) {
-                            block_value_sum += map_matrix[i + k][j + l].getValue();
+                    for (int xMuut = -1; xMuut < 2; xMuut++) {
+                        for (int yMuut = -1; yMuut < 2; yMuut++) {
+                            block_value_sum += map_matrix[x + xMuut][y + yMuut].getValue();
                         }
                     }
+                    Node node = map_matrix[x][y];
                     if (block_value_sum > 5) {
-                        map_matrix[i][j].setId(1);
-                        map_matrix[i][j].setValue(1);
-                        map_matrix[i][j].setColor(new Color(0, 0, 0, 1));
-                    }
-                    if (block_value_sum < 5) {
-                        map_matrix[i][j].setId(0);
-                        map_matrix[i][j].setValue(0);
-                        map_matrix[i][j].setColor(new Color(1, 1, 1, 1));
+                        node.setId(1);
+                        node.setValue(1);
+                        node.setColor(Color.BLACK);
+                    } else if (block_value_sum < 5) {
+                        node.setId(0);
+                        node.setValue(0);
+                        node.setColor(Color.WHITE);
+                    } else {
+                        if (node.id == 0) {
+                            node.setColor(Color.WHITE);
+                        } else if (node.id == 1) {
+                            node.setColor(Color.BLACK);
+                        }
                     }
                 }
             }
         }
+    }
+
+    private HashSet<Node> getNeighbours(Node node) {
+        int currentX  = node.indexX;
+        int currentY = node.indexY;
+        HashSet<Node> neighbours = new HashSet<>();
+        for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+                int newX = currentX + x;
+                int newY = currentY + y;
+                boolean isInBorders = newX >= 0 && newX < map_matrix.length && newY >= 0 && newY < map_matrix[0].length;
+                if (isInBorders) {
+                    Node neighbour = map_matrix[newX][newY];
+                    neighbours.add(neighbour);
+                }
+            }
+        }
+        return neighbours;
     }
 
     public void genFlippedMap() {
@@ -99,10 +130,10 @@ public class Map {
 
     public void drawMap(int blocksize) {
         this.size = blocksize;
-        for (int i = 0; i < this.x; i++) {
-            for (int j = 0; j < this.y; j++) {
-                gc.setFill(map_matrix[i][j].getColor());
-                gc.fillRect(i * this.size, j * this.size, this.size, this.size);
+        for (int x = 0; x < this.x; x++) {
+            for (int y = 0; y < this.y; y++) {
+                gc.setFill(map_matrix[x][y].getColor());
+                gc.fillRect(x * this.size, y * this.size, this.size, this.size);
             }
         }
     }
@@ -113,13 +144,14 @@ public class Map {
         editMap_matrix(tower.indexX, tower.indexY, new Block(tower.indexX, tower.indexY, 0, 1, Color.WHITE, 0));
     }
 
-    public Block[][] getMap_matrix() {
+    public Node[][] getMap_matrix() {
         return this.map_matrix;
     }
 
-    public void editMap_matrix(int i, int j, Block newblock) {
-        this.map_matrix[i][j] = newblock;
-        this.map[j][i] = newblock.getId();
+    public void editMap_matrix(int x, int y, Block newblock) {
+        Node node = this.map_matrix[x][y];
+        node.copyBlock(newblock);
+        this.map[y][x] = newblock.getId();
     }
 
     private List<int[]> genOpenBlocks() {
@@ -299,7 +331,7 @@ public class Map {
         gc.stroke();
     }
 
-    public Block getBlock(int x, int y) {
+    public Node getBlock(int x, int y) {
         return map_matrix[x][y];
     }
 
@@ -307,20 +339,8 @@ public class Map {
         return x;
     }
 
-    public void setX(int x) {
-        this.map = new int[this.y][x];
-        this.map_matrix = new Block[x][this.y];
-        this.x = x;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public void setY(int y) {
-        this.map = new int[y][this.x];
-        this.map_matrix = new Block[this.x][y];
-        this.y = y;
     }
 
     public Tower getTowerWithXY(int x, int y) {

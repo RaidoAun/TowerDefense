@@ -29,6 +29,10 @@ public class Block {
         return pathCount;
     }
 
+    public void setPathCount(int pathCount) {
+        this.pathCount = pathCount;
+    }
+
     public Color getColor() {
         return color;
     }

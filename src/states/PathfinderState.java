@@ -40,9 +40,13 @@ public class PathfinderState implements State {
             sm.toggleFullscreen();
         }
 
+        if (click != null) {
+            System.out.println(map.getMap_matrix()[click.indexX][click.indexY].id);
+            System.out.println(map.getMap_matrix()[click.indexX][click.indexY].getColor());
+        }
+
         if (click != null && pathfinder == null) {
-            pathfinder = new NewPathfinder(click.indexX, click.indexY);
-            pathfinder.generateMatrix(map);
+            pathfinder = new NewPathfinder(click.indexX, click.indexY, map);
             pathfinder.scanMap();
             map.editMap_matrix(click.indexX, click.indexY, new Nexus(click.indexX, click.indexY));
         } else if (click != null) {

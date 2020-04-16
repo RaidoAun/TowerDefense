@@ -188,12 +188,20 @@ public class GameState implements State {
 
     private void placeTower(int x, int y) {
 
-        Towers towerToMake = Towers.values()[towerToMakeId];
-        raha -= towerToMake.getHind();
         List<Spawnpoint> updatableSpawns = map.pathsContain(new int[]{x, y});
+        System.out.println("Before");
+        System.out.println(click.eventblock);
+        System.out.println(click.eventblock.getId());
+        System.out.println(click.eventblock.getColor());
         map.editMap_matrix(x, y, new Block(x, y, 1, 0, Color.BLACK, 0));
-
+        System.out.println("After");
+        System.out.println(click.eventblock);
+        System.out.println(click.eventblock.getId());
+        System.out.println(click.eventblock.getColor());
+        System.out.println("----------------");
         if (eiTakistaTeed(updatableSpawns)) {
+            Towers towerToMake = Towers.values()[towerToMakeId];
+            raha -= towerToMake.getHind();
             genNewPaths(updatableSpawns);
             map.noTowerRanges();
             //Uue toweri genereerimine.

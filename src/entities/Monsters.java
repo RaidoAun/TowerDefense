@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public enum Monsters {
 
-    TAVALINE(0, 3, 100, 10, 20, Color.YELLOW),
-    KIIRE(1, 4, 50, 10, 30, Color.BLUE),
+    TAVALINE(0, 2, 100, 10, 20, Color.YELLOW),
+    KIIRE(1, 3, 50, 10, 30, Color.BLUE),
     TUGEV(2, 1, 200, 20, 40, Color.CRIMSON);
 
     private final int id;

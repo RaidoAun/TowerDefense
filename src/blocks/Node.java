@@ -17,9 +17,16 @@ public class Node extends Block {
         this.visited = false;
         this.inUnvisitedList = false;
         this.cost = Double.POSITIVE_INFINITY;
-        parent = null;
+        this.parent = null;
     }
 
+    public Node(Node node) {
+        super(node.indexX, node.indexY, node.id, node.value, node.color, 0);
+        this.visited = node.isVisited();
+        this.inUnvisitedList = node.isInUnvisitedList();
+        this.cost = node.getCost();
+        this.parent = node.getParent();
+    }
     public boolean isVisited() {
         return visited;
     }

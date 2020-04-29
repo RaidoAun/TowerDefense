@@ -1,5 +1,6 @@
 package tools;
 
+import blocks.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import blocks.Block;
@@ -32,7 +33,7 @@ public class Click {
         }
 
         if (map != null) {
-            this.eventblock = map.getBlock(indexX, indexY);
+            this.eventblock = new Node(map.getNode(indexX, indexY));
         }
     }
 

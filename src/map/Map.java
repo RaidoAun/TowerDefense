@@ -183,7 +183,7 @@ public class Map {
             for (int i = 0; i < path.length - 1; i++) {
                 int indexX = path[i][0];
                 int indexY = path[i][1];
-                int pathCount = getBlock(indexX, indexY).getPathCount();
+                int pathCount = getNode(indexX, indexY).getPathCount();
 
                 Block newBlock = new Block(indexX, indexY, 9, 5, Color.LIGHTGRAY, pathCount + 1);
                 editMap_matrix(indexX, indexY, newBlock);
@@ -196,14 +196,14 @@ public class Map {
             for (int i = 0; i < path.length - 1; i++) {
                 int indexX = path[i][0];
                 int indexY = path[i][1];
-                int pathCount = getBlock(indexX, indexY).getPathCount();
+                int pathCount = getNode(indexX, indexY).getPathCount();
 
                 Block newBlock = new Block(indexX, indexY, 9, 5, Color.LIGHTGRAY, pathCount - 1);
                 if (newBlock.getPathCount() == 0) {
                     newBlock.setId(0);
                     newBlock.setColor(Color.WHITE);
                 }
-                if (getBlock(indexX, indexY).getId() == 9) editMap_matrix(indexX, indexY, newBlock);
+                if (getNode(indexX, indexY).getId() == 9) editMap_matrix(indexX, indexY, newBlock);
             }
         }
     }
@@ -331,7 +331,7 @@ public class Map {
         gc.stroke();
     }
 
-    public Node getBlock(int x, int y) {
+    public Node getNode(int x, int y) {
         return map_matrix[x][y];
     }
 

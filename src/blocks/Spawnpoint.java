@@ -5,6 +5,7 @@ import entities.Monsters;
 import javafx.scene.paint.Color;
 import map.Map;
 import map.Pathfinder;
+import states.GameState;
 
 import java.util.Random;
 
@@ -23,18 +24,19 @@ public class Spawnpoint extends Block {
         nexusWithPath = false;
         this.map = map;
         this.spawnRate = 30;
-        this.idleTime = spawnRate;
+        //this.idleTime = spawnRate;
     }
 
-    public void tick() {
-        if (idleTime >= spawnRate) {
+    public void tick(int tick,int level) {
+        if (tick%spawnRate==0) {
             Monsters[] monsters = Monsters.values();
             Monster uusKoletis = new Monster(monsters[r.nextInt(monsters.length)], pixelX, pixelY, this);
+            uusKoletis.setHp(uusKoletis.getHp()*(10+level)/10);
             map.addMonster(uusKoletis);
-            idleTime = 0;
-        } else {
+            //idleTime = 0;
+        } /*else {
             idleTime += 1;
-        }
+        }*/
     }
 
     public int[][] getPath() {

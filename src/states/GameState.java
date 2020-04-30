@@ -33,6 +33,8 @@ public class GameState implements State {
     private CanvasWindow cWindow;
     private int towerToMakeId;
     private Click click;
+    private int level;
+    private int tick;
 
     public GameState(StateManager sm, Scene gameScene, Map map) {
 
@@ -68,6 +70,12 @@ public class GameState implements State {
         g.setFill(Paint.valueOf("#2aa32e"));
         g.fillText(text, Main.screenW - 300, 50);
     }
+    private void drawLevel(GraphicsContext g) {
+        String text = String.format("Level: %s", this.level);
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.screenH / 20));
+        g.setFill(Paint.valueOf("#db1818"));
+        g.fillText(text, Main.screenW - 300, 150);
+    }
 
     @Override
     public void tick() {
@@ -84,7 +92,7 @@ public class GameState implements State {
         }
         //Uute monsterite spawnimine.
         for (Spawnpoint spawn : map.getSpawnpoints()) {
-            spawn.tick();
+            spawn.tick(this.tick,this.level);
         }
         //Koletiste liigutamine.
         List<Monster> monsters = new ArrayList<>(map.getAllMonsters());
@@ -94,6 +102,11 @@ public class GameState implements State {
         //Towerite tulistamine (ei ole graafiline).
         for (Tower tower : map.getTowers()) {
             tower.tick(map);
+        }
+        this.tick+=1;
+        if (this.tick>=1200){
+            this.level++;
+            this.tick=0;
         }
     }
 
@@ -113,7 +126,7 @@ public class GameState implements State {
         //Raha ja elude uuendamine graafiliselt.
         drawMoney(g);
         drawHealth(g);
-
+        drawLevel(g);
         for (Monster monster : map.getAllMonsters()) {
             monster.render(g);
         }
@@ -124,6 +137,7 @@ public class GameState implements State {
         //CanvasWindow joonistamine.
         cWindow.draw();
     }
+
 
     @Override
     public States getState() {

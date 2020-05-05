@@ -191,7 +191,7 @@ public class GameState implements State {
         CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
         for (int i = 0; i < Towers.values().length; i++) {
             int index = i;
-            CanvasButton button_temp = new CanvasButton(() -> towerToMakeId = index);
+            CanvasButton button_temp = new CanvasButton(() ->{towerToMakeId = index;cWindow.setActive(false);});
             button_temp.setColor(Towers.values()[index].getColor());
             int button_padding = cWindow.getW() / (Towers.values().length);
             button_temp.setCoords((int) (cWindow.getX() + button_padding * (index + 0.25)), cWindow.getY() + cWindow.getH() / 2 - cWindow.getText_size() / 2, cWindow.getText_size(), cWindow.getText_size());

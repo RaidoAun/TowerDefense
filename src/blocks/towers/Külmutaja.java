@@ -4,6 +4,7 @@ import entities.Monster;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import map.Map;
+import towerdefense.Main;
 
 import java.util.HashSet;
 
@@ -73,7 +74,7 @@ public class Külmutaja extends Tower {
     @Override
     public void lvlUp() {
         this.level += 1;
-        this.range += 10;
+        this.range += (Towers.KÜLMUTAJA.getRange()/10)*Main.blockSize;
         this.damage += 5;
     }
 

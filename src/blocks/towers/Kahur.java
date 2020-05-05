@@ -42,7 +42,7 @@ public class Kahur extends Tower {
     @Override
     public void lvlUp() {
         this.level += 1;
-        this.range += 10;
+        this.range += (Towers.KAHUR.getRange()/10)*Main.blockSize;
         this.damage += 1;
     }
 

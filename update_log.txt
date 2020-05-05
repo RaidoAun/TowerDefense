@@ -77,3 +77,9 @@ Uue pathfinderi testimise visuaalsemaks tegememine.
 
 12.04.2020 Leo
 Mapi klassis olev maatriks koosneb nüüd Node classist.
+
+30.04 2020 Raido
+Monsterid lähevid levelitega tugevamaks.
+
+05.05 2020
+Monsterite kiirus sõltub blocki suurusest.

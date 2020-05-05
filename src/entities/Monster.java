@@ -26,6 +26,7 @@ public class Monster extends Entity {
         this.reachedNexus = false;
         this.spawnPoint = spawnPoint;
         this.slowDebuff = 0;
+        this.speed*= Main.blockSize;
     }
 
     @Override

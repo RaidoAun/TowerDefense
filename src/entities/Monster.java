@@ -37,6 +37,7 @@ public class Monster extends Entity {
             map.getAllMonsters().remove(this);
         } else if (reachedNexus) {
             GameState.updateHealth(-dmg);
+            GameState.updateMoney(money);
             map.getAllMonsters().remove(this);
         }
 

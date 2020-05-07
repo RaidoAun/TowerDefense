@@ -81,5 +81,9 @@ Mapi klassis olev maatriks koosneb nüüd Node classist.
 30.04 2020 Raido
 Monsterid lähevid levelitega tugevamaks.
 
-05.05 2020
+05.05 2020 Raido
 Monsterite kiirus sõltub blocki suurusest.
+
+07.07 2020 Raido
+Kuulide kiirus sõltub blocki suurusest.
+Natuke balancimist.

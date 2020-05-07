@@ -22,9 +22,11 @@ public abstract class Tower extends Block {
     protected int maxLevel;
     protected int cooldown; //Mitme frame tagant teeb damage (tulistab).
     protected int idleTime; //Kaua tower pole tulistanud (framed).
+    protected String name;
 
     public Tower(Towers type, int x, int y) {
         super(x, y, type.getId() + 10, type.getDmg(), type.getColor(), 0);
+        this.name = type.getNimi();
         this.level = 1;
         this.range = type.getRange() * Main.blockSize;
         this.active = false;
@@ -108,5 +110,9 @@ public abstract class Tower extends Block {
 
     public int getMaxLevel() {
         return maxLevel;
+    }
+
+    public String getName() {
+        return name;
     }
 }

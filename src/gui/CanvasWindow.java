@@ -28,12 +28,11 @@ public class CanvasWindow {
     private Boolean show_tower;
     private Map map;
 
-    public CanvasWindow(Canvas c, Map map) {
+    public CanvasWindow(Canvas c) {
         this.c = c;
         this.gc = c.getGraphicsContext2D();
         this.block_size = Main.blockSize;
         this.text_size = Main.screenH / 60;
-        this.map = map;
     }
 
     public void draw() {
@@ -48,8 +47,8 @@ public class CanvasWindow {
     }
 
     public void drawTowerInfo() {
-        String[] info = new String[]{"Id:", "Dmg:", "Range:", "Level:"};
-        String[] value = new String[]{Integer.toString(tower.getId()), Integer.toString(this.tower.getDamage()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
+        String[] info = new String[]{tower.getName(), "Dmg:", "Range:", "Level:"};
+        String[] value = new String[]{"", Integer.toString(this.tower.getDamage()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(Paint.valueOf("#2aa32e"));
         for (int i = 0; i < info.length; i++) {
@@ -59,7 +58,6 @@ public class CanvasWindow {
     }
 
     public void drawButtons() {
-
         for (CanvasButton button : buttons) {
             gc.setFill(button.getColor());
             gc.fillRect(button.getX(), button.getY(), button.getW(), button.getH());
@@ -68,7 +66,12 @@ public class CanvasWindow {
     }
 
     public boolean isClickOnWindow(int x, int y) {
-        return x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h;
+        if (this.active){
+            return x > this.x && x < this.x + this.w && y > this.y && y < this.y + this.h;
+        }
+        else{
+            return false;
+        }
     }
 
     public void checkButtons(int clickx, int clicky) {
@@ -151,5 +154,9 @@ public class CanvasWindow {
 
     public int getText_size() {
         return text_size;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

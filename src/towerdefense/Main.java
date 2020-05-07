@@ -12,10 +12,10 @@ public class Main extends Application {
 
     public static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
     public static int screenW = (int) Screen.getPrimary().getBounds().getWidth();
-    public static int blockSize = 15;
+    public static int blockSize = 25;
     public static Stage window;
     public static int spawnCount = 3;
-    public static int spawnSpacing = 20;
+    public static int spawnSpacing = 15;
 
     public static void main(String[] args) {
         launch(args);

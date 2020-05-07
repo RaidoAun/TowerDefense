@@ -29,7 +29,7 @@ public class Kuulipilduja extends Tower {
         }
 
         if (idleTime >= cooldown && target != null) {
-            Projectile missile = new Projectile(this, target, 3, Main.blockSize * 0.25);
+            Projectile missile = new Projectile(this, target, 3*Main.blockSize/15, Main.blockSize * 0.25);
             shotProjectiles.add(missile);
             idleTime = 0;
         } else {
@@ -52,7 +52,7 @@ public class Kuulipilduja extends Tower {
     public void lvlUp() {
         this.level += 1;
         this.range += (Towers.KUULIPILDUJA.getRange()/10)*Main.blockSize;
-        this.damage += 1;
+        this.damage += (Towers.KUULIPILDUJA.getDmg()/10);
     }
 
     @Override

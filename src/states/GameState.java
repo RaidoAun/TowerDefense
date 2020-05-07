@@ -11,6 +11,7 @@ import gui.PopUp;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class GameState implements State {
 
-    public static int raha = 1000;
+    public static int raha = 300;
     public static int health = 100;
     private StateManager sm;
     private Scene gameScene;
@@ -35,6 +36,7 @@ public class GameState implements State {
     private Click click;
     private int level;
     private int tick;
+    private boolean pause;
 
     public GameState(StateManager sm, Scene gameScene, Map map) {
 
@@ -42,9 +44,8 @@ public class GameState implements State {
         this.game = States.GAME;
         this.map = map;
         this.gameScene = gameScene;
-        this.cWindow = new CanvasWindow(sm.getCanvas(), map);
+        this.cWindow = new CanvasWindow(sm.getCanvas());
         this.towerToMakeId = 0;
-
         sm.getCanvas().setOnMouseClicked(e -> click = new Click(e, map));
 
     }
@@ -148,7 +149,7 @@ public class GameState implements State {
     public void reset() {
         map = null;
         click = null;
-        raha = 1000;
+        raha = 300;
         health = 100;
     }
 
@@ -158,7 +159,11 @@ public class GameState implements State {
         int clicky = click.getPixelY();
         //If spagett, mis vaatab, kas klikati CanvasWindow peale.
         if (click.secondary && !cWindow.isClickOnWindow(clickx, clicky)) {
-            openTowerMenu();
+            if (!cWindow.isActive()){
+                openTowerMenu();
+            }else{
+                cWindow.setActive(false);
+            }
         } else if (click.primary && !cWindow.isClickOnWindow(clickx, clicky)) {
             Block eventBlock = click.eventblock;
             cWindow.setActive(false);
@@ -169,13 +174,12 @@ public class GameState implements State {
             if (eventBlock.getId() != 0 && eventBlock.getId() != 9 && eventBlock.getId() < 10) {
                 map.noTowerRanges();
                 Platform.runLater(() -> PopUp.createPopup("Sellele ruudule ei saa ehitada!\n Proovi uuesti!"));
-            } else if (raha < Towers.values()[towerToMakeId].getHind()) {
-                Platform.runLater(() -> PopUp.createPopup("Pole piisavalt raha, et ehitada!"));
             } else if (eventBlock.getId() >= 10) {
                 upgradeTower(x, y);
-            } else {
+            } else if (raha >= Towers.values()[towerToMakeId].getHind()) {
                 placeTower(x, y);
             }
+
         } else {
             cWindow.checkButtons(clickx, clicky);
         }
@@ -191,7 +195,12 @@ public class GameState implements State {
         CanvasButton[] buttons_temp = new CanvasButton[Towers.values().length];
         for (int i = 0; i < Towers.values().length; i++) {
             int index = i;
-            CanvasButton button_temp = new CanvasButton(() ->{towerToMakeId = index;cWindow.setActive(false);});
+            CanvasButton button_temp = new CanvasButton(() ->{
+                if (click.primary){
+                    towerToMakeId = index;
+                    cWindow.setActive(false);
+                }
+            });
             button_temp.setColor(Towers.values()[index].getColor());
             int button_padding = cWindow.getW() / (Towers.values().length);
             button_temp.setCoords((int) (cWindow.getX() + button_padding * (index + 0.25)), cWindow.getY() + cWindow.getH() / 2 - cWindow.getText_size() / 2, cWindow.getText_size(), cWindow.getText_size());

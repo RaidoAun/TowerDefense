@@ -19,7 +19,7 @@ public class Kahur extends Tower {
         Monster monster = getClosestMonster(map.getAllMonsters());
         if (idleTime >= cooldown && monster != null) {
             if (monster.distanceFrom(this.pixelX, this.pixelY) <= this.range) {
-                Projectile missile = new Projectile(this, monster, 3, Main.blockSize * 0.75);
+                Projectile missile = new Projectile(this, monster, 3*Main.blockSize/15, Main.blockSize * 0.75);
                 shotProjectiles.add(missile);
             }
             idleTime = 0;
@@ -43,7 +43,7 @@ public class Kahur extends Tower {
     public void lvlUp() {
         this.level += 1;
         this.range += (Towers.KAHUR.getRange()/10)*Main.blockSize;
-        this.damage += 1;
+        this.damage += (Towers.KAHUR.getDmg()/10);
     }
 
     @Override

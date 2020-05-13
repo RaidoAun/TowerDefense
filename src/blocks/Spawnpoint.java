@@ -7,7 +7,7 @@ import map.Map;
 import map.Pathfinder;
 import states.GameState;
 
-import java.util.Random;
+import java.util.*;
 
 public class Spawnpoint extends Block {
 
@@ -25,25 +25,28 @@ public class Spawnpoint extends Block {
         nexusWithPath = false;
         this.map = map;
         this.spawnRate = 30;
-        this.bosstimer = 10000;
+        this.bosstimer = 100;
         this.startidletime = 1000;
     }
 
-    public void tick(int tick,int level) {
-        if (startidletime<=0){
-            if (tick%spawnRate==0) {
-                Monsters[] monsters = Monsters.values();
-                Monster uusKoletis = new Monster(monsters[r.nextInt(monsters.length)], pixelX, pixelY, this);
-                if (this.bosstimer==0){//võiks teha siin boss spawni
-
-                    this.bosstimer = 1000;
-                }else{
-                    uusKoletis.setHp(uusKoletis.getHp()*(10+level)/10);
+    public void tick(int tick, int level) {
+        if (startidletime <= 0) {
+            if (tick % spawnRate == 0) {
+                List<Monsters> monsters = new ArrayList<>(Arrays.asList(Monsters.values()));
+                monsters.remove(Monsters.BOSS);
+                Monster uusKoletis = new Monster(monsters.get(r.nextInt(monsters.size())), pixelX, pixelY, this);
+                if (this.bosstimer == 0) {//võiks teha siin boss spawni
+                    Monster boss = new Monster(Monsters.BOSS, pixelX, pixelY, this);
+                    boss.setHp(boss.getHp() * (10 + level) / 10);
+                    map.addMonster(boss);
+                    this.bosstimer = 100;
+                } else {
+                    uusKoletis.setHp(uusKoletis.getHp() * (10 + level) / 10);
                     this.bosstimer--;
                 }
                 map.addMonster(uusKoletis);
             }
-        }else{
+        } else {
             startidletime--;
         }
     }

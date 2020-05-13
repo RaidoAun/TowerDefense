@@ -11,11 +11,12 @@ public class Monster extends Entity {
 
     private double slowDebuff;
     private int hp;
-    private int dmg;
+    private final int dmg;
     private int step;
-    private int money;
+    private final int money;
+    private final Monsters type;
     private boolean reachedNexus;
-    private Spawnpoint spawnPoint; //blocks.Spawnpoint, kust koletis alguse sai.
+    private final Spawnpoint spawnPoint; //blocks.Spawnpoint, kust koletis alguse sai.
 
     public Monster(Monsters type, double pixelX, double pixelY, Spawnpoint spawnPoint) {
         super(pixelX, pixelY, type.getColor(), type.getKiirus());
@@ -27,6 +28,7 @@ public class Monster extends Entity {
         this.spawnPoint = spawnPoint;
         this.slowDebuff = 0;
         this.speed*= Main.blockSize;
+        this.type = type;
     }
 
     @Override
@@ -57,7 +59,12 @@ public class Monster extends Entity {
 
     public void drawMonster(GraphicsContext g) {
         g.setFill(this.color);
-        double diameeter = (double) Main.blockSize / 2;
+        double diameeter;
+        if (type == Monsters.BOSS) {
+            diameeter = (double) Main.blockSize * 0.75;
+        } else {
+            diameeter = (double) Main.blockSize / 2;
+        }
         g.fillOval(this.pixelX - diameeter / 2, this.pixelY - diameeter / 2, diameeter, diameeter);
         if (slowDebuff > 0) {
             g.setStroke(Color.AQUA);

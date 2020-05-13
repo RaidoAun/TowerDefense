@@ -19,6 +19,7 @@ public class Spawnpoint extends Block {
     private int spawnRate; //Mitme frame tagant spawnib uus koletis.
     private int bosstimer;
     private int startidletime;
+    private int swarmTicks;
 
     public Spawnpoint(int x, int y, Map map) {
         super(x, y, 2, 2, Color.LIGHTGREEN, 0);
@@ -27,22 +28,31 @@ public class Spawnpoint extends Block {
         this.spawnRate = 30;
         this.bosstimer = 100;
         this.startidletime = 1000;
+        this.swarmTicks = 0;
     }
 
     public void tick(int tick, int level) {
         if (startidletime <= 0) {
-            if (tick % spawnRate == 0) {
+            if (tick % spawnRate == 0 || this.swarmTicks>0) {
                 List<Monsters> monsters = new ArrayList<>(Arrays.asList(Monsters.values()));
                 monsters.remove(Monsters.BOSS);
                 Monster uusKoletis = new Monster(monsters.get(r.nextInt(monsters.size())), pixelX, pixelY, this);
                 if (this.bosstimer == 0) {//võiks teha siin boss spawni
-                    Monster boss = new Monster(Monsters.BOSS, pixelX, pixelY, this);
-                    boss.setHp((int) (boss.getHp() * (10 + Math.pow(level,1.1)) / 10));
-                    map.addMonster(boss);
-                    this.bosstimer = 100;
+                    if (r.nextBoolean()){
+                        Monster boss = new Monster(Monsters.BOSS, pixelX, pixelY, this);
+                        boss.setHp((int) (boss.getHp() * (10 + Math.pow(level,1.5)) / 10));
+                        map.addMonster(boss);
+                        this.bosstimer = 100;
+                    }else{
+                        this.swarmTicks=50;
+                    }
+
                 } else {
                     uusKoletis.setHp((int) (uusKoletis.getHp() * (10 + Math.pow(level,1.5)) / 10));
                     this.bosstimer--;
+                    if (this.swarmTicks>0){
+                        this.swarmTicks--;
+                    }
                 }
                 map.addMonster(uusKoletis);
             }

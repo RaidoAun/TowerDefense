@@ -14,7 +14,7 @@ import java.util.HashSet;
 public class Kahur extends Tower {
     public Kahur(int x, int y) {
         super(Towers.KAHUR, x, y);
-        this.explosionRadius = 2*Main.blockSize;
+        this.explosionRadius = 1.5*Main.blockSize;
         this.activeExplosions=new HashSet<>();
     }
 

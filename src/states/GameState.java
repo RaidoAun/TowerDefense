@@ -25,12 +25,12 @@ import java.util.List;
 
 public class GameState implements State {
 
-    public static int raha = 300;
+    public static int raha = 400;
     public static int health = 100;
+    public static Map map;
     private StateManager sm;
     private Scene gameScene;
     private States game;
-    private Map map;
     private CanvasWindow cWindow;
     private int towerToMakeId;
     private Click click;

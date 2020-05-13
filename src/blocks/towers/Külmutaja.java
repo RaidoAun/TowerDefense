@@ -4,6 +4,7 @@ import entities.Monster;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import map.Map;
+import states.GameState;
 import towerdefense.Main;
 
 import java.util.HashSet;
@@ -15,8 +16,8 @@ public class Külmutaja extends Tower {
 
     public Külmutaja(int x, int y) {
         super(Towers.KÜLMUTAJA, x, y);
-        frozenMonsters = new HashSet<>();
-        activeCircles = new HashSet<>();
+        this.frozenMonsters = new HashSet<>();
+        this.activeCircles = new HashSet<>();
     }
 
     @Override
@@ -80,6 +81,7 @@ public class Külmutaja extends Tower {
 
     @Override
     public void sell() {
+        GameState.updateMoney((int) (Towers.KÜLMUTAJA.getHind()*(10+this.level)*0.05));
         for (Monster monster : frozenMonsters) {
             monster.setSlowDebuff(monster.getSlowDebuff() - (double) this.damage / 100);
         }

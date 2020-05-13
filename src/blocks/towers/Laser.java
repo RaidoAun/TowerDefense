@@ -3,6 +3,7 @@ package blocks.towers;
 import entities.Monster;
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import states.GameState;
 import towerdefense.Main;
 
 import java.util.HashSet;
@@ -19,6 +20,7 @@ public class Laser extends Tower {
     @Override
     public void tick(Map map) {
         if (idleTime >= cooldown) {
+            monstersToLaser.clear();
             for (Monster monster : map.getAllMonsters()) {
                 if (monster.distanceFrom(this.pixelX, this.pixelY) <= this.range) {
                     monster.setHp(monster.getHp() - damage);
@@ -34,11 +36,15 @@ public class Laser extends Tower {
     @Override
     public void render(GraphicsContext g) {
         for (Monster monster : monstersToLaser) {
-            g.setStroke(color);
-            g.setLineWidth((double) Main.blockSize / 10);
-            g.strokeLine(monster.getPixelX(), monster.getPixelY(), this.pixelX, this.pixelY);
+            if (monster.getHp()>0&& !monster.isReachedNexus()){
+                g.setStroke(color);
+                g.setLineWidth((double) Main.blockSize / 10);
+                double a = monster.getPixelX()-(monster.getPixelX()-this.pixelX)/(monster.distanceFrom(this.pixelX,this.pixelY)/10);
+                double b = monster.getPixelY()-(monster.getPixelY()-this.pixelY)/(monster.distanceFrom(this.pixelX,this.pixelY)/10);
+                g.strokeLine(monster.getPixelX(), monster.getPixelY(), a, b);
+            }
         }
-        monstersToLaser.clear();
+
     }
 
     @Override
@@ -50,6 +56,6 @@ public class Laser extends Tower {
 
     @Override
     public void sell() {
-
+        GameState.updateMoney((int) (Towers.LASER.getHind()*(10+this.level)*0.05));
     }
 }

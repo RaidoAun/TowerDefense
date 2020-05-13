@@ -3,6 +3,7 @@ package entities;
 import blocks.towers.Tower;
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import states.GameState;
 import towerdefense.Main;
 
 public class Projectile extends Entity {
@@ -23,10 +24,18 @@ public class Projectile extends Entity {
 
     @Override
     public void tick(Map map) {
+        Monster closest = getClosestMonster(map.getAllMonsters());
+        double xDist = closest.getPixelX()-pixelX;
+        double yDist = closest.getPixelY()-pixelY;
+        double distance = Math.hypot(xDist, yDist);
+        if (this.diameter*1.5>=distance){
+            hitMonster(closest);
+            target =null;
+        }
         if (target != null) {
-            double xDist = target.getPixelX() - pixelX;
-            double yDist = target.getPixelY() - pixelY;
-            double distance = Math.hypot(xDist, yDist);
+            xDist = target.getPixelX() - pixelX;
+            yDist = target.getPixelY() - pixelY;
+            distance = Math.hypot(xDist, yDist);
             direction = Math.atan2(yDist, xDist);
             if (this.speed < distance) {
                 this.pixelX = this.pixelX + (speed * Math.cos(direction));
@@ -36,10 +45,9 @@ public class Projectile extends Entity {
                 this.pixelY = target.getPixelY();
             }
             if (pixelX == target.getPixelX() && pixelY == target.getPixelY()) {
-                target.setHp(target.getHp() - damage);
-                towerOfOrigin.getShotProjectiles().remove(this);
+                hitMonster(target);
             } else if (target.isReachedNexus() || target.getHp() <= 0) {
-                target = /*getClosestMonster(map.getAllMonsters())*/ null;
+                target =null; //getClosestMonster(map.getAllMonsters());
             }
         } else {
             if (pixelX < 0 || pixelX > Main.screenW || pixelY < 0 || pixelY > Main.screenH) {
@@ -55,5 +63,21 @@ public class Projectile extends Entity {
     public void render(GraphicsContext g) {
         g.setFill(this.color);
         g.fillOval(pixelX - diameter / 2, pixelY - diameter / 2, diameter, diameter);
+    }
+    private void hitMonster(Monster monster){
+        if (towerOfOrigin.getId()==11){
+            towerOfOrigin.getactiveExplosions().add(new Explosion(this.pixelX, this.pixelY, color.RED,towerOfOrigin.getExplosionRadius()));
+            for (Monster monster1:GameState.map.getAllMonsters()){
+                double xDist = monster1.getPixelX()-this.pixelX;
+                double yDist = monster1.getPixelY()-this.pixelY;
+                double distance = Math.hypot(xDist, yDist);
+                if (distance<=towerOfOrigin.getExplosionRadius()){
+                    monster1.setHp(monster1.getHp() - this.damage);
+                }
+            }
+        }else{
+            monster.setHp(monster.getHp() - this.damage);
+        }
+        towerOfOrigin.getShotProjectiles().remove(this);
     }
 }

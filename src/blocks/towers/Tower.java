@@ -1,6 +1,7 @@
 package blocks.towers;
 
 import blocks.Block;
+import entities.Explosion;
 import entities.Monster;
 import entities.Projectile;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,7 +13,6 @@ import towerdefense.Main;
 import java.util.HashSet;
 
 public abstract class Tower extends Block {
-
     protected HashSet<Projectile> shotProjectiles;
     protected int level;
     protected double range;
@@ -23,11 +23,13 @@ public abstract class Tower extends Block {
     protected int cooldown; //Mitme frame tagant teeb damage (tulistab).
     protected int idleTime; //Kaua tower pole tulistanud (framed).
     protected String name;
+    protected double explosionRadius;
+    protected HashSet<Explosion> activeExplosions;
 
     public Tower(Towers type, int x, int y) {
         super(x, y, type.getId() + 10, type.getDmg(), type.getColor(), 0);
         this.name = type.getNimi();
-        this.level = 1;
+        this.level = 0;
         this.range = type.getRange() * Main.blockSize;
         this.active = false;
         this.damage = type.getDmg();
@@ -114,5 +116,12 @@ public abstract class Tower extends Block {
 
     public String getName() {
         return name;
+    }
+    public double getExplosionRadius(){
+        return explosionRadius;
+    }
+
+    public HashSet<Explosion> getactiveExplosions() {
+        return activeExplosions;
     }
 }

@@ -2,6 +2,7 @@ package blocks.towers;
 
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import states.GameState;
 
 public class Müür extends Tower {
 

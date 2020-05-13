@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import map.Map;
 import states.GameState;
 import towerdefense.Main;
 
@@ -26,7 +25,6 @@ public class CanvasWindow {
     private Tower tower;
     private CanvasButton[] buttons;
     private Boolean show_tower;
-    private Map map;
 
     public CanvasWindow(Canvas c) {
         this.c = c;
@@ -107,7 +105,7 @@ public class CanvasWindow {
         });
         temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
         CanvasButton temp2 = new CanvasButton(() -> {
-            map.sellTower(tower);
+            GameState.map.sellTower(this.tower);
             this.active = false;
         });
         temp2.setColor(Color.RED);

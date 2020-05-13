@@ -37,11 +37,11 @@ public class Spawnpoint extends Block {
                 Monster uusKoletis = new Monster(monsters.get(r.nextInt(monsters.size())), pixelX, pixelY, this);
                 if (this.bosstimer == 0) {//võiks teha siin boss spawni
                     Monster boss = new Monster(Monsters.BOSS, pixelX, pixelY, this);
-                    boss.setHp(boss.getHp() * (10 + level) / 10);
+                    boss.setHp((int) (boss.getHp() * (10 + Math.pow(level,1.1)) / 10));
                     map.addMonster(boss);
                     this.bosstimer = 100;
                 } else {
-                    uusKoletis.setHp(uusKoletis.getHp() * (10 + level) / 10);
+                    uusKoletis.setHp((int) (uusKoletis.getHp() * (10 + Math.pow(level,1.5)) / 10));
                     this.bosstimer--;
                 }
                 map.addMonster(uusKoletis);

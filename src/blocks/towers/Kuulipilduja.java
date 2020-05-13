@@ -4,6 +4,7 @@ import entities.Monster;
 import entities.Projectile;
 import javafx.scene.canvas.GraphicsContext;
 import map.Map;
+import states.GameState;
 import towerdefense.Main;
 
 import java.util.HashSet;
@@ -29,7 +30,7 @@ public class Kuulipilduja extends Tower {
         }
 
         if (idleTime >= cooldown && target != null) {
-            Projectile missile = new Projectile(this, target, 3*Main.blockSize/15, Main.blockSize * 0.25);
+            Projectile missile = new Projectile(this, target, 4*Main.blockSize/15, Main.blockSize * 0.25);
             shotProjectiles.add(missile);
             idleTime = 0;
         } else {
@@ -57,6 +58,6 @@ public class Kuulipilduja extends Tower {
 
     @Override
     public void sell() {
-
+        GameState.updateMoney((int) (Towers.KUULIPILDUJA.getHind()*(10+this.level)*0.05));
     }
 }

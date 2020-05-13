@@ -106,6 +106,7 @@ public class CanvasWindow {
         temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
         CanvasButton temp2 = new CanvasButton(() -> {
             GameState.map.sellTower(this.tower);
+            GameState.genNewPaths(GameState.map.getSpawnpoints());
             this.active = false;
         });
         temp2.setColor(Color.RED);

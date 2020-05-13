@@ -252,7 +252,7 @@ public class GameState implements State {
         }
     }
 
-    public void genNewPaths(List<Spawnpoint> spawns) {
+    public static void genNewPaths(List<Spawnpoint> spawns) {
         for (Spawnpoint s : spawns) {
             int[][] oldPath = s.getPath();
             s.genPath(500);

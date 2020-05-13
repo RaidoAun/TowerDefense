@@ -84,6 +84,9 @@ Monsterid lähevid levelitega tugevamaks.
 05.05 2020 Raido
 Monsterite kiirus sõltub blocki suurusest.
 
-07.07 2020 Raido
+07.05 2020 Raido
 Kuulide kiirus sõltub blocki suurusest.
 Natuke balancimist.
+
+13.05 2020 Raido
+Balance update, kahuri animatsioonid

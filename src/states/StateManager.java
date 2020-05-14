@@ -17,7 +17,7 @@ public class StateManager {
 
     public StateManager(Stage window) {
         this.window = window;
-        this.canvas = new Canvas(Main.screenW, Main.screenH);
+        this.canvas = new Canvas(Main.screenWkoosValgeAlaga, Main.screenH);
         allStates = new HashMap<>();
     }
 

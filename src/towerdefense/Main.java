@@ -9,10 +9,11 @@ import javafx.stage.Stage;
 import states.*;
 
 public class Main extends Application {
-
-    public static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
-    public static int screenW = (int) Screen.getPrimary().getBounds().getWidth();
     public static int blockSize = 25;
+    public static int screenH = (int) Screen.getPrimary().getBounds().getHeight();
+    public static int screenW = (int) Math.floor((Screen.getPrimary().getBounds().getWidth()-200) / blockSize)*blockSize;
+    public static int screenWkoosValgeAlaga = (int) Screen.getPrimary().getBounds().getWidth();
+
     public static Stage window;
     public static int spawnCount = 3;
     public static int spawnSpacing = 15;

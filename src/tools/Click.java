@@ -5,6 +5,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import blocks.Block;
 import map.Map;
+import towerdefense.Main;
 
 public class Click {
 
@@ -32,7 +33,7 @@ public class Click {
             this.secondary = true;
         }
 
-        if (map != null) {
+        if (map != null&& this.pixelX<= Main.screenW) {
             this.eventblock = new Node(map.getNode(indexX, indexY));
         }
     }

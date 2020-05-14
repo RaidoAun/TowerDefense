@@ -21,6 +21,7 @@ import tools.Click;
 import towerdefense.Main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameState implements State {
@@ -44,9 +45,11 @@ public class GameState implements State {
         this.game = States.GAME;
         this.map = map;
         this.gameScene = gameScene;
-        this.cWindow = new CanvasWindow(sm.getCanvas());
+        this.cWindow = new CanvasWindow(sm.getCanvas().getGraphicsContext2D());
         this.towerToMakeId = 0;
-        sm.getCanvas().setOnMouseClicked(e -> click = new Click(e, map));
+        sm.getCanvas().setOnMouseClicked(e -> {
+            click = new Click(e, map);
+        });
 
     }
 
@@ -58,24 +61,33 @@ public class GameState implements State {
         health += hp;
     }
 
-    private void drawHealth(GraphicsContext g) {
-        String text = String.format("Tervis: %s", health);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.screenH / 20));
-        g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, Main.screenW - 300, 100);
-    }
-
-    private void drawMoney(GraphicsContext g) {
-        String text = String.format("Raha: %s $", raha);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.screenH / 20));
+    public void drawValgeAla(GraphicsContext g){
+        g.setFill(new Color(1,1,1,1));
+        g.fillRect(Main.screenW,0,Main.screenWkoosValgeAlaga, Main.screenH);
+        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.screenH / 40));
         g.setFill(Paint.valueOf("#2aa32e"));
-        g.fillText(text, Main.screenW - 300, 50);
-    }
-    private void drawLevel(GraphicsContext g) {
-        String text = String.format("Level: %s", this.level);
-        g.setFont(Font.font("Calibri", FontWeight.BOLD, (double) Main.screenH / 20));
-        g.setFill(Paint.valueOf("#db1818"));
-        g.fillText(text, Main.screenW - 300, 150);
+        String text;
+        text = String.format("Raha: %s $", raha);
+        g.fillText(text, Main.screenW, 25);
+
+        text = String.format("Tervis: %s", health);
+        g.fillText(text, Main.screenW, 50);
+
+        text = String.format("Level: %s", this.level);
+        g.fillText(text, Main.screenW, 75);
+
+
+        List<Towers> towers = new ArrayList<>(Arrays.asList(Towers.values()));
+        CanvasWindow[] infoWindows = new CanvasWindow[towers.size()];
+        for (int i = 0; i < towers.size(); i++) {
+            infoWindows[i] = new CanvasWindow(sm.getCanvas().getGraphicsContext2D());
+
+            infoWindows[i].setText_size(Main.screenH / 50);
+            Tower newTower = TowerChooser.getTower(towers.get(i), 0, 0);
+            infoWindows[i].setX(Main.screenW);
+            infoWindows[i].setY(150*(i+1));
+            infoWindows[i].drawTowerInfoALL(newTower);
+        }
     }
 
     @Override
@@ -89,7 +101,9 @@ public class GameState implements State {
         }
         //Vaatab, kas mängija on ekreaanil klikanud, ja kui on, siis uuendab väärtusi.
         if (click != null) {
-            towerClick();
+            if (click.getPixelX()<=Main.screenW){
+                towerClick();
+            }
         }
         //Uute monsterite spawnimine.
         for (Spawnpoint spawn : map.getSpawnpoints()) {
@@ -119,15 +133,14 @@ public class GameState implements State {
             sm.changeScene(gameScene);
             sm.toggleFullscreen();
         }
+
         //Mapi joonistamine.
         map.drawMap(Main.blockSize);
         map.drawGrid(0.1, Color.BLACK);
         //Tower rangede joonistamine.
         renderTowerRanges();
         //Raha ja elude uuendamine graafiliselt.
-        drawMoney(g);
-        drawHealth(g);
-        drawLevel(g);
+        drawValgeAla(g);
         for (Monster monster : map.getAllMonsters()) {
             monster.render(g);
         }
@@ -149,7 +162,7 @@ public class GameState implements State {
     public void reset() {
         map = null;
         click = null;
-        raha = 300;
+        raha = 400;
         health = 100;
     }
 

@@ -89,4 +89,7 @@ Kuulide kiirus sõltub blocki suurusest.
 Natuke balancimist.
 
 13.05 2020 Raido
-Balance update, kahuri animatsioonid
+Balance update, kahuri animatsioonid, kahuri plahvatus, swarm
+
+14.05 2020 Raido
+Game GUI update, paremale valge ala koos infoga.

@@ -16,7 +16,6 @@ public class CanvasWindow {
     private int y;
     private int w;
     private int h;
-    private Canvas c;
     private boolean active;
     private Color color = new Color(1, 1, 1, 0.95);
     private GraphicsContext gc;
@@ -26,9 +25,8 @@ public class CanvasWindow {
     private CanvasButton[] buttons;
     private Boolean show_tower;
 
-    public CanvasWindow(Canvas c) {
-        this.c = c;
-        this.gc = c.getGraphicsContext2D();
+    public CanvasWindow(GraphicsContext g) {
+        this.gc = g;
         this.block_size = Main.blockSize;
         this.text_size = Main.screenH / 60;
     }
@@ -38,17 +36,27 @@ public class CanvasWindow {
             gc.setFill(color);
             gc.fillRect(x, y, w, h);
             if (show_tower) {
-                drawTowerInfo();
+                drawTowerInfo(this.tower);
             }
             drawButtons();
         }
     }
 
-    public void drawTowerInfo() {
+    public void drawTowerInfo(Tower tower) {
         String[] info = new String[]{tower.getName(), "Dmg:", "Range:", "Level:"};
-        String[] value = new String[]{"", Integer.toString(this.tower.getDamage()), Double.toString(this.tower.getRange()), Integer.toString(this.tower.getLevel())};
+        String[] value = new String[]{"", Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel())};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
-        gc.setFill(Paint.valueOf("#2aa32e"));
+        gc.setFill(tower.getColor());
+        for (int i = 0; i < info.length; i++) {
+            gc.fillText(info[i], this.x + (double) this.text_size / 2, this.y + this.text_size * (i + 1));
+            gc.fillText(value[i], this.x + this.text_size * 4, this.y + this.text_size * (i + 1));
+        }
+    }
+    public void drawTowerInfoALL(Tower tower) {
+        String[] info = new String[]{tower.getName(),"Hind", "Dmg:", "Range:", "Level:"};
+        String[] value = new String[]{"", Integer.toString(tower.getHind()), Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel())};
+        gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
+        gc.setFill(tower.getColor());
         for (int i = 0; i < info.length; i++) {
             gc.fillText(info[i], this.x + (double) this.text_size / 2, this.y + this.text_size * (i + 1));
             gc.fillText(value[i], this.x + this.text_size * 4, this.y + this.text_size * (i + 1));
@@ -97,19 +105,21 @@ public class CanvasWindow {
             this.y = tempy;
         }
         CanvasButton temp = new CanvasButton(() -> {
+            GameState.map.sellTower(this.tower);
+            GameState.genNewPaths(GameState.map.getSpawnpoints());
+            this.active = false;
+        });
+        CanvasButton temp2 = new CanvasButton(() -> {
             int upgradePrice = (int) (tower.getHind() * 0.1);
             if (tower.getMaxLevel() > tower.getLevel() && GameState.raha >= upgradePrice) {
                 GameState.updateMoney(-upgradePrice);
                 tower.lvlUp();
             }
         });
+        temp.setColor(Color.RED);
         temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
-        CanvasButton temp2 = new CanvasButton(() -> {
-            GameState.map.sellTower(this.tower);
-            GameState.genNewPaths(GameState.map.getSpawnpoints());
-            this.active = false;
-        });
-        temp2.setColor(Color.RED);
+
+        temp2.setColor(Color.GREEN);
         temp2.setCoords(this.x + 2 * (this.w / 3) - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);
         this.buttons = new CanvasButton[]{temp, temp2};
     }
@@ -157,5 +167,17 @@ public class CanvasWindow {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setText_size(int text_size) {
+        this.text_size = text_size;
     }
 }

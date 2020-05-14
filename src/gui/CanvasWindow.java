@@ -44,7 +44,7 @@ public class CanvasWindow {
 
     public void drawTowerInfo(Tower tower) {
         String[] info = new String[]{tower.getName(), "Dmg:", "Range:", "Level:"};
-        String[] value = new String[]{"", Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel())};
+        String[] value = new String[]{"", Integer.toString(tower.getDamage()), Double.toString(tower.getRange()/Main.blockSize), Integer.toString(tower.getLevel())};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(tower.getColor());
         for (int i = 0; i < info.length; i++) {
@@ -54,7 +54,7 @@ public class CanvasWindow {
     }
     public void drawTowerInfoALL(Tower tower) {
         String[] info = new String[]{tower.getName(),"Hind", "Dmg:", "Range:", "Level:",""};
-        String[] value = new String[]{"", Integer.toString(tower.getHind()), Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel()), "Upgrade"};
+        String[] value = new String[]{"", Integer.toString(tower.getHind()), Integer.toString(tower.getDamage()), Double.toString(tower.getRange()/Main.blockSize), Integer.toString(tower.getLevel()), "Upgrade"};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(tower.getColor());
         for (int i = 0; i < info.length; i++) {

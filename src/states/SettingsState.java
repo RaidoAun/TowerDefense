@@ -9,6 +9,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import towerdefense.Main;
 
 public class SettingsState implements State {
@@ -104,6 +105,7 @@ public class SettingsState implements State {
             Main.spawnCount = ajutineSpawnCount;
             Main.spawnSpacing = ajutineSpawnDist;
             Main.blockSize = ajutineBlockSize;
+            Main.screenW = (int) Math.floor((Screen.getPrimary().getBounds().getWidth()-200) / ajutineBlockSize)*ajutineBlockSize;
         });
         reset.setOnAction(e -> {
             s_input.setText(Integer.toString(Main.spawnCount));

@@ -53,8 +53,8 @@ public class CanvasWindow {
         }
     }
     public void drawTowerInfoALL(Tower tower) {
-        String[] info = new String[]{tower.getName(),"Hind", "Dmg:", "Range:", "Level:"};
-        String[] value = new String[]{"", Integer.toString(tower.getHind()), Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel())};
+        String[] info = new String[]{tower.getName(),"Hind", "Dmg:", "Range:", "Level:",""};
+        String[] value = new String[]{"", Integer.toString(tower.getHind()), Integer.toString(tower.getDamage()), Double.toString(tower.getRange()), Integer.toString(tower.getLevel()), "Upgrade"};
         gc.setFont(Font.font("Calibri", FontWeight.BOLD, this.text_size));
         gc.setFill(tower.getColor());
         for (int i = 0; i < info.length; i++) {
@@ -110,11 +110,7 @@ public class CanvasWindow {
             this.active = false;
         });
         CanvasButton temp2 = new CanvasButton(() -> {
-            int upgradePrice = (int) (tower.getHind() * 0.1);
-            if (tower.getMaxLevel() > tower.getLevel() && GameState.raha >= upgradePrice) {
-                GameState.updateMoney(-upgradePrice);
-                tower.lvlUp();
-            }
+            tower.lvlUp();
         });
         temp.setColor(Color.RED);
         temp.setCoords(this.x + this.w / 3 - this.text_size / 2, this.y + this.h - this.text_size, this.text_size, this.text_size);

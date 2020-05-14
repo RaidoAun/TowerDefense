@@ -49,9 +49,13 @@ public class Laser extends Tower {
 
     @Override
     public void lvlUp() {
-        this.level += 1;
-        this.range += (Towers.LASER.getRange()/10)*Main.blockSize;
-        this.damage += (Towers.LASER.getDmg()/10);
+        int upgradePrice = (int) (this.getHind() * 0.1);
+        if (this.getMaxLevel() > this.getLevel() && GameState.raha >= upgradePrice) {
+            GameState.updateMoney(-upgradePrice);
+            this.level += 1;
+            this.range += (Towers.LASER.getRange()/10)*Main.blockSize;
+            this.damage += (Towers.LASER.getDmg()/10);
+        }
     }
 
     @Override

@@ -58,9 +58,13 @@ public class Kahur extends Tower {
 
     @Override
     public void lvlUp() {
-        this.level += 1;
-        this.range += (Towers.KAHUR.getRange()/10)*Main.blockSize;
-        this.damage += (Towers.KAHUR.getDmg()/10);
+        int upgradePrice = (int) (this.getHind() * 0.1);
+        if (this.getMaxLevel() > this.getLevel() && GameState.raha >= upgradePrice) {
+            GameState.updateMoney(-upgradePrice);
+            this.level += 1;
+            this.range += (Towers.KAHUR.getRange()/10)*Main.blockSize;
+            this.damage += (Towers.KAHUR.getDmg()/10);
+        }
     }
 
     @Override

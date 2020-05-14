@@ -51,9 +51,13 @@ public class Kuulipilduja extends Tower {
 
     @Override
     public void lvlUp() {
-        this.level += 1;
-        this.range += (Towers.KUULIPILDUJA.getRange()/10)*Main.blockSize;
-        this.damage += (Towers.KUULIPILDUJA.getDmg()/10);
+        int upgradePrice = (int) (this.getHind() * 0.1);
+        if (this.getMaxLevel() > this.getLevel() && GameState.raha >= upgradePrice) {
+            GameState.updateMoney(-upgradePrice);
+            this.level += 1;
+            this.range += (Towers.KUULIPILDUJA.getRange()/10)*Main.blockSize;
+            this.damage += (Towers.KUULIPILDUJA.getDmg()/10);
+        }
     }
 
     @Override

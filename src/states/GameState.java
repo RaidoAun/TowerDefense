@@ -38,6 +38,7 @@ public class GameState implements State {
     private int level;
     private int tick;
     private boolean pause;
+    private CanvasWindow[] infoWindows;
 
     public GameState(StateManager sm, Scene gameScene, Map map) {
 
@@ -50,6 +51,7 @@ public class GameState implements State {
         sm.getCanvas().setOnMouseClicked(e -> {
             click = new Click(e, map);
         });
+        initValgeAla();
 
     }
 
@@ -76,17 +78,12 @@ public class GameState implements State {
         text = String.format("Level: %s", this.level);
         g.fillText(text, Main.screenW, 75);
 
-
         List<Towers> towers = new ArrayList<>(Arrays.asList(Towers.values()));
-        CanvasWindow[] infoWindows = new CanvasWindow[towers.size()];
         for (int i = 0; i < towers.size(); i++) {
-            infoWindows[i] = new CanvasWindow(sm.getCanvas().getGraphicsContext2D());
-
-            infoWindows[i].setText_size(Main.screenH / 50);
             Tower newTower = TowerChooser.getTower(towers.get(i), 0, 0);
-            infoWindows[i].setX(Main.screenW);
-            infoWindows[i].setY(150*(i+1));
             infoWindows[i].drawTowerInfoALL(newTower);
+            infoWindows[i].drawButtons();
+
         }
     }
 
@@ -104,6 +101,10 @@ public class GameState implements State {
             if (click.getPixelX()<=Main.screenW){
                 towerClick();
             }
+            for (CanvasWindow window:infoWindows) {
+                window.checkButtons(click.getPixelX(),click.getPixelY());
+            }
+            click = null;
         }
         //Uute monsterite spawnimine.
         for (Spawnpoint spawn : map.getSpawnpoints()) {
@@ -193,10 +194,9 @@ public class GameState implements State {
                 placeTower(x, y);
             }
 
-        } else {
+        }else {
             cWindow.checkButtons(clickx, clicky);
         }
-        click = null;
     }
 
     private void openTowerMenu() {
@@ -282,5 +282,25 @@ public class GameState implements State {
         }
         return true;
     }
-
+    public void initValgeAla(){
+        List<Towers> towers = new ArrayList<>(Arrays.asList(Towers.values()));
+        infoWindows = new CanvasWindow[towers.size()];
+        for (int i = 0; i < towers.size(); i++) {
+            Tower newTower = TowerChooser.getTower(towers.get(i), 0, 0);
+            infoWindows[i] = new CanvasWindow(sm.getCanvas().getGraphicsContext2D());
+            CanvasButton btn = new CanvasButton(() -> {
+                for (Tower tower : map.getTowers()) {
+                    if (tower.getId() == newTower.getId())
+                        tower.lvlUp();
+                }
+            });
+            btn.setCoords(Main.screenW + 50, (150 * (i + 1) + 110), Main.screenH / 50, Main.screenH / 50);
+            btn.setColor(newTower.getColor());
+            CanvasButton[] btns = new CanvasButton[]{btn};
+            infoWindows[i].setButtons(btns);
+            infoWindows[i].setText_size(Main.screenH / 50);
+            infoWindows[i].setX(Main.screenW);
+            infoWindows[i].setY(150 * (i + 1));
+        }
+    }
 }

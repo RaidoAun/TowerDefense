@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 public enum Towers {
 
     LASER("Laser", 0, 10, 150, 4, Color.CRIMSON, 3, 5),
-    KAHUR("Kahur", 1, 2000, 200, 3, Color.CHARTREUSE, 3, 60),
+    KAHUR("Kahur", 1, 2000, 200, 3, Color.DARKOLIVEGREEN, 3, 60),
     KUULIPILDUJA("Kuulipilduja", 2, 300, 100, 5, Color.DARKBLUE, 5, 5),
     KÜLMUTAJA("Külmutaja", 3, 30, 300, 10, Color.AQUA, 3, 45),
     MÜÜR("Müür", 4, 0, 10, 10, Color.GOLD, 0, 0);

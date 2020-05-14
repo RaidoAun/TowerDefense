@@ -86,6 +86,7 @@ public class Monster extends Entity {
     }
 
     public void move(int[][] path, double speed) {
+
         if (this.step < path.length) {
             int distx = (int) (((path[this.step][0] + 0.5) * Main.blockSize) - this.pixelX);
             int disty = (int) (((path[this.step][1] + 0.5) * Main.blockSize) - this.pixelY);
@@ -126,7 +127,11 @@ public class Monster extends Entity {
                 this.step += 1;
             }
         } else {
-            this.reachedNexus = true;
+            int distx = (int) (((path[path.length-1][0] + 0.5) * Main.blockSize) - this.pixelX);
+            int disty = (int) (((path[path.length-1][1] + 0.5) * Main.blockSize) - this.pixelY);
+            if (distx==0 && disty == 0){
+                this.reachedNexus = true;
+            }
         }
     }
 

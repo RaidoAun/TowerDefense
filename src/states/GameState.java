@@ -91,7 +91,7 @@ public class GameState implements State {
     public void tick() {
         //Kontrollib, kas mäng on läbi.
         if (health <= 0) {
-            Platform.runLater(() -> PopUp.createPopup("YOU SUCK! GAME OVER!"));
+            Platform.runLater(() -> PopUp.createPopup("GAME OVER!"));
             sm.resetStates(States.GAME, States.NEXUS);
             sm.setState(States.MENU);
             return;
